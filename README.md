@@ -2,15 +2,17 @@
 
 This repository is the separately distributed Stripe Checkout adapter for
 RED-CMS Store Lite. P3C-1 established package identity plus dependency-free
-pure normalization contracts, and P3C-2 added checkout-attempt storage. The
-current **P3C-3 schema-only** slice adds immutable provider-event receipt/replay
-storage and one pure receipt-record planner.
+pure normalization contracts, P3C-2 added checkout-attempt storage, and P3C-3
+added immutable provider-event receipt/replay storage. The current **P3C-4
+registration-only** slice assembles those contracts as a RED-CMS-discoverable,
+integrity-checked adapter package.
 
-P3C-3 remains deliberately non-installable. It contains no `addon.json`,
-`addon.php`, registrar, route, webhook verifier, secret reference, HTTP client,
-Stripe SDK, database connection/writer, Store Lite invocation, browser return
-handler, client installation, or payment path. The migration cannot be applied
-through RED-CMS until a later reviewed installable-package gate.
+P3C-4 validates only the closed manifest and registrar shape. It does not
+install or enable the package, apply a migration, publish a route or adapter,
+invoke a handler, resolve a secret, access a database or network, contact
+Stripe, invoke Store Lite, handle a browser return, deploy to a client, or
+create a payment. Both registered handlers explicitly refuse invocation until
+a later reviewed operational gate.
 
 ## Current contracts
 
@@ -31,6 +33,13 @@ through RED-CMS until a later reviewed installable-package gate.
 No contract reads request globals, a secret, a database, RED-CMS core, Store
 Lite runtime code, or the network.
 
+The installable payload under `package/` declares one adapter, one Store Lite
+dependency, one server-signature event route, two value-free secret-reference
+settings, one ordinary return-origin setting, and the two existing migrations.
+Current RED-CMS core validates that manifest without executing it, then may
+execute only the registrar in a discarded request-local registry after prior
+database-readiness evidence is supplied.
+
 ## Run the isolated proof
 
 ```sh
@@ -42,4 +51,6 @@ and
 [`docs/P3C-2-CHECKOUT-ATTEMPT-STORAGE-CONTRACT.md`](docs/P3C-2-CHECKOUT-ATTEMPT-STORAGE-CONTRACT.md)
 and
 [`docs/P3C-3-EVENT-REPLAY-STORAGE-CONTRACT.md`](docs/P3C-3-EVENT-REPLAY-STORAGE-CONTRACT.md)
+and
+[`docs/P3C-4-REGISTRATION-ONLY-PACKAGE-CONTRACT.md`](docs/P3C-4-REGISTRATION-ONLY-PACKAGE-CONTRACT.md)
 for the complete boundaries and later-gate exclusions.
