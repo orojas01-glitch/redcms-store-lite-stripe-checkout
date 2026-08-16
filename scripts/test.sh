@@ -19,6 +19,7 @@ fi
 "$PHP_CLI" -l "$PROJECT_DIR/tests/p3c2-checkout-attempt-storage-self-test.php"
 "$PHP_CLI" -l "$PROJECT_DIR/tests/p3c3-event-replay-storage-self-test.php"
 "$PHP_CLI" -l "$PROJECT_DIR/tests/p3c4-registration-only-package-self-test.php"
+"$PHP_CLI" -l "$PROJECT_DIR/tests/p3d1-install-disabled-rehearsal.php"
 "$PHP_CLI" "$PROJECT_DIR/tests/p3c1-foundation-self-test.php"
 "$PHP_CLI" "$PROJECT_DIR/tests/p3c2-checkout-attempt-storage-self-test.php"
 "$PHP_CLI" "$PROJECT_DIR/tests/p3c3-event-replay-storage-self-test.php"
