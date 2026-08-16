@@ -15,7 +15,23 @@ fi
 source "$RED_CMS_CORE_ROOT/scripts/db-common.sh"
 
 FRANKENPHP_BIN="${FRANKENPHP_BIN:-/Users/oscarrojas/Documents/red-cms-dev/frankenphp-1.12.4/frankenphp}"
-REHEARSAL_DATABASE="${RED_STRIPE_P3D1_DATABASE:-redcms_stripe_p3d1_$(date +%s)_$$}"
+REHEARSAL_ID="${RED_STRIPE_REHEARSAL_ID:-p3d1}"
+case "$REHEARSAL_ID" in
+    p3d1)
+        REHEARSAL_LABEL='P3D-1'
+        REHEARSAL_FIXTURE="$TEST_DIR/p3d1-install-disabled-rehearsal.php"
+        REHEARSAL_DATABASE="${RED_STRIPE_REHEARSAL_DATABASE:-${RED_STRIPE_P3D1_DATABASE:-redcms_stripe_p3d1_$(date +%s)_$$}}"
+        ;;
+    p3d2)
+        REHEARSAL_LABEL='P3D-2'
+        REHEARSAL_FIXTURE="$TEST_DIR/p3d2-enable-dry-run-rehearsal.php"
+        REHEARSAL_DATABASE="${RED_STRIPE_REHEARSAL_DATABASE:-redcms_stripe_p3d2_$(date +%s)_$$}"
+        ;;
+    *)
+        printf 'Unsupported Stripe rehearsal id: %s\n' "$REHEARSAL_ID" >&2
+        exit 64
+        ;;
+esac
 TEMP_ROOT=""
 STAGED_PROJECT=""
 ADMIN_DEFAULTS_FILE=""
@@ -103,7 +119,7 @@ red_stripe_p3d1_cleanup() {
         fi
     fi
     if [[ -n "$TEMP_ROOT"
-        && "$TEMP_ROOT" == "${TMPDIR:-/tmp}/redcms-stripe-p3d1."*
+        && "$TEMP_ROOT" == "${TMPDIR:-/tmp}/redcms-stripe-$REHEARSAL_ID."*
         && -d "$TEMP_ROOT"
     ]]; then
         rm -rf -- "$TEMP_ROOT"
@@ -129,7 +145,7 @@ red_stripe_p3d1_cleanup() {
         && "$DATABASE_CREATED" -eq 1
         && "$GRANT_CREATED" -eq 1
     ]]; then
-        printf 'Stripe P3D-1 cleanup passed: database:0 grant:0 staged-project:0 process:%s primary:unchanged\n' "$process_count"
+        printf 'Stripe %s cleanup passed: database:0 grant:0 staged-project:0 process:%s primary:unchanged\n' "$REHEARSAL_LABEL" "$process_count"
     fi
     if [[ "$original_status" -ne 0 ]]; then
         exit "$original_status"
@@ -145,17 +161,17 @@ if [[ $# -ne 0 ]]; then
     printf 'Usage: %s\n' "$0" >&2
     exit 64
 fi
-if [[ ! "$REHEARSAL_DATABASE" =~ ^redcms_stripe_p3d1_[A-Za-z0-9_]+$
+if [[ ! "$REHEARSAL_DATABASE" =~ ^redcms_stripe_${REHEARSAL_ID}_[A-Za-z0-9_]+$
     || ${#REHEARSAL_DATABASE} -gt 64
     || "$REHEARSAL_DATABASE" == "$RED_DB_NAME_RESOLVED"
 ]]; then
-    printf 'Unsafe Stripe P3D-1 database name: %s\n' "$REHEARSAL_DATABASE" >&2
+    printf 'Unsafe Stripe %s database name: %s\n' "$REHEARSAL_LABEL" "$REHEARSAL_DATABASE" >&2
     exit 64
 fi
 if [[ ! -x "$FRANKENPHP_BIN"
     || ! -s "$ADAPTER_REPOSITORY/package/addon.json"
     || ! -s "$STORE_LITE_REPOSITORY/package/addon.json"
-    || ! -s "$TEST_DIR/p3d1-install-disabled-rehearsal.php"
+    || ! -s "$REHEARSAL_FIXTURE"
 ]]; then
     printf '%s\n' 'Adapter, Store Lite, or rehearsal fixture is unavailable.' >&2
     exit 66
@@ -174,8 +190,8 @@ store_version="$("$RED_PHP_BIN_RESOLVED" -r '
     echo $manifest["version"] ?? "";
 ' "$STORE_LITE_REPOSITORY/package/addon.json")"
 if [[ "$adapter_version" != '0.1.0' || "$store_version" != '0.1.35' ]]; then
-    printf 'P3D-1 requires adapter 0.1.0 and Store Lite 0.1.35; found %s and %s.\n' \
-        "$adapter_version" "$store_version" >&2
+    printf '%s requires adapter 0.1.0 and Store Lite 0.1.35; found %s and %s.\n' \
+        "$REHEARSAL_LABEL" "$adapter_version" "$store_version" >&2
     exit 65
 fi
 
@@ -185,7 +201,7 @@ if command -v caffeinate >/dev/null 2>&1; then
     printf '%s\n' 'Mac sleep prevention is active for this rehearsal only.'
 fi
 
-TEMP_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/redcms-stripe-p3d1.XXXXXX")"
+TEMP_ROOT="$(mktemp -d "${TMPDIR:-/tmp}/redcms-stripe-$REHEARSAL_ID.XXXXXX")"
 STAGED_PROJECT="$TEMP_ROOT/project"
 mkdir -p \
     "$STAGED_PROJECT/addons/redcms/store-lite" \
@@ -202,7 +218,7 @@ rsync -a \
     "$ADAPTER_REPOSITORY/package/" \
     "$STAGED_PROJECT/addons/redcms/store-lite-stripe-checkout/"
 
-ADMIN_DEFAULTS_FILE="$(mktemp "${TMPDIR:-/tmp}/redcms-stripe-p3d1-admin.XXXXXX")"
+ADMIN_DEFAULTS_FILE="$(mktemp "${TMPDIR:-/tmp}/redcms-stripe-$REHEARSAL_ID-admin.XXXXXX")"
 chmod 600 "$ADMIN_DEFAULTS_FILE"
 {
     printf '[client]\n'
@@ -250,7 +266,7 @@ red_stripe_p3d1_admin_mysql --execute="
 "
 GRANT_CREATED=1
 
-printf 'Preparing fresh P3D-1 project database: %s\n' "$REHEARSAL_DATABASE"
+printf 'Preparing fresh %s project database: %s\n' "$REHEARSAL_LABEL" "$REHEARSAL_DATABASE"
 "$RED_MYSQL_BIN" \
     "--defaults-extra-file=$RED_DB_DEFAULTS_FILE" \
     "$REHEARSAL_DATABASE" < "$STAGED_PROJECT/db-structure.sql"
@@ -265,8 +281,8 @@ RED_DB_HOST="$RED_DB_HOST_RESOLVED:$RED_DB_PORT_RESOLVED" \
 RED_DB_USER="$RED_DB_USER_RESOLVED" \
 RED_DB_PASS="$RED_DB_PASS_RESOLVED" \
 RED_DB_NAME="$REHEARSAL_DATABASE" \
-RED_STRIPE_P3D1_PROJECT_ROOT="$STAGED_PROJECT" \
+RED_STRIPE_REHEARSAL_PROJECT_ROOT="$STAGED_PROJECT" \
     "$FRANKENPHP_BIN" php-cli \
-    "$TEST_DIR/p3d1-install-disabled-rehearsal.php"
+    "$REHEARSAL_FIXTURE"
 
-printf '%s\n' 'Stripe P3D-1 install-disabled rehearsal passed before cleanup.'
+printf 'Stripe %s rehearsal passed before cleanup.\n' "$REHEARSAL_LABEL"
