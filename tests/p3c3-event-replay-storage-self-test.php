@@ -94,9 +94,12 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3c3_assert(
-        ($identity['status'] ?? null)
-            === 'p3c3_event_replay_schema_only_non_installable',
-        'identity marks P3C-3 event/replay storage as non-installable'
+        is_string($identity['status'] ?? null)
+            && preg_match(
+                '/\Ap3c[3-9]_[a-z0-9_]+\z/D',
+                $identity['status']
+            ) === 1,
+        'identity preserves the P3C-3 storage contract across later gates'
     );
 
     $migrationDirectory = $projectDirectory . '/package/migrations';

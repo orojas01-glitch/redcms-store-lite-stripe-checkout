@@ -136,8 +136,9 @@ try {
             && ($identity['repository'] ?? null) ===
                 'redcms-store-lite-stripe-checkout'
             && is_string($identity['status'] ?? null)
-            && str_ends_with($identity['status'], '_non_installable'),
-        'package and repository identities are exact and non-installable'
+            && preg_match('/\Ap3c[1-9]_[a-z0-9_]+\z/D', $identity['status'])
+                === 1,
+        'package and repository identities remain exact across later gates'
     );
     red_stripe_p3c1_assert(
         ($identity['futureManifest']['requiredDependency']['id'] ?? null)
@@ -151,15 +152,15 @@ try {
         'future identity is bound to current Store Lite and one outbound host'
     );
     foreach ([
-        'package/addon.json',
-        'package/addon.php',
         'package/registrar.php',
         'composer.json',
         'vendor',
+        'package/vendor',
+        'package/secrets',
     ] as $forbiddenPath) {
         red_stripe_p3c1_assert(
             !file_exists($projectDirectory . '/' . $forbiddenPath),
-            $forbiddenPath . ' remains absent from the P3C-1 foundation'
+            $forbiddenPath . ' remains absent from the bounded package'
         );
     }
 

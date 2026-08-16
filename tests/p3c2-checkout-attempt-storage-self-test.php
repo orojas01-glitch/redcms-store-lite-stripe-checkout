@@ -94,10 +94,10 @@ try {
     red_stripe_p3c2_assert(
         is_string($identity['status'] ?? null)
             && preg_match(
-                '/\Ap3c[2-9]_[a-z0-9_]+_non_installable\z/D',
+                '/\Ap3c[2-9]_[a-z0-9_]+\z/D',
                 $identity['status']
             ) === 1,
-        'identity keeps P3C-2 and later schema slices non-installable'
+        'identity advances only through named P3C-2 and later gates'
     );
     red_stripe_p3c2_assert(
         in_array('migration-execution', $identity['exclusions'] ?? [], true)

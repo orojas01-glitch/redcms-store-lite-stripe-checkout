@@ -1,0 +1,110 @@
+{
+  "$schema": "https://red-sphere.com/schemas/addon-manifest-v1.json",
+  "schemaVersion": 1,
+  "id": "redcms.store-lite-stripe-checkout",
+  "name": "RED-CMS Store Lite Stripe Checkout",
+  "description": "Separately distributed Stripe Checkout adapter for RED-CMS Store Lite.",
+  "version": "0.1.0",
+  "type": "adapter",
+  "compatibility": {
+    "cms": ">=5.1 <6.0",
+    "php": ">=8.2 <9.0"
+  },
+  "provides": {
+    "components": [],
+    "services": [],
+    "adminTools": [],
+    "adapters": [
+      "redcms.store-lite-stripe-checkout/checkout"
+    ]
+  },
+  "dependencies": {
+    "required": [
+      {
+        "id": "redcms.store-lite",
+        "version": ">=0.1.35 <1.0"
+      }
+    ],
+    "optional": []
+  },
+  "permissions": [],
+  "settings": [
+    {
+      "key": "checkout.return-origin",
+      "label": "Checkout return origin",
+      "type": "url",
+      "secret": false,
+      "default": null
+    },
+    {
+      "key": "stripe.secret-key",
+      "label": "Stripe secret key reference",
+      "type": "secret-reference",
+      "secret": true
+    },
+    {
+      "key": "stripe.webhook-secret",
+      "label": "Stripe webhook secret reference",
+      "type": "secret-reference",
+      "secret": true
+    }
+  ],
+  "migrations": [
+    {
+      "id": "2026-08-16-checkout-attempts",
+      "path": "migrations/2026-08-16-create-checkout-attempts.sql",
+      "sha256": "f58ae3b56d5b96d80f2757162e41e0fa4540f5e652934b9708e3884be633c2fa"
+    },
+    {
+      "id": "2026-08-16-event-receipts",
+      "path": "migrations/2026-08-16-create-event-receipts.sql",
+      "sha256": "20b516693d15bf2fb3829de6d9c9fe44202af03b846a05262d0c79f2b0cd2b8d"
+    }
+  ],
+  "routes": [
+    {
+      "id": "redcms.store-lite-stripe-checkout/provider-events",
+      "scope": "public",
+      "path": "/addons/redcms/store-lite-stripe-checkout/provider-events",
+      "methods": [
+        "POST"
+      ],
+      "authentication": "server-signature",
+      "csrf": "not-applicable"
+    }
+  ],
+  "publicMutationContracts": [],
+  "jobs": [],
+  "outboundHosts": [
+    "api.stripe.com"
+  ],
+  "assets": {
+    "public": [],
+    "admin": []
+  },
+  "integrity": {
+    "entrypoint": "addon.php",
+    "files": [
+      {
+        "path": "addon.php",
+        "sha256": "ec120d1af0b20c1f2a47b97e3b1e8b696a28ddc8ab34c3c69981aec2cf43a9b3"
+      },
+      {
+        "path": "identity.json",
+        "sha256": "63cf594e5de7fe9e983eb5d3ed37bc0e4428466c6054e8e3521182e830738d09"
+      },
+      {
+        "path": "migrations/2026-08-16-create-checkout-attempts.sql",
+        "sha256": "f58ae3b56d5b96d80f2757162e41e0fa4540f5e652934b9708e3884be633c2fa"
+      },
+      {
+        "path": "migrations/2026-08-16-create-event-receipts.sql",
+        "sha256": "20b516693d15bf2fb3829de6d9c9fe44202af03b846a05262d0c79f2b0cd2b8d"
+      }
+    ]
+  },
+  "uninstall": {
+    "defaultDataAction": "retain",
+    "allowExplicitPurge": false
+  }
+}
