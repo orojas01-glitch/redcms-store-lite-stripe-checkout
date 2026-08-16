@@ -7,7 +7,7 @@ if (PHP_SAPI !== 'cli') {
     exit;
 }
 
-$projectRoot = realpath((string) getenv('RED_STRIPE_P3D1_PROJECT_ROOT'));
+$projectRoot = realpath((string) getenv('RED_STRIPE_REHEARSAL_PROJECT_ROOT'));
 $databaseName = (string) getenv('RED_DB_NAME');
 if (!is_string($projectRoot)
     || !is_dir($projectRoot)

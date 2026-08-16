@@ -4,15 +4,17 @@ This repository is the separately distributed Stripe Checkout adapter for
 RED-CMS Store Lite. P3C-1 established package identity plus dependency-free
 pure normalization contracts, P3C-2 added checkout-attempt storage, and P3C-3
 added immutable provider-event receipt/replay storage. P3C-4 assembled those
-contracts as a RED-CMS-discoverable, integrity-checked adapter package. The
-current **P3D-1 offline lifecycle** gate proves that exact package installs into
-`installed_disabled` on a fresh disposable database and cleans up exactly.
+contracts as a RED-CMS-discoverable, integrity-checked adapter package. P3D-1
+proved that exact package installs into `installed_disabled` on a fresh
+disposable database. The current **P3D-2 value-free dry-run** gate adds complete
+atomic-enable readiness evidence without applying the state transition.
 
-P3D-1 does not configure or enable the adapter, publish a route or adapter,
-invoke a handler, resolve a secret, access the network, contact Stripe, invoke
-Store Lite payment behavior, handle a browser return, deploy to a client, or
-create a payment. Both registered handlers explicitly refuse invocation until
-a later reviewed operational gate.
+P3D-2 stores only an ordinary return origin and two non-secret placeholder
+`config:` reference names in its disposable database. It does not enable the
+adapter, publish a route or adapter, invoke a handler, resolve a secret, access
+the network, contact Stripe, invoke Store Lite payment behavior, handle a
+browser return, deploy to a client, or create a payment. Both registered
+handlers explicitly refuse invocation until a later reviewed operational gate.
 
 ## Current contracts
 
@@ -51,6 +53,7 @@ MySQL, and FrankenPHP development environment:
 
 ```sh
 tests/p3d1-install-disabled-rehearsal.sh
+tests/p3d2-enable-dry-run-rehearsal.sh
 ```
 
 See [`docs/P3C-1-FOUNDATION-CONTRACT.md`](docs/P3C-1-FOUNDATION-CONTRACT.md)
@@ -62,4 +65,6 @@ and
 [`docs/P3C-4-REGISTRATION-ONLY-PACKAGE-CONTRACT.md`](docs/P3C-4-REGISTRATION-ONLY-PACKAGE-CONTRACT.md)
 and
 [`docs/P3D-1-INSTALL-DISABLED-LIFECYCLE.md`](docs/P3D-1-INSTALL-DISABLED-LIFECYCLE.md)
+and
+[`docs/P3D-2-VALUE-FREE-ENABLE-DRY-RUN.md`](docs/P3D-2-VALUE-FREE-ENABLE-DRY-RUN.md)
 for the complete boundaries and later-gate exclusions.
