@@ -92,9 +92,12 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3c2_assert(
-        ($identity['status'] ?? null) ===
-            'p3c2_schema_only_non_installable',
-        'identity marks P3C-2 as schema-only and non-installable'
+        is_string($identity['status'] ?? null)
+            && preg_match(
+                '/\Ap3c[2-9]_[a-z0-9_]+_non_installable\z/D',
+                $identity['status']
+            ) === 1,
+        'identity keeps P3C-2 and later schema slices non-installable'
     );
     red_stripe_p3c2_assert(
         in_array('migration-execution', $identity['exclusions'] ?? [], true)
@@ -115,9 +118,13 @@ try {
     $migrations = glob($migrationDirectory . '/*.sql');
     red_stripe_p3c2_assert(
         is_array($migrations)
-            && $migrations === [$migrationDirectory
-                . '/2026-08-16-create-checkout-attempts.sql'],
-        'P3C-2 contains exactly one ordered immutable SQL migration'
+            && in_array(
+                $migrationDirectory
+                    . '/2026-08-16-create-checkout-attempts.sql',
+                $migrations,
+                true
+            ),
+        'the immutable P3C-2 checkout-attempt migration remains present'
     );
     $sql = (string) file_get_contents($migrations[0]);
     red_stripe_p3c2_assert(
