@@ -8,17 +8,17 @@ contracts as a RED-CMS-discoverable, integrity-checked adapter package. P3D-1
 proved that exact package installs into `installed_disabled` on a fresh
 disposable database. P3D-2 added complete value-free atomic-enable readiness
 evidence. P3D-3 proved the exact adapter state and bounded audit fact commit
-together or both roll back. The
-current **P3D-4 value-free runtime binding** gate adds exact request-local
-adapter, route, and Store Lite payment-service ownership without invoking them.
+together or both roll back. P3D-4 added exact value-free request-local
+ownership. The current **P3D-5 synthetic-secret request bootstrap** gate runs
+the full production bootstrap with two disposable process-local values.
 
-P3D-4 enables the adapter only inside its disposable database, then removes
-that database exactly. It uses the integrity-checked registrars to build a
-request-local context with no secret-access object. It does not run the full
-secret-resolving bootstrap, invoke a handler or service, expose an HTTP route,
+P3D-5 enables the adapter only inside its disposable database, injects two
+random synthetic values into that PHP process, resolves them into the private
+package-bound access object, then removes both environment entries and the
+database exactly. It does not invoke a handler or service, dispatch a route,
 access the network, contact Stripe, change Store Lite behavior, handle a
 browser return, deploy to a client, or create a payment. Both adapter handlers
-explicitly refuse invocation until a later reviewed operational gate.
+still explicitly refuse invocation until a later reviewed operational gate.
 
 ## Current contracts
 
@@ -60,6 +60,7 @@ tests/p3d1-install-disabled-rehearsal.sh
 tests/p3d2-enable-dry-run-rehearsal.sh
 tests/p3d3-atomic-enable-rollback-rehearsal.sh
 tests/p3d4-runtime-service-binding-rehearsal.sh
+tests/p3d5-synthetic-secret-bootstrap-rehearsal.sh
 ```
 
 See [`docs/P3C-1-FOUNDATION-CONTRACT.md`](docs/P3C-1-FOUNDATION-CONTRACT.md)
@@ -77,4 +78,6 @@ and
 [`docs/P3D-3-ATOMIC-ENABLE-ROLLBACK.md`](docs/P3D-3-ATOMIC-ENABLE-ROLLBACK.md)
 and
 [`docs/P3D-4-VALUE-FREE-RUNTIME-SERVICE-BINDING.md`](docs/P3D-4-VALUE-FREE-RUNTIME-SERVICE-BINDING.md)
+and
+[`docs/P3D-5-SYNTHETIC-SECRET-REQUEST-BOOTSTRAP.md`](docs/P3D-5-SYNTHETIC-SECRET-REQUEST-BOOTSTRAP.md)
 for the complete boundaries and later-gate exclusions.

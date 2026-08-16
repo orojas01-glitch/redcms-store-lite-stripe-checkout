@@ -49,6 +49,15 @@ case "$REHEARSAL_ID" in
         )
         REHEARSAL_DATABASE="${RED_STRIPE_REHEARSAL_DATABASE:-redcms_stripe_p3d4_$(date +%s)_$$}"
         ;;
+    p3d5)
+        REHEARSAL_LABEL='P3D-5'
+        REHEARSAL_FIXTURES=(
+            "$TEST_DIR/p3d2-enable-dry-run-rehearsal.php"
+            "$TEST_DIR/p3d3-atomic-enable-rollback-rehearsal.php"
+            "$TEST_DIR/p3d5-synthetic-secret-bootstrap-rehearsal.php"
+        )
+        REHEARSAL_DATABASE="${RED_STRIPE_REHEARSAL_DATABASE:-redcms_stripe_p3d5_$(date +%s)_$$}"
+        ;;
     *)
         printf 'Unsupported Stripe rehearsal id: %s\n' "$REHEARSAL_ID" >&2
         exit 64
