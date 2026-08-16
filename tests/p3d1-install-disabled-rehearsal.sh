@@ -16,6 +16,7 @@ source "$RED_CMS_CORE_ROOT/scripts/db-common.sh"
 
 FRANKENPHP_BIN="${FRANKENPHP_BIN:-/Users/oscarrojas/Documents/red-cms-dev/frankenphp-1.12.4/frankenphp}"
 REHEARSAL_ID="${RED_STRIPE_REHEARSAL_ID:-p3d1}"
+REHEARSAL_PREFLIGHT_FIXTURE=''
 case "$REHEARSAL_ID" in
     p3d1)
         REHEARSAL_LABEL='P3D-1'
@@ -26,6 +27,12 @@ case "$REHEARSAL_ID" in
         REHEARSAL_LABEL='P3D-2'
         REHEARSAL_FIXTURE="$TEST_DIR/p3d2-enable-dry-run-rehearsal.php"
         REHEARSAL_DATABASE="${RED_STRIPE_REHEARSAL_DATABASE:-redcms_stripe_p3d2_$(date +%s)_$$}"
+        ;;
+    p3d3)
+        REHEARSAL_LABEL='P3D-3'
+        REHEARSAL_PREFLIGHT_FIXTURE="$TEST_DIR/p3d2-enable-dry-run-rehearsal.php"
+        REHEARSAL_FIXTURE="$TEST_DIR/p3d3-atomic-enable-rollback-rehearsal.php"
+        REHEARSAL_DATABASE="${RED_STRIPE_REHEARSAL_DATABASE:-redcms_stripe_p3d3_$(date +%s)_$$}"
         ;;
     *)
         printf 'Unsupported Stripe rehearsal id: %s\n' "$REHEARSAL_ID" >&2
@@ -172,6 +179,8 @@ if [[ ! -x "$FRANKENPHP_BIN"
     || ! -s "$ADAPTER_REPOSITORY/package/addon.json"
     || ! -s "$STORE_LITE_REPOSITORY/package/addon.json"
     || ! -s "$REHEARSAL_FIXTURE"
+    || ( -n "$REHEARSAL_PREFLIGHT_FIXTURE"
+        && ! -s "$REHEARSAL_PREFLIGHT_FIXTURE" )
 ]]; then
     printf '%s\n' 'Adapter, Store Lite, or rehearsal fixture is unavailable.' >&2
     exit 66
@@ -282,7 +291,19 @@ RED_DB_USER="$RED_DB_USER_RESOLVED" \
 RED_DB_PASS="$RED_DB_PASS_RESOLVED" \
 RED_DB_NAME="$REHEARSAL_DATABASE" \
 RED_STRIPE_REHEARSAL_PROJECT_ROOT="$STAGED_PROJECT" \
+RED_STRIPE_REHEARSAL_ID="$REHEARSAL_ID" \
     "$FRANKENPHP_BIN" php-cli \
-    "$REHEARSAL_FIXTURE"
+    "${REHEARSAL_PREFLIGHT_FIXTURE:-$REHEARSAL_FIXTURE}"
+
+if [[ -n "$REHEARSAL_PREFLIGHT_FIXTURE" ]]; then
+    RED_DB_HOST="$RED_DB_HOST_RESOLVED:$RED_DB_PORT_RESOLVED" \
+    RED_DB_USER="$RED_DB_USER_RESOLVED" \
+    RED_DB_PASS="$RED_DB_PASS_RESOLVED" \
+    RED_DB_NAME="$REHEARSAL_DATABASE" \
+    RED_STRIPE_REHEARSAL_PROJECT_ROOT="$STAGED_PROJECT" \
+    RED_STRIPE_REHEARSAL_ID="$REHEARSAL_ID" \
+        "$FRANKENPHP_BIN" php-cli \
+        "$REHEARSAL_FIXTURE"
+fi
 
 printf 'Stripe %s rehearsal passed before cleanup.\n' "$REHEARSAL_LABEL"
