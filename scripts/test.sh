@@ -22,6 +22,7 @@ fi
 "$PHP_CLI" -l "$PROJECT_DIR/tests/p3d1-install-disabled-rehearsal.php"
 "$PHP_CLI" -l "$PROJECT_DIR/tests/p3d2-enable-dry-run-rehearsal.php"
 "$PHP_CLI" -l "$PROJECT_DIR/tests/p3d3-atomic-enable-rollback-rehearsal.php"
+"$PHP_CLI" -l "$PROJECT_DIR/tests/p3d4-runtime-service-binding-rehearsal.php"
 "$PHP_CLI" "$PROJECT_DIR/tests/p3c1-foundation-self-test.php"
 "$PHP_CLI" "$PROJECT_DIR/tests/p3c2-checkout-attempt-storage-self-test.php"
 "$PHP_CLI" "$PROJECT_DIR/tests/p3c3-event-replay-storage-self-test.php"

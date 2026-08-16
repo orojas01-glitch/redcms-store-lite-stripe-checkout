@@ -9,15 +9,23 @@ if (PHP_SAPI !== 'cli') {
 
 $projectRoot = realpath((string) getenv('RED_STRIPE_REHEARSAL_PROJECT_ROOT'));
 $databaseName = (string) getenv('RED_DB_NAME');
+$rehearsalId = (string) getenv('RED_STRIPE_REHEARSAL_ID');
+if (!in_array($rehearsalId, ['p3d3', 'p3d4'], true)) {
+    $rehearsalId = 'p3d3';
+}
+$rehearsalLabel = strtoupper($rehearsalId);
 if (!is_string($projectRoot)
     || !is_dir($projectRoot)
-    || (string) getenv('RED_STRIPE_REHEARSAL_ID') !== 'p3d3'
     || preg_match(
-        '/\Aredcms_stripe_p3d3_[A-Za-z0-9_]+\z/D',
+        '/\Aredcms_stripe_' . preg_quote($rehearsalId, '/')
+            . '_[A-Za-z0-9_]+\z/D',
         $databaseName
     ) !== 1
 ) {
-    fwrite(STDERR, "Stripe P3D-3 rehearsal refused unsafe input.\n");
+    fwrite(
+        STDERR,
+        "Stripe $rehearsalLabel atomic rehearsal refused unsafe input.\n"
+    );
     exit(64);
 }
 

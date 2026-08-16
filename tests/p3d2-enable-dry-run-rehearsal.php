@@ -10,7 +10,7 @@ if (PHP_SAPI !== 'cli') {
 $projectRoot = realpath((string) getenv('RED_STRIPE_REHEARSAL_PROJECT_ROOT'));
 $databaseName = (string) getenv('RED_DB_NAME');
 $rehearsalId = (string) getenv('RED_STRIPE_REHEARSAL_ID');
-if (!in_array($rehearsalId, ['p3d2', 'p3d3'], true)) {
+if (!in_array($rehearsalId, ['p3d2', 'p3d3', 'p3d4'], true)) {
     $rehearsalId = 'p3d2';
 }
 $rehearsalLabel = strtoupper($rehearsalId);
