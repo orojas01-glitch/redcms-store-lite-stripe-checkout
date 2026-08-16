@@ -1,0 +1,36 @@
+{
+  "contractVersion": 1,
+  "status": "foundation_only_non_installable",
+  "id": "redcms.store-lite-stripe-checkout",
+  "name": "RED-CMS Store Lite Stripe Checkout",
+  "repository": "redcms-store-lite-stripe-checkout",
+  "futureManifest": {
+    "schemaVersion": 1,
+    "type": "adapter",
+    "version": "0.1.0-dev",
+    "cmsCompatibility": ">=5.1 <6.0",
+    "phpCompatibility": ">=8.2 <9.0",
+    "requiredDependency": {
+      "id": "redcms.store-lite",
+      "version": ">=0.1.35 <1.0"
+    },
+    "adapterId": "redcms.store-lite-stripe-checkout/checkout",
+    "outboundHost": "api.stripe.com"
+  },
+  "exclusions": [
+    "installable-manifest",
+    "entrypoint",
+    "migration",
+    "registrar",
+    "route",
+    "webhook-verifier",
+    "secret-reference",
+    "http-client",
+    "provider-sdk",
+    "database",
+    "store-lite-invocation",
+    "browser-handler",
+    "client-deployment",
+    "payment"
+  ]
+}
