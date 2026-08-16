@@ -12,5 +12,8 @@ fi
 
 "$PHP_CLI" -l "$PROJECT_DIR/src/StripeCheckoutResponseNormalizer.php"
 "$PHP_CLI" -l "$PROJECT_DIR/src/StripeVerifiedEventNormalizer.php"
+"$PHP_CLI" -l "$PROJECT_DIR/src/StripeCheckoutAttemptRecordPlanner.php"
 "$PHP_CLI" -l "$PROJECT_DIR/tests/p3c1-foundation-self-test.php"
+"$PHP_CLI" -l "$PROJECT_DIR/tests/p3c2-checkout-attempt-storage-self-test.php"
 "$PHP_CLI" "$PROJECT_DIR/tests/p3c1-foundation-self-test.php"
+"$PHP_CLI" "$PROJECT_DIR/tests/p3c2-checkout-attempt-storage-self-test.php"

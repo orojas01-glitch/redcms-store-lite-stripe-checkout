@@ -135,8 +135,8 @@ try {
             'redcms.store-lite-stripe-checkout'
             && ($identity['repository'] ?? null) ===
                 'redcms-store-lite-stripe-checkout'
-            && ($identity['status'] ?? null) ===
-                'foundation_only_non_installable',
+            && is_string($identity['status'] ?? null)
+            && str_ends_with($identity['status'], '_non_installable'),
         'package and repository identities are exact and non-installable'
     );
     red_stripe_p3c1_assert(
@@ -153,7 +153,7 @@ try {
     foreach ([
         'package/addon.json',
         'package/addon.php',
-        'package/migrations',
+        'package/registrar.php',
         'composer.json',
         'vendor',
     ] as $forbiddenPath) {

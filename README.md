@@ -1,13 +1,15 @@
 # RED-CMS Store Lite Stripe Checkout Adapter
 
 This repository is the separately distributed Stripe Checkout adapter for
-RED-CMS Store Lite. Its current state is **P3C-1 foundation only**: package
-identity plus dependency-free pure normalization contracts.
+RED-CMS Store Lite. P3C-1 established package identity plus dependency-free
+pure normalization contracts. The current **P3C-2 schema-only** slice adds one
+immutable checkout-attempt migration and one pure persistence-record planner.
 
-P3C-1 is deliberately non-installable. It contains no `addon.json`,
-`addon.php`, migration, registrar, route, webhook verifier, secret reference,
-HTTP client, Stripe SDK, database writer, Store Lite invocation, browser return
-handler, client installation, or payment path.
+P3C-2 remains deliberately non-installable. It contains no `addon.json`,
+`addon.php`, registrar, route, webhook verifier, secret reference, HTTP client,
+Stripe SDK, database connection/writer, Store Lite invocation, browser return
+handler, client installation, or payment path. The migration cannot be applied
+through RED-CMS until a later reviewed installable-package gate.
 
 ## Current contracts
 
@@ -18,9 +20,12 @@ handler, client installation, or payment path.
 - `RED_CMS_Store_Lite_Stripe_Verified_Event_Normalizer` accepts only a bounded,
   already-signature-verified and reconciled Stripe event projection. It emits
   the exact provider-neutral event vocabulary consumed by Store Lite 0.1.35.
+- `RED_CMS_Store_Lite_Stripe_Checkout_Attempt_Record_Planner` revalidates the
+  reviewed Checkout response and returns only the bounded adapter-owned record
+  allowed by the P3C-2 schema. The transient hosted URL is dropped.
 
-Neither contract reads request globals, a secret, the filesystem, a database,
-RED-CMS core, Store Lite runtime code, or the network.
+No contract reads request globals, a secret, a database, RED-CMS core, Store
+Lite runtime code, or the network.
 
 ## Run the isolated proof
 
@@ -29,4 +34,6 @@ PHP_CLI=/path/to/php scripts/test.sh
 ```
 
 See [`docs/P3C-1-FOUNDATION-CONTRACT.md`](docs/P3C-1-FOUNDATION-CONTRACT.md)
-for the complete boundary and later-gate exclusions.
+and
+[`docs/P3C-2-CHECKOUT-ATTEMPT-STORAGE-CONTRACT.md`](docs/P3C-2-CHECKOUT-ATTEMPT-STORAGE-CONTRACT.md)
+for the complete boundaries and later-gate exclusions.
