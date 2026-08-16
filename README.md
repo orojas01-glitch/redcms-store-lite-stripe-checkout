@@ -7,16 +7,18 @@ added immutable provider-event receipt/replay storage. P3C-4 assembled those
 contracts as a RED-CMS-discoverable, integrity-checked adapter package. P3D-1
 proved that exact package installs into `installed_disabled` on a fresh
 disposable database. P3D-2 added complete value-free atomic-enable readiness
-evidence. The current **P3D-3 atomic enable and rollback** gate proves the exact
-adapter state and bounded audit fact commit together or both roll back.
+evidence. P3D-3 proved the exact adapter state and bounded audit fact commit
+together or both roll back. The
+current **P3D-4 value-free runtime binding** gate adds exact request-local
+adapter, route, and Store Lite payment-service ownership without invoking them.
 
-P3D-3 enables the adapter only inside its disposable database, then removes
-that database exactly. It stores only an ordinary return origin and two
-non-secret placeholder `config:` reference names. It does not publish a route
-or adapter, invoke a handler, resolve a secret, access the network, contact
-Stripe, invoke Store Lite payment behavior, handle a browser return, deploy to
-a client, or create a payment. Both registered handlers explicitly refuse
-invocation until a later reviewed operational gate.
+P3D-4 enables the adapter only inside its disposable database, then removes
+that database exactly. It uses the integrity-checked registrars to build a
+request-local context with no secret-access object. It does not run the full
+secret-resolving bootstrap, invoke a handler or service, expose an HTTP route,
+access the network, contact Stripe, change Store Lite behavior, handle a
+browser return, deploy to a client, or create a payment. Both adapter handlers
+explicitly refuse invocation until a later reviewed operational gate.
 
 ## Current contracts
 
@@ -57,6 +59,7 @@ MySQL, and FrankenPHP development environment:
 tests/p3d1-install-disabled-rehearsal.sh
 tests/p3d2-enable-dry-run-rehearsal.sh
 tests/p3d3-atomic-enable-rollback-rehearsal.sh
+tests/p3d4-runtime-service-binding-rehearsal.sh
 ```
 
 See [`docs/P3C-1-FOUNDATION-CONTRACT.md`](docs/P3C-1-FOUNDATION-CONTRACT.md)
@@ -72,4 +75,6 @@ and
 [`docs/P3D-2-VALUE-FREE-ENABLE-DRY-RUN.md`](docs/P3D-2-VALUE-FREE-ENABLE-DRY-RUN.md)
 and
 [`docs/P3D-3-ATOMIC-ENABLE-ROLLBACK.md`](docs/P3D-3-ATOMIC-ENABLE-ROLLBACK.md)
+and
+[`docs/P3D-4-VALUE-FREE-RUNTIME-SERVICE-BINDING.md`](docs/P3D-4-VALUE-FREE-RUNTIME-SERVICE-BINDING.md)
 for the complete boundaries and later-gate exclusions.
