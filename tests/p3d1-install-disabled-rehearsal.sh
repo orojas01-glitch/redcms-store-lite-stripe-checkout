@@ -58,6 +58,15 @@ case "$REHEARSAL_ID" in
         )
         REHEARSAL_DATABASE="${RED_STRIPE_REHEARSAL_DATABASE:-redcms_stripe_p3d5_$(date +%s)_$$}"
         ;;
+    p3d7)
+        REHEARSAL_LABEL='P3D-7'
+        REHEARSAL_FIXTURES=(
+            "$TEST_DIR/p3d2-enable-dry-run-rehearsal.php"
+            "$TEST_DIR/p3d3-atomic-enable-rollback-rehearsal.php"
+            "$TEST_DIR/p3d7-typed-offline-adapter-invocation-rehearsal.php"
+        )
+        REHEARSAL_DATABASE="${RED_STRIPE_REHEARSAL_DATABASE:-redcms_stripe_p3d7_$(date +%s)_$$}"
+        ;;
     *)
         printf 'Unsupported Stripe rehearsal id: %s\n' "$REHEARSAL_ID" >&2
         exit 64
@@ -226,8 +235,8 @@ store_version="$("$RED_PHP_BIN_RESOLVED" -r '
     $manifest = json_decode(file_get_contents($argv[1]), true, 512, JSON_THROW_ON_ERROR);
     echo $manifest["version"] ?? "";
 ' "$STORE_LITE_REPOSITORY/package/addon.json")"
-if [[ "$adapter_version" != '0.1.0' || "$store_version" != '0.1.35' ]]; then
-    printf '%s requires adapter 0.1.0 and Store Lite 0.1.35; found %s and %s.\n' \
+if [[ "$adapter_version" != '0.1.1' || "$store_version" != '0.1.35' ]]; then
+    printf '%s requires adapter 0.1.1 and Store Lite 0.1.35; found %s and %s.\n' \
         "$REHEARSAL_LABEL" "$adapter_version" "$store_version" >&2
     exit 65
 fi

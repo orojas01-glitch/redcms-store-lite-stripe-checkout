@@ -187,7 +187,7 @@ try {
             && ($storeReport['status'] ?? '') === 'enabled_current'
             && ($adapterReport['status'] ?? '') === 'enabled_current'
             && ($storePackage['manifest']['version'] ?? '') === '0.1.35'
-            && ($adapterPackage['manifest']['version'] ?? '') === '0.1.0',
+            && ($adapterPackage['manifest']['version'] ?? '') === '0.1.1',
         'both exact package identities are enabled and registry-current'
     );
 
@@ -234,9 +234,6 @@ try {
     $adapterEntrypoint = realpath(
         $projectRoot . '/addons/redcms/store-lite-stripe-checkout/addon.php'
     );
-    $adapterReflection = $adapterHandler instanceof Closure
-        ? new ReflectionFunction($adapterHandler)
-        : null;
     $routeReflection = $routeHandler instanceof Closure
         ? new ReflectionFunction($routeHandler)
         : null;
@@ -245,10 +242,11 @@ try {
             'RED_CMS_Store_Lite_Payment_Event_Service',
             'handle',
         ]
-            && $adapterReflection instanceof ReflectionFunction
+            && $adapterHandler === [
+                'RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter',
+                'handle',
+            ]
             && $routeReflection instanceof ReflectionFunction
-            && realpath((string) $adapterReflection->getFileName())
-                === $adapterEntrypoint
             && realpath((string) $routeReflection->getFileName())
                 === $adapterEntrypoint,
         'handler identities bind to exact Store Lite and adapter entrypoints'
@@ -361,7 +359,7 @@ try {
     echo json_encode(
         [
             'ok' => true,
-            'adapterVersion' => '0.1.0',
+            'adapterVersion' => '0.1.1',
             'storeLiteVersion' => '0.1.35',
             'database' => $databaseName,
             'runtimeSnapshotSHA256' => $snapshotSha256,

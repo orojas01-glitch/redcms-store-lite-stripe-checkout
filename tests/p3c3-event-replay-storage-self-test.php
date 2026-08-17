@@ -96,7 +96,7 @@ try {
     red_stripe_p3c3_assert(
         is_string($identity['status'] ?? null)
             && preg_match(
-                '/\Ap3c[3-9]_[a-z0-9_]+\z/D',
+                '/\Ap3(?:c[3-9]|d[1-9])_[a-z0-9_]+\z/D',
                 $identity['status']
             ) === 1,
         'identity preserves the P3C-3 storage contract across later gates'

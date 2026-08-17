@@ -165,7 +165,7 @@ try {
     );
     red_stripe_p3c4_assert(
         ($package['id'] ?? null) === $packageId
-            && ($package['manifest']['version'] ?? null) === '0.1.0'
+            && ($package['manifest']['version'] ?? null) === '0.1.1'
             && ($package['manifest']['type'] ?? null) === 'adapter',
         'manifest identity, version, and adapter type are exact'
     );
@@ -209,7 +209,7 @@ try {
         'secret settings declare references without values or defaults'
     );
     red_stripe_p3c4_assert(
-        count($manifest['integrity']['files']) === 4
+        count($manifest['integrity']['files']) === 5
             && $manifest['integrity']['entrypoint'] === 'addon.php',
         'integrity inventory covers every package payload file exactly once'
     );
@@ -288,22 +288,25 @@ try {
             ],
         'registrar emits only the declared adapter and route registrations'
     );
-    foreach ([
-        'adapter' => $registry->adapters[$packageId . '/checkout'],
-        'route' => $registry->routes[$packageId . '/provider-events'],
-    ] as $label => $handler) {
-        $refused = false;
-        try {
-            $handler();
-        } catch (LogicException $exception) {
-            $refused = $exception->getMessage()
-                === 'p3c4_' . $label . '_handler_not_operational';
-        }
-        red_stripe_p3c4_assert(
-            $refused,
-            $label . ' handler refuses if called outside the later runtime gate'
-        );
+    $adapterHandler = $registry->adapters[$packageId . '/checkout'];
+    red_stripe_p3c4_assert(
+        $adapterHandler === [
+            'RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter',
+            'handle',
+        ] && is_callable($adapterHandler),
+        'adapter registration points only to the reviewed typed handler'
+    );
+    $routeRefused = false;
+    try {
+        $registry->routes[$packageId . '/provider-events']();
+    } catch (LogicException $exception) {
+        $routeRefused = $exception->getMessage()
+            === 'p3c4_route_handler_not_operational';
     }
+    red_stripe_p3c4_assert(
+        $routeRefused,
+        'provider-event route still refuses outside a later runtime gate'
+    );
 
     $packageSource = '';
     $iterator = new RecursiveIteratorIterator(

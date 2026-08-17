@@ -10,7 +10,11 @@ if (PHP_SAPI !== 'cli') {
 $projectRoot = realpath((string) getenv('RED_STRIPE_REHEARSAL_PROJECT_ROOT'));
 $databaseName = (string) getenv('RED_DB_NAME');
 $rehearsalId = (string) getenv('RED_STRIPE_REHEARSAL_ID');
-if (!in_array($rehearsalId, ['p3d2', 'p3d3', 'p3d4', 'p3d5'], true)) {
+if (!in_array(
+    $rehearsalId,
+    ['p3d2', 'p3d3', 'p3d4', 'p3d5', 'p3d7'],
+    true
+)) {
     $rehearsalId = 'p3d2';
 }
 $rehearsalLabel = strtoupper($rehearsalId);
@@ -654,7 +658,7 @@ try {
     echo json_encode(
         [
             'ok' => true,
-            'adapterVersion' => '0.1.0',
+            'adapterVersion' => '0.1.1',
             'database' => $databaseName,
             'configurationSHA256' => $availability['configurationSha256'],
             'secretAvailabilitySHA256' => $availability['evidenceSha256'],
