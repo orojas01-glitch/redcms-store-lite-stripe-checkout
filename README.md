@@ -15,7 +15,9 @@ P3D-7 adopted that boundary in external adapter version `0.1.1`. The current
 **P3E-1 non-executing sandbox transport contract** fixes a dependency-free
 request/response plan while leaving the installable adapter unchanged and
 offline. P3E-2 adds a **sealed transport executor proof** that invokes only an
-in-memory test double once and never authorizes retry.
+in-memory test double once and never authorizes retry. P3E-3 adds a **bounded
+wire codec** for canonical synthetic form bytes and duplicate-key-rejecting
+JSON decoding, still without transport.
 
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
@@ -39,6 +41,11 @@ P3E-2 sequences that plan through one proof-only sealed double. It distinguishes
 definite provider refusal from indeterminate network, server, or unusable-
 response outcomes; suppresses transport exceptions; and always returns
 `retryAuthorized=false`. It still contains no HTTP or credential implementation.
+
+P3E-3 deterministically serializes the reviewed request form, bounds and hashes
+the exact bytes, parses synthetic UTF-8 JSON with strict depth/value/duplicate-
+key rules, and projects only the eleven reviewed Checkout fields. Provider
+error bodies are not interpreted, and unusable results remain indeterminate.
 
 ## Current contracts
 
@@ -64,6 +71,8 @@ response outcomes; suppresses transport exceptions; and always returns
   only bounded transport evidence and the already-decoded P3C-1 projection.
 - `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Sealed_Executor` invokes only the
   P3E-2 proof interface once and emits no transcript or secret-derived fact.
+- `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Wire_Codec` converts only between
+  reviewed plans, synthetic bytes, and closed P3E-2 transcripts.
 
 The pure normalization and record-planning contracts read no request global,
 secret, database, RED-CMS core, Store Lite runtime code, or network. The typed
@@ -119,4 +128,6 @@ and
 [`docs/P3E-1-NON-EXECUTING-SANDBOX-TRANSPORT-CONTRACT.md`](docs/P3E-1-NON-EXECUTING-SANDBOX-TRANSPORT-CONTRACT.md)
 and
 [`docs/P3E-2-SEALED-TRANSPORT-EXECUTOR.md`](docs/P3E-2-SEALED-TRANSPORT-EXECUTOR.md)
+and
+[`docs/P3E-3-BOUNDED-WIRE-CODEC.md`](docs/P3E-3-BOUNDED-WIRE-CODEC.md)
 for the complete boundaries and later-gate exclusions.
