@@ -45,3 +45,8 @@ This closes only non-contact readiness and authorization-envelope preparation.
 It does not authenticate an owner, consume a nonce, authorize provider contact,
 or permit a real/test Stripe credential, Checkout Session, payment, webhook,
 Store Lite mutation, client activation, or live mode.
+
+The readiness identity is the exact installable package id
+`redcms.store-lite-stripe-checkout`. A post-merge punctuation correction
+replaced the impossible `redcms.store-lite.stripe-checkout` spelling without
+changing package `0.1.1`, the plan shape, or any execution boundary.

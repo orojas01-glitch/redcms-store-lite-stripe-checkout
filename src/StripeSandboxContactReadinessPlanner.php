@@ -84,7 +84,7 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Contact_Readiness_Planner
             'runtimeProviderTransport',
         ])
             && ($evidence['packageId'] ?? null)
-                === 'redcms.store-lite.stripe-checkout'
+                === 'redcms.store-lite-stripe-checkout'
             && ($evidence['packageVersion'] ?? null) === '0.1.1'
             && self::sha256($evidence['packageArtifactSha256'] ?? null)
             && ($evidence['runtimeProviderTransport'] ?? null)

@@ -22,7 +22,7 @@ value-free fields without accepting a key value or key hash.
 
 The planner requires exact evidence for:
 
-- package `redcms.store-lite.stripe-checkout` version `0.1.1`, a bounded
+- package `redcms.store-lite-stripe-checkout` version `0.1.1`, a bounded
   package-artifact SHA-256, and runtime provider transport still `disabled`;
 - setting `stripe.secret-key` classified externally as `restricted_test`;
 - process-environment delivery with availability true but both value and value
