@@ -14,7 +14,8 @@ process-local values. Core P3D-6 added the reusable typed invocation boundary.
 P3D-7 adopted that boundary in external adapter version `0.1.1`. The current
 **P3E-1 non-executing sandbox transport contract** fixes a dependency-free
 request/response plan while leaving the installable adapter unchanged and
-offline.
+offline. P3E-2 adds a **sealed transport executor proof** that invokes only an
+in-memory test double once and never authorizes retry.
 
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
@@ -33,6 +34,11 @@ idempotency, TLS verification, no redirects, hard time/size bounds, and no
 credential value. The second validates only bounded HTTP/TLS/body evidence,
 then reuses the closed non-live Checkout Session normalizer. It does not open a
 connection or change the runtime handler.
+
+P3E-2 sequences that plan through one proof-only sealed double. It distinguishes
+definite provider refusal from indeterminate network, server, or unusable-
+response outcomes; suppresses transport exceptions; and always returns
+`retryAuthorized=false`. It still contains no HTTP or credential implementation.
 
 ## Current contracts
 
@@ -56,6 +62,8 @@ connection or change the runtime handler.
   a deterministic non-executable sandbox request plan from exact order facts.
 - `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Transport_Response_Gate` accepts
   only bounded transport evidence and the already-decoded P3C-1 projection.
+- `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Sealed_Executor` invokes only the
+  P3E-2 proof interface once and emits no transcript or secret-derived fact.
 
 The pure normalization and record-planning contracts read no request global,
 secret, database, RED-CMS core, Store Lite runtime code, or network. The typed
@@ -109,4 +117,6 @@ and
 [`docs/P3D-7-TYPED-OFFLINE-ADAPTER-INVOCATION.md`](docs/P3D-7-TYPED-OFFLINE-ADAPTER-INVOCATION.md)
 and
 [`docs/P3E-1-NON-EXECUTING-SANDBOX-TRANSPORT-CONTRACT.md`](docs/P3E-1-NON-EXECUTING-SANDBOX-TRANSPORT-CONTRACT.md)
+and
+[`docs/P3E-2-SEALED-TRANSPORT-EXECUTOR.md`](docs/P3E-2-SEALED-TRANSPORT-EXECUTOR.md)
 for the complete boundaries and later-gate exclusions.
