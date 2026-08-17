@@ -11,8 +11,10 @@ evidence. P3D-3 proved the exact adapter state and bounded audit fact commit
 together or both roll back. P3D-4 added exact value-free request-local
 ownership. P3D-5 then proved the full production bootstrap with two disposable
 process-local values. Core P3D-6 added the reusable typed invocation boundary.
-The current **P3D-7 typed offline adapter invocation** gate adopts that
-boundary in external adapter version `0.1.1`.
+P3D-7 adopted that boundary in external adapter version `0.1.1`. The current
+**P3E-1 non-executing sandbox transport contract** fixes a dependency-free
+request/response plan while leaving the installable adapter unchanged and
+offline.
 
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
@@ -23,6 +25,14 @@ caller input also fail closed. The provider-event route remains non-
 operational. No HTTP client, SDK, provider request, Checkout Session, Store
 Lite service call, database write, order transition, browser return, client
 deployment, or payment is created.
+
+P3E-1 adds two pure source contracts outside the installable payload. One
+validates immutable server-derived checkout/line facts and returns a hashed
+sandbox request plan with a fixed HTTPS endpoint, pinned API-version input,
+idempotency, TLS verification, no redirects, hard time/size bounds, and no
+credential value. The second validates only bounded HTTP/TLS/body evidence,
+then reuses the closed non-live Checkout Session normalizer. It does not open a
+connection or change the runtime handler.
 
 ## Current contracts
 
@@ -42,6 +52,10 @@ deployment, or payment is created.
 - `RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter` accepts only a
   core-owned typed request for `contract.probe` with empty input. It privately
   checks both declared settings and always keeps provider transport disabled.
+- `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Transport_Planner` produces only
+  a deterministic non-executable sandbox request plan from exact order facts.
+- `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Transport_Response_Gate` accepts
+  only bounded transport evidence and the already-decoded P3C-1 projection.
 
 The pure normalization and record-planning contracts read no request global,
 secret, database, RED-CMS core, Store Lite runtime code, or network. The typed
@@ -93,4 +107,6 @@ and
 [`docs/P3D-5-SYNTHETIC-SECRET-REQUEST-BOOTSTRAP.md`](docs/P3D-5-SYNTHETIC-SECRET-REQUEST-BOOTSTRAP.md)
 and
 [`docs/P3D-7-TYPED-OFFLINE-ADAPTER-INVOCATION.md`](docs/P3D-7-TYPED-OFFLINE-ADAPTER-INVOCATION.md)
+and
+[`docs/P3E-1-NON-EXECUTING-SANDBOX-TRANSPORT-CONTRACT.md`](docs/P3E-1-NON-EXECUTING-SANDBOX-TRANSPORT-CONTRACT.md)
 for the complete boundaries and later-gate exclusions.
