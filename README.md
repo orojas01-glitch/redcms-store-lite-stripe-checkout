@@ -17,7 +17,10 @@ request/response plan while leaving the installable adapter unchanged and
 offline. P3E-2 adds a **sealed transport executor proof** that invokes only an
 in-memory test double once and never authorizes retry. P3E-3 adds a **bounded
 wire codec** for canonical synthetic form bytes and duplicate-key-rejecting
-JSON decoding, still without transport.
+JSON decoding, still without transport. P3E-4 adds a **one-use synthetic
+credential byte transport** that privately constructs and verifies HTTP Basic
+authorization, discards credential material, and returns only preloaded
+synthetic response bytes. It still opens no connection.
 
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
@@ -47,6 +50,14 @@ the exact bytes, parses synthetic UTF-8 JSON with strict depth/value/duplicate-
 key rules, and projects only the eleven reviewed Checkout fields. Provider
 error bodies are not interpreted, and unusable results remain indeterminate.
 
+P3E-4 connects those synthetic byte contracts through a final concrete
+one-attempt in-memory transport. Only an exact random `synthetic_p3e4_`
+fixture can enter it; Stripe test/live key prefixes are refused. The transport
+constructs `Basic base64(secret + ":")` privately, checks its precommitted
+SHA-256, clears the secret and commitment from object state before exchange,
+and returns only a preloaded synthetic wire response. No credential-derived
+fact reaches the adapter result, and retry remains unauthorized.
+
 ## Current contracts
 
 - `RED_CMS_Store_Lite_Stripe_Checkout_Response_Normalizer` validates a closed,
@@ -73,6 +84,12 @@ error bodies are not interpreted, and unusable results remain indeterminate.
   P3E-2 proof interface once and emits no transcript or secret-derived fact.
 - `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Wire_Codec` converts only between
   reviewed plans, synthetic bytes, and closed P3E-2 transcripts.
+- `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Synthetic_Byte_Transport` owns
+  one exact synthetic fixture, privately assembles HTTP Basic authorization,
+  discards credential state, and returns preloaded bytes once.
+- `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Synthetic_Transport_Adapter`
+  sequences P3E-3 bytes through that transport and the P3E-2 executor without
+  accepting or returning credential material.
 
 The pure normalization and record-planning contracts read no request global,
 secret, database, RED-CMS core, Store Lite runtime code, or network. The typed
@@ -130,4 +147,6 @@ and
 [`docs/P3E-2-SEALED-TRANSPORT-EXECUTOR.md`](docs/P3E-2-SEALED-TRANSPORT-EXECUTOR.md)
 and
 [`docs/P3E-3-BOUNDED-WIRE-CODEC.md`](docs/P3E-3-BOUNDED-WIRE-CODEC.md)
+and
+[`docs/P3E-4-SYNTHETIC-CREDENTIAL-TRANSPORT.md`](docs/P3E-4-SYNTHETIC-CREDENTIAL-TRANSPORT.md)
 for the complete boundaries and later-gate exclusions.
