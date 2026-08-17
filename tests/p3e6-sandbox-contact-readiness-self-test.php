@@ -27,7 +27,7 @@ function red_stripe_p3e6_assert(bool $condition, string $message): void
 function red_stripe_p3e6_package(): array
 {
     return [
-        'packageId' => 'redcms.store-lite.stripe-checkout',
+        'packageId' => 'redcms.store-lite-stripe-checkout',
         'packageVersion' => '0.1.1',
         'packageArtifactSha256' => str_repeat('a', 64),
         'runtimeProviderTransport' => 'disabled',
@@ -172,7 +172,7 @@ try {
         'plan fixes the read-only sandbox resource-miss probe'
     );
     red_stripe_p3e6_assert(
-        $plan['packageId'] === 'redcms.store-lite.stripe-checkout'
+        $plan['packageId'] === 'redcms.store-lite-stripe-checkout'
             && $plan['packageVersion'] === '0.1.1'
             && $plan['packageArtifactSha256'] === str_repeat('a', 64)
             && $plan['runtimeProviderTransport'] === 'disabled',
