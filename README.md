@@ -9,16 +9,20 @@ proved that exact package installs into `installed_disabled` on a fresh
 disposable database. P3D-2 added complete value-free atomic-enable readiness
 evidence. P3D-3 proved the exact adapter state and bounded audit fact commit
 together or both roll back. P3D-4 added exact value-free request-local
-ownership. The current **P3D-5 synthetic-secret request bootstrap** gate runs
-the full production bootstrap with two disposable process-local values.
+ownership. P3D-5 then proved the full production bootstrap with two disposable
+process-local values. Core P3D-6 added the reusable typed invocation boundary.
+The current **P3D-7 typed offline adapter invocation** gate adopts that
+boundary in external adapter version `0.1.1`.
 
-P3D-5 enables the adapter only inside its disposable database, injects two
-random synthetic values into that PHP process, resolves them into the private
-package-bound access object, then removes both environment entries and the
-database exactly. It does not invoke a handler or service, dispatch a route,
-access the network, contact Stripe, change Store Lite behavior, handle a
-browser return, deploy to a client, or create a payment. Both adapter handlers
-still explicitly refuse invocation until a later reviewed operational gate.
+P3D-7 enables the adapter only inside its disposable database, injects two
+random synthetic values into that PHP process, and invokes only the exact
+value-free `contract.probe` operation through the core typed boundary. The
+class-based handler resolves its own two settings privately and returns the
+fixed refusal `provider_transport_disabled`. Unsupported operations and any
+caller input also fail closed. The provider-event route remains non-
+operational. No HTTP client, SDK, provider request, Checkout Session, Store
+Lite service call, database write, order transition, browser return, client
+deployment, or payment is created.
 
 ## Current contracts
 
@@ -35,9 +39,15 @@ still explicitly refuse invocation until a later reviewed operational gate.
 - `RED_CMS_Store_Lite_Stripe_Event_Receipt_Record_Planner` revalidates an
   already-verified event projection and returns only the bounded immutable
   P3C-3 receipt. Raw bodies and signatures are never accepted or returned.
+- `RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter` accepts only a
+  core-owned typed request for `contract.probe` with empty input. It privately
+  checks both declared settings and always keeps provider transport disabled.
 
-No contract reads request globals, a secret, a database, RED-CMS core, Store
-Lite runtime code, or the network.
+The pure normalization and record-planning contracts read no request global,
+secret, database, RED-CMS core, Store Lite runtime code, or network. The typed
+offline handler depends only on the RED-CMS request/result types and its
+package-bound secret lookup; it returns no secret-derived fact and has no
+provider or business-data path.
 
 The installable payload under `package/` declares one adapter, one Store Lite
 dependency, one server-signature event route, two value-free secret-reference
@@ -61,6 +71,7 @@ tests/p3d2-enable-dry-run-rehearsal.sh
 tests/p3d3-atomic-enable-rollback-rehearsal.sh
 tests/p3d4-runtime-service-binding-rehearsal.sh
 tests/p3d5-synthetic-secret-bootstrap-rehearsal.sh
+tests/p3d7-typed-offline-adapter-invocation-rehearsal.sh
 ```
 
 See [`docs/P3C-1-FOUNDATION-CONTRACT.md`](docs/P3C-1-FOUNDATION-CONTRACT.md)
@@ -80,4 +91,6 @@ and
 [`docs/P3D-4-VALUE-FREE-RUNTIME-SERVICE-BINDING.md`](docs/P3D-4-VALUE-FREE-RUNTIME-SERVICE-BINDING.md)
 and
 [`docs/P3D-5-SYNTHETIC-SECRET-REQUEST-BOOTSTRAP.md`](docs/P3D-5-SYNTHETIC-SECRET-REQUEST-BOOTSTRAP.md)
+and
+[`docs/P3D-7-TYPED-OFFLINE-ADAPTER-INVOCATION.md`](docs/P3D-7-TYPED-OFFLINE-ADAPTER-INVOCATION.md)
 for the complete boundaries and later-gate exclusions.

@@ -10,7 +10,7 @@ if (PHP_SAPI !== 'cli') {
 $projectRoot = realpath((string) getenv('RED_STRIPE_REHEARSAL_PROJECT_ROOT'));
 $databaseName = (string) getenv('RED_DB_NAME');
 $rehearsalId = (string) getenv('RED_STRIPE_REHEARSAL_ID');
-if (!in_array($rehearsalId, ['p3d3', 'p3d4', 'p3d5'], true)) {
+if (!in_array($rehearsalId, ['p3d3', 'p3d4', 'p3d5', 'p3d7'], true)) {
     $rehearsalId = 'p3d3';
 }
 $rehearsalLabel = strtoupper($rehearsalId);
@@ -315,7 +315,7 @@ try {
     red_stripe_p3d3_assert(
         $enabled['status'] === 'enabled'
             && $enabled['packageId'] === $adapterPackageId
-            && $enabled['version'] === '0.1.0'
+            && $enabled['version'] === '0.1.1'
             && hash_equals(
                 $plan['planSha256'],
                 $enabled['planSha256']
@@ -354,7 +354,7 @@ try {
                    AND EventName='addon.enable.completed'"
             ) === [[
                 'addon.enable.completed',
-                '0.1.0',
+                '0.1.1',
                 'succeeded',
                 'payment_adapter_enabled',
                 '1',
@@ -408,7 +408,7 @@ try {
     echo json_encode(
         [
             'ok' => true,
-            'adapterVersion' => '0.1.0',
+            'adapterVersion' => '0.1.1',
             'database' => $databaseName,
             'enablementPlanSHA256' => $plan['planSha256'],
             'committedStateSHA256' => $committedFingerprint,

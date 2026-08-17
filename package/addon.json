@@ -4,7 +4,7 @@
   "id": "redcms.store-lite-stripe-checkout",
   "name": "RED-CMS Store Lite Stripe Checkout",
   "description": "Separately distributed Stripe Checkout adapter for RED-CMS Store Lite.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "adapter",
   "compatibility": {
     "cms": ">=5.1 <6.0",
@@ -87,11 +87,15 @@
     "files": [
       {
         "path": "addon.php",
-        "sha256": "ec120d1af0b20c1f2a47b97e3b1e8b696a28ddc8ab34c3c69981aec2cf43a9b3"
+        "sha256": "121667a1e771f1272cd14733fda7352a3227890518862eebc59b713ec75f2c2e"
+      },
+      {
+        "path": "StripeTypedOfflineCheckoutAdapter.php",
+        "sha256": "8418682d9fcad1a7e1a1624234d76fe948a1fbbd866c228954250306b694042b"
       },
       {
         "path": "identity.json",
-        "sha256": "63cf594e5de7fe9e983eb5d3ed37bc0e4428466c6054e8e3521182e830738d09"
+        "sha256": "c84660b6437b8926de3b32635b5083b47fa50070c38bc0a37813bbcd7e1a46e7"
       },
       {
         "path": "migrations/2026-08-16-create-checkout-attempts.sql",

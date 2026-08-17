@@ -136,7 +136,10 @@ try {
             && ($identity['repository'] ?? null) ===
                 'redcms-store-lite-stripe-checkout'
             && is_string($identity['status'] ?? null)
-            && preg_match('/\Ap3c[1-9]_[a-z0-9_]+\z/D', $identity['status'])
+            && preg_match(
+                '/\Ap3(?:c|d)[1-9]_[a-z0-9_]+\z/D',
+                $identity['status']
+            )
                 === 1,
         'package and repository identities remain exact across later gates'
     );
