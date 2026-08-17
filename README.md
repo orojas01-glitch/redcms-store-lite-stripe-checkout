@@ -20,7 +20,9 @@ wire codec** for canonical synthetic form bytes and duplicate-key-rejecting
 JSON decoding, still without transport. P3E-4 adds a **one-use synthetic
 credential byte transport** that privately constructs and verifies HTTP Basic
 authorization, discards credential material, and returns only preloaded
-synthetic response bytes. It still opens no connection.
+synthetic response bytes. P3E-5 adds the first executable transport proof: a
+**one-use loopback-only HTTPS transport** against a disposable TLS fixture.
+It cannot address Stripe or any non-loopback host.
 
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
@@ -58,6 +60,14 @@ SHA-256, clears the secret and commitment from object state before exchange,
 and returns only a preloaded synthetic wire response. No credential-derived
 fact reaches the adapter result, and retry remains unauthorized.
 
+P3E-5 replaces the preloaded response with one real cURL exchange to an exact
+`https://127.0.0.1:<ephemeral-port>` fixture. It pins HTTPS, TLS 1.2, peer and
+host verification, a fixture-only in-memory CA certificate, no proxy, no
+redirect, fixed time/size limits, a fresh connection, and no retry. The
+disposable server observes the exact canonical request and persists only
+method/path/header names plus authorization/body hashes. An untrusted
+certificate fails closed. The installable adapter still contains no transport.
+
 ## Current contracts
 
 - `RED_CMS_Store_Lite_Stripe_Checkout_Response_Normalizer` validates a closed,
@@ -90,6 +100,11 @@ fact reaches the adapter result, and retry remains unauthorized.
 - `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Synthetic_Transport_Adapter`
   sequences P3E-3 bytes through that transport and the P3E-2 executor without
   accepting or returning credential material.
+- `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Loopback_Https_Transport` makes
+  one TLS-verified cURL request only to numeric IPv4 loopback and returns the
+  bounded wire response.
+- `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Loopback_Https_Adapter` sequences
+  that response through the existing codec and sealed executor.
 
 The pure normalization and record-planning contracts read no request global,
 secret, database, RED-CMS core, Store Lite runtime code, or network. The typed
@@ -120,6 +135,7 @@ tests/p3d3-atomic-enable-rollback-rehearsal.sh
 tests/p3d4-runtime-service-binding-rehearsal.sh
 tests/p3d5-synthetic-secret-bootstrap-rehearsal.sh
 tests/p3d7-typed-offline-adapter-invocation-rehearsal.sh
+tests/p3e5-loopback-https-transport-rehearsal.sh
 ```
 
 See [`docs/P3C-1-FOUNDATION-CONTRACT.md`](docs/P3C-1-FOUNDATION-CONTRACT.md)
@@ -149,4 +165,6 @@ and
 [`docs/P3E-3-BOUNDED-WIRE-CODEC.md`](docs/P3E-3-BOUNDED-WIRE-CODEC.md)
 and
 [`docs/P3E-4-SYNTHETIC-CREDENTIAL-TRANSPORT.md`](docs/P3E-4-SYNTHETIC-CREDENTIAL-TRANSPORT.md)
+and
+[`docs/P3E-5-LOOPBACK-HTTPS-TRANSPORT.md`](docs/P3E-5-LOOPBACK-HTTPS-TRANSPORT.md)
 for the complete boundaries and later-gate exclusions.
