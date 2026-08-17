@@ -24,7 +24,10 @@ synthetic response bytes. P3E-5 adds the first executable transport proof: a
 **one-use loopback-only HTTPS transport** against a disposable TLS fixture.
 It cannot address Stripe or any non-loopback host. P3E-6 adds a
 **non-contact sandbox readiness and authorization-envelope contract**. It
-contains no transport and never marks contact authorized.
+contains no transport and never marks contact authorized. P3E-8B1 now adds a
+**provider-capable but unconnected read-only transport source** plus a pure
+bounded-outcome gate. Neither is part of the installable package or called by
+any runtime, test, core, route, or client path.
 
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
@@ -78,6 +81,15 @@ owner-authority revalidation and atomic nonce consumption, while
 `contactAuthorized`, mutation, Checkout creation, payment, retry, live mode,
 and client deployment all remain false.
 
+P3E-8B1 implements only the source-level mechanics for that exact probe. The
+transport fixes one GET target, restricted-test credential shape, private HTTP
+Basic handling, verified HTTPS with TLS 1.2 minimum, no proxy or redirects,
+one use, and hard time/header/body bounds. It discards response headers and
+body and returns only bounded status/enforcement evidence. The pure outcome
+gate classifies synthetic evidence without contacting Stripe. The installable
+adapter remains byte-identical `0.1.1`, offline, and unable to load either
+class.
+
 ## Current contracts
 
 - `RED_CMS_Store_Lite_Stripe_Checkout_Response_Normalizer` validates a closed,
@@ -120,6 +132,11 @@ and client deployment all remain false.
 - `RED_CMS_Store_Lite_Stripe_Sandbox_Contact_Authorization_Gate` prepares one
   hash-bound 15-minute envelope but cannot authenticate an owner, consume a
   nonce, authorize contact, or execute it.
+- `RED_CMS_Store_Lite_Stripe_Sandbox_Read_Only_Probe_Transport` is an
+  unconnected one-use primitive for only the exact P3E-6 read-only target. It
+  has no credential resolver and is never called in P3E-8B1.
+- `RED_CMS_Store_Lite_Stripe_Sandbox_Read_Only_Probe_Outcome_Gate` purely
+  projects exact synthetic transport evidence to a closed status-only outcome.
 
 The pure normalization and record-planning contracts read no request global,
 secret, database, RED-CMS core, Store Lite runtime code, or network. The typed
@@ -184,4 +201,6 @@ and
 [`docs/P3E-5-LOOPBACK-HTTPS-TRANSPORT.md`](docs/P3E-5-LOOPBACK-HTTPS-TRANSPORT.md)
 and
 [`docs/P3E-6-SANDBOX-CONTACT-READINESS.md`](docs/P3E-6-SANDBOX-CONTACT-READINESS.md)
+and
+[`docs/P3E-8B1-PROVIDER-TRANSPORT-CONTRACT.md`](docs/P3E-8B1-PROVIDER-TRANSPORT-CONTRACT.md)
 for the complete boundaries and later-gate exclusions.
