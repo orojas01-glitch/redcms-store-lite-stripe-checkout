@@ -22,7 +22,9 @@ credential byte transport** that privately constructs and verifies HTTP Basic
 authorization, discards credential material, and returns only preloaded
 synthetic response bytes. P3E-5 adds the first executable transport proof: a
 **one-use loopback-only HTTPS transport** against a disposable TLS fixture.
-It cannot address Stripe or any non-loopback host.
+It cannot address Stripe or any non-loopback host. P3E-6 adds a
+**non-contact sandbox readiness and authorization-envelope contract**. It
+contains no transport and never marks contact authorized.
 
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
@@ -68,6 +70,14 @@ disposable server observes the exact canonical request and persists only
 method/path/header names plus authorization/body hashes. An untrusted
 certificate fails closed. The installable adapter still contains no transport.
 
+P3E-6 fixes a future read-only resource-miss probe, restricted sandbox-key
+readiness facts, package identity, TLS bounds, and a one-attempt operator
+confirmation window. It emits only deterministic hashes and value-free plans.
+The prepared envelope is not a cryptographic signature: it requires later
+owner-authority revalidation and atomic nonce consumption, while
+`contactAuthorized`, mutation, Checkout creation, payment, retry, live mode,
+and client deployment all remain false.
+
 ## Current contracts
 
 - `RED_CMS_Store_Lite_Stripe_Checkout_Response_Normalizer` validates a closed,
@@ -105,6 +115,11 @@ certificate fails closed. The installable adapter still contains no transport.
   bounded wire response.
 - `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Loopback_Https_Adapter` sequences
   that response through the existing codec and sealed executor.
+- `RED_CMS_Store_Lite_Stripe_Sandbox_Contact_Readiness_Planner` validates only
+  closed, non-secret package, credential, and future-network evidence.
+- `RED_CMS_Store_Lite_Stripe_Sandbox_Contact_Authorization_Gate` prepares one
+  hash-bound 15-minute envelope but cannot authenticate an owner, consume a
+  nonce, authorize contact, or execute it.
 
 The pure normalization and record-planning contracts read no request global,
 secret, database, RED-CMS core, Store Lite runtime code, or network. The typed
@@ -167,4 +182,6 @@ and
 [`docs/P3E-4-SYNTHETIC-CREDENTIAL-TRANSPORT.md`](docs/P3E-4-SYNTHETIC-CREDENTIAL-TRANSPORT.md)
 and
 [`docs/P3E-5-LOOPBACK-HTTPS-TRANSPORT.md`](docs/P3E-5-LOOPBACK-HTTPS-TRANSPORT.md)
+and
+[`docs/P3E-6-SANDBOX-CONTACT-READINESS.md`](docs/P3E-6-SANDBOX-CONTACT-READINESS.md)
 for the complete boundaries and later-gate exclusions.
