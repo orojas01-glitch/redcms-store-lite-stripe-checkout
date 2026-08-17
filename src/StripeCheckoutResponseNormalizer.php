@@ -47,7 +47,7 @@ final class RED_CMS_Store_Lite_Stripe_Checkout_Response_Normalizer
             || ($response['object'] ?? null) !== 'checkout.session'
             || !is_string($response['url'] ?? null)
             || strlen($response['url']) < 1
-            || strlen($response['url']) > 2048
+            || strlen($response['url']) > 4096
             || ($response['mode'] ?? null) !== 'payment'
             || ($response['status'] ?? null) !== 'open'
             || ($response['payment_status'] ?? null) !== 'unpaid'
@@ -146,6 +146,9 @@ final class RED_CMS_Store_Lite_Stripe_Checkout_Response_Normalizer
 
     private static function checkoutUrl(string $value, string $sessionId): bool
     {
+        if (preg_match('/[\x00-\x1F\x7F]/', $value) === 1) {
+            return false;
+        }
         $url = parse_url($value);
         return is_array($url)
             && ($url['scheme'] ?? null) === 'https'
@@ -154,8 +157,17 @@ final class RED_CMS_Store_Lite_Stripe_Checkout_Response_Normalizer
             && !array_key_exists('pass', $url)
             && !array_key_exists('port', $url)
             && !array_key_exists('query', $url)
-            && !array_key_exists('fragment', $url)
-            && ($url['path'] ?? null) === '/c/pay/' . $sessionId;
+            && ($url['path'] ?? null) === '/c/pay/' . $sessionId
+            && self::checkoutFragment($url['fragment'] ?? null);
+    }
+
+    private static function checkoutFragment(mixed $value): bool
+    {
+        return $value === null
+            || (is_string($value)
+                && strlen($value) >= 1
+                && strlen($value) <= 2048
+                && preg_match('/[\x00-\x1F\x7F]/', $value) !== 1);
     }
 
     private static function invalid(string $error): array
