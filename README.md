@@ -26,8 +26,11 @@ It cannot address Stripe or any non-loopback host. P3E-6 adds a
 **non-contact sandbox readiness and authorization-envelope contract**. It
 contains no transport and never marks contact authorized. P3E-8B1 now adds a
 **provider-capable but unconnected read-only transport source** plus a pure
-bounded-outcome gate. Neither is part of the installable package or called by
-any runtime, test, core, route, or client path.
+bounded-outcome gate. P3E-8B3A now advances the installable adapter to `0.1.2`
+and inventories byte-identical copies of both reviewed classes. The typed
+handler remains refusal-only and cannot construct either class, so discovery,
+installation, enablement, registration, and `contract.probe` remain
+non-contact operations.
 
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
@@ -86,9 +89,10 @@ transport fixes one GET target, restricted-test credential shape, private HTTP
 Basic handling, verified HTTPS with TLS 1.2 minimum, no proxy or redirects,
 one use, and hard time/header/body bounds. It discards response headers and
 body and returns only bounded status/enforcement evidence. The pure outcome
-gate classifies synthetic evidence without contacting Stripe. The installable
-adapter remains byte-identical `0.1.1`, offline, and unable to load either
-class.
+gate classifies synthetic evidence without contacting Stripe. P3E-8B3A copies
+both classes into the `0.1.2` package integrity inventory but does not connect
+them to the typed handler. The historical P3E-6 plan remains bound to `0.1.1`
+with transport disabled, and current core refuses `0.1.2` for contact.
 
 ## Current contracts
 
@@ -203,4 +207,6 @@ and
 [`docs/P3E-6-SANDBOX-CONTACT-READINESS.md`](docs/P3E-6-SANDBOX-CONTACT-READINESS.md)
 and
 [`docs/P3E-8B1-PROVIDER-TRANSPORT-CONTRACT.md`](docs/P3E-8B1-PROVIDER-TRANSPORT-CONTRACT.md)
+and
+[`docs/P3E-8B3A-PACKAGE-ADOPTION.md`](docs/P3E-8B3A-PACKAGE-ADOPTION.md)
 for the complete boundaries and later-gate exclusions.

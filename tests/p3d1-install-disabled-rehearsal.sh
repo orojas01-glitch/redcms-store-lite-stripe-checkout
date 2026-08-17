@@ -235,8 +235,8 @@ store_version="$("$RED_PHP_BIN_RESOLVED" -r '
     $manifest = json_decode(file_get_contents($argv[1]), true, 512, JSON_THROW_ON_ERROR);
     echo $manifest["version"] ?? "";
 ' "$STORE_LITE_REPOSITORY/package/addon.json")"
-if [[ "$adapter_version" != '0.1.1' || "$store_version" != '0.1.35' ]]; then
-    printf '%s requires adapter 0.1.1 and Store Lite 0.1.35; found %s and %s.\n' \
+if [[ "$adapter_version" != '0.1.2' || "$store_version" != '0.1.35' ]]; then
+    printf '%s requires adapter 0.1.2 and Store Lite 0.1.35; found %s and %s.\n' \
         "$REHEARSAL_LABEL" "$adapter_version" "$store_version" >&2
     exit 65
 fi

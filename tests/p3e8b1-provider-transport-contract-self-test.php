@@ -123,9 +123,19 @@ try {
         'transport and outcome contracts cannot be extended'
     );
     red_stripe_p3e8b1_assert(
-        !str_contains($packageSource, 'Read_Only_Probe_Transport')
-            && !str_contains($packageSource, 'Read_Only_Probe_Outcome_Gate'),
-        'installable package does not load or reference provider-contact source'
+        str_contains($packageSource, 'Read_Only_Probe_Transport')
+            && str_contains($packageSource, 'Read_Only_Probe_Outcome_Gate')
+            && hash_file(
+                'sha256',
+                $projectDirectory
+                    . '/package/StripeSandboxReadOnlyProbeTransport.php'
+            ) === hash_file('sha256', $transportPath)
+            && hash_file(
+                'sha256',
+                $projectDirectory
+                    . '/package/StripeSandboxReadOnlyProbeOutcomeGate.php'
+            ) === hash_file('sha256', $outcomePath),
+        '0.1.2 adopts byte-identical reviewed transport and outcome source'
     );
     foreach ([
         'getenv(', 'putenv(', '$_ENV', '$_SERVER', '$_POST', '$_GET',
@@ -330,12 +340,16 @@ try {
     $packageHashes = [
         'StripeTypedOfflineCheckoutAdapter.php' =>
             '8418682d9fcad1a7e1a1624234d76fe948a1fbbd866c228954250306b694042b',
+        'StripeSandboxReadOnlyProbeTransport.php' =>
+            '1496d748c9ca2c714fd8000a96e8feb3f39235f0242a93903d59f90678d72ccb',
+        'StripeSandboxReadOnlyProbeOutcomeGate.php' =>
+            'be9183b47ee2a1c6f90289279f6dcf902786c640609fd8553e830f1d8adac58e',
         'addon.json' =>
-            '7e0c49b43db10ac3ae475d6b94157f5bd4cc5fe34fad9248f5c13ef4bcb07e46',
+            'e2f08e72317508d1dc89e1b640aa50326a37b1755d9f8ee65c8bffd576ead64a',
         'addon.php' =>
-            '121667a1e771f1272cd14733fda7352a3227890518862eebc59b713ec75f2c2e',
+            'b472d435761958c0669422d100d2c13da2a47d94d74ea6c77cf430cba7016ced',
         'identity.json' =>
-            'c84660b6437b8926de3b32635b5083b47fa50070c38bc0a37813bbcd7e1a46e7',
+            'fde1431d23459a3bba5b864bcc626d8d92aebe4b336e76b78dbaa569ffdbb78e',
         'migrations/2026-08-16-create-checkout-attempts.sql' =>
             'f58ae3b56d5b96d80f2757162e41e0fa4540f5e652934b9708e3884be633c2fa',
         'migrations/2026-08-16-create-event-receipts.sql' =>
@@ -347,7 +361,7 @@ try {
                 'sha256',
                 $projectDirectory . '/package/' . $relativePath
             ) === $expectedSha256,
-            'installable package file remains byte-identical: '
+            'installable 0.1.2 package file matches reviewed SHA-256: '
                 . $relativePath
         );
     }

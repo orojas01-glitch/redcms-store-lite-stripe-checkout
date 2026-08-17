@@ -315,7 +315,7 @@ try {
     red_stripe_p3d3_assert(
         $enabled['status'] === 'enabled'
             && $enabled['packageId'] === $adapterPackageId
-            && $enabled['version'] === '0.1.1'
+            && $enabled['version'] === '0.1.2'
             && hash_equals(
                 $plan['planSha256'],
                 $enabled['planSha256']
@@ -354,7 +354,7 @@ try {
                    AND EventName='addon.enable.completed'"
             ) === [[
                 'addon.enable.completed',
-                '0.1.1',
+                '0.1.2',
                 'succeeded',
                 'payment_adapter_enabled',
                 '1',
@@ -408,7 +408,7 @@ try {
     echo json_encode(
         [
             'ok' => true,
-            'adapterVersion' => '0.1.1',
+            'adapterVersion' => '0.1.2',
             'database' => $databaseName,
             'enablementPlanSHA256' => $plan['planSha256'],
             'committedStateSHA256' => $committedFingerprint,
