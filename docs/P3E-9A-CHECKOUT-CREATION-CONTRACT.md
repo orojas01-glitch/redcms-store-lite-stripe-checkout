@@ -1,7 +1,7 @@
 # P3E-9A Non-Executing Checkout-Creation Contract
 
-Status: complete as a dependency-free, source-only contract. It does not alter
-the installable adapter `0.1.4` payload or integrity inventory.
+Status: complete as a dependency-free, source-only contract. At this gate it
+did not alter the installable adapter `0.1.4` payload or integrity inventory.
 
 ## Boundary
 
@@ -80,3 +80,8 @@ P3E-9A adds no:
 P3E-9B remains the next gate. It may separately adopt this source into a new
 synthetic-only package/core operation after exact package identity, version,
 integrity, and cross-profile refusal are reviewed.
+
+P3E-9B1 later completed the external package half in adapter `0.1.5` through
+byte-identical source adoption and one separately named synthetic-only
+operation. That later package change does not alter the P3E-9A proof or
+authorize core execution, provider transport, or Checkout creation.

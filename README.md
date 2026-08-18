@@ -31,7 +31,11 @@ and inventories byte-identical copies of both reviewed classes. P3E-8B3B now
 advances the package to `0.1.3` and adds one synthetic-only typed operation.
 P3E-8B3C1 now advances the package to `0.1.4` and adds the exact latent
 read-only sandbox operation. Its source is integrity-checked but remains
-uninvoked, and current core rejects the new provider-read-only profile.
+uninvoked at that adapter gate. Core later adopted the profile and completed
+one separately authorized read-only Sandbox request. P3E-9A then added the
+source-only Checkout-creation contract, and P3E-9B1 now advances the package to
+`0.1.5` with one synthetic-only Checkout operation. Core does not yet invoke
+that new operation.
 
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
@@ -125,9 +129,19 @@ requires a new mutation-aware restricted-write profile that cannot reuse the
 completed read-only evidence. The synthetic result discards the Checkout URL
 and keeps authorization, network, provider contact/mutation, Checkout
 creation, payment, webhook, browser, order mutation, retry, demo/client state,
-and deployment false. Adapter `0.1.4` and every file under `package/` remain
-unchanged. See
+and deployment false. At that gate, adapter `0.1.4` and every file under
+`package/` remained unchanged. See
 [`docs/P3E-9A-CHECKOUT-CREATION-CONTRACT.md`](docs/P3E-9A-CHECKOUT-CREATION-CONTRACT.md).
+
+P3E-9B1 now advances the installable adapter to `0.1.5`. The package adopts
+byte-identical copies of the five reviewed P3E-9A dependencies and adds only
+`checkout.create-sandbox-synthetic`, a one-use in-memory operation requiring
+access scoped to `stripe.secret-key` with the webhook secret withheld. It
+recomputes the exact contract before secret access, returns no Checkout URL or
+credential, and keeps network, provider contact/mutation, Checkout creation,
+payment, webhook, browser, order mutation, retry, and client deployment false.
+The real Checkout operation remains unsupported. See
+[`docs/P3E-9B1-SYNTHETIC-CHECKOUT-PACKAGE.md`](docs/P3E-9B1-SYNTHETIC-CHECKOUT-PACKAGE.md).
 
 ## Current contracts
 
@@ -185,6 +199,9 @@ unchanged. See
   non-executable mutation-aware request contract and validates only a bounded
   synthetic open/unpaid Session projection with exact expiry and no retained
   Checkout URL.
+- `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Creation_Synthetic_Executor`
+  repeats the exact adopted contract once and validates fixed in-memory
+  Session facts without transport, provider state, or business mutation.
 
 The pure normalization and record-planning contracts read no request global,
 secret, database, RED-CMS core, Store Lite runtime code, or network. The typed
@@ -259,4 +276,6 @@ and
 [`docs/P3E-8B3C1-PROVIDER-OPERATION.md`](docs/P3E-8B3C1-PROVIDER-OPERATION.md)
 and
 [`docs/P3E-9A-CHECKOUT-CREATION-CONTRACT.md`](docs/P3E-9A-CHECKOUT-CREATION-CONTRACT.md)
+and
+[`docs/P3E-9B1-SYNTHETIC-CHECKOUT-PACKAGE.md`](docs/P3E-9B1-SYNTHETIC-CHECKOUT-PACKAGE.md)
 for the complete boundaries and later-gate exclusions.

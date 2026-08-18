@@ -205,11 +205,19 @@ try {
         'fixture loads only itself and five dependency-free source contracts'
     );
     red_stripe_p3e9a_assert(
-        !is_file(
-            $projectDirectory
-                . '/package/StripeSandboxCheckoutCreationContract.php'
+        hash_equals(
+            hash_file(
+                'sha256',
+                $projectDirectory
+                    . '/src/StripeSandboxCheckoutCreationContract.php'
+            ),
+            hash_file(
+                'sha256',
+                $projectDirectory
+                    . '/package/StripeSandboxCheckoutCreationContract.php'
+            )
         ),
-        'P3E-9A adds no installable package payload'
+        'later package adoption keeps the P3E-9A source byte-identical'
     );
     $manifest = json_decode(
         (string) file_get_contents($projectDirectory . '/package/addon.json'),
@@ -218,9 +226,9 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e9a_assert(
-        ($manifest['version'] ?? null) === '0.1.4'
-            && count($manifest['integrity']['files'] ?? []) === 8,
-        'installable adapter identity and integrity inventory remain unchanged'
+        ($manifest['version'] ?? null) === '0.1.5'
+            && count($manifest['integrity']['files'] ?? []) === 14,
+        'later P3E-9B package adoption is exact and integrity checked'
     );
 
     $checkout = red_stripe_p3e9a_checkout();

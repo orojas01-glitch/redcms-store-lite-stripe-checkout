@@ -35,6 +35,11 @@ final class RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter
         ) {
             return self::providerProbe($request);
         }
+        if ($request->operation()
+            === 'checkout.create-sandbox-synthetic'
+        ) {
+            return self::syntheticCheckout($request);
+        }
         return RED_Addon_Adapter_Result::failure('unsupported_operation');
     }
 
@@ -226,6 +231,86 @@ final class RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter
             'executionPerformed' => true,
             'errors' => [],
         ]);
+    }
+
+    private static function syntheticCheckout(
+        RED_Addon_Adapter_Request $request
+    ): RED_Addon_Adapter_Result {
+        $input = $request->input();
+        if (!self::syntheticCheckoutInput($input)) {
+            return RED_Addon_Adapter_Result::failure(
+                'synthetic_checkout_input_refused'
+            );
+        }
+
+        $apiValue = null;
+        $apiResolution = $request->secret('stripe.secret-key', $apiValue);
+        $webhookValue = null;
+        $webhookResolution = $request->secret(
+            'stripe.webhook-secret',
+            $webhookValue
+        );
+        if (($apiResolution['resolved'] ?? false) !== true
+            || !is_string($apiValue)
+            || $apiValue === ''
+            || ($webhookResolution['resolved'] ?? false) !== false
+            || $webhookValue !== null
+        ) {
+            $apiValue = null;
+            return RED_Addon_Adapter_Result::failure(
+                'synthetic_checkout_secret_refused'
+            );
+        }
+
+        try {
+            $executor =
+                new RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Creation_Synthetic_Executor();
+            $outcome = $executor->execute(
+                $input['checkout'],
+                $input['policy'],
+                $input['profile'],
+                $input['contractSha256'],
+                $apiValue
+            );
+        } catch (Throwable $throwable) {
+            $apiValue = null;
+            return RED_Addon_Adapter_Result::failure(
+                'synthetic_checkout_failed'
+            );
+        }
+        $apiValue = null;
+        return RED_Addon_Adapter_Result::success($outcome);
+    }
+
+    private static function syntheticCheckoutInput(array $input): bool
+    {
+        $keys = array_keys($input);
+        $expected = [
+            'checkout', 'contactTarget', 'contractSha256', 'policy', 'profile',
+        ];
+        sort($keys, SORT_STRING);
+        sort($expected, SORT_STRING);
+        if ($keys !== $expected
+            || ($input['contactTarget'] ?? null)
+                !== 'synthetic-checkout-package'
+            || !is_array($input['checkout'] ?? null)
+            || !is_array($input['policy'] ?? null)
+            || !is_array($input['profile'] ?? null)
+            || !self::sha256($input['contractSha256'] ?? null)
+        ) {
+            return false;
+        }
+        $prepared =
+            RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Creation_Contract::prepare(
+                $input['checkout'],
+                $input['policy'],
+                $input['profile']
+            );
+        return ($prepared['valid'] ?? null) === true
+            && hash_equals(
+                $input['contractSha256'],
+                (string) ($prepared['contractSha256'] ?? '')
+            );
     }
 
     private static function providerInput(array $input): bool
