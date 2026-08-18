@@ -3,12 +3,15 @@
 declare(strict_types=1);
 
 /**
- * P3D-7 typed offline package entrypoint.
+ * P3E-8B3A typed package entrypoint.
  *
  * RED-CMS may integrity-check and execute this registrar only to validate the
- * exact declared registration shape. The adapter supports only the typed
- * value-free contract probe; the provider-event route remains unavailable.
+ * exact declared registration shape. Loading and registering the package
+ * performs no secret resolution or network request. The provider-event route
+ * remains unavailable.
  */
+require_once __DIR__ . '/StripeSandboxReadOnlyProbeTransport.php';
+require_once __DIR__ . '/StripeSandboxReadOnlyProbeOutcomeGate.php';
 require_once __DIR__ . '/StripeTypedOfflineCheckoutAdapter.php';
 
 return static function ($registry): void {

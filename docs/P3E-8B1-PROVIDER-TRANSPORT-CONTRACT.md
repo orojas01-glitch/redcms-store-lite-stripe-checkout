@@ -71,16 +71,23 @@ last possible boundary. It must first prove the complete orchestration against
 an isolated loopback double. Provider contact remains a separate explicit
 operator decision after that proof.
 
+P3E-8B3A later adopted byte-identical copies of these two reviewed classes
+into installable adapter `0.1.2` while keeping its typed handler refusal-only.
+That later inventory change does not alter the P3E-8B1 proof or authorize
+provider contact.
+
 ## Verification
 
 ```sh
 PHP_CLI=/path/to/php scripts/test.sh
 ```
 
-The focused fixture proves exact plan acceptance, plan-tamper refusal,
-credential-shape refusal, required cURL safety options, absence from the
-installable package, closed outcome classification, evidence bounds,
-deterministic hashes, and byte-identical package files.
+The focused regression proves exact plan acceptance, plan-tamper refusal,
+credential-shape refusal, required cURL safety options, closed outcome
+classification, evidence bounds, and deterministic hashes. At the original
+P3E-8B1 gate it also proved package absence; after P3E-8B3A it instead proves
+the two package copies are byte-identical to the reviewed source and the
+remaining `0.1.2` payload matches its reviewed hashes.
 
 ## Official references reviewed
 

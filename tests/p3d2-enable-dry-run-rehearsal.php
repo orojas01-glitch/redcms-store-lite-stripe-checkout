@@ -658,7 +658,7 @@ try {
     echo json_encode(
         [
             'ok' => true,
-            'adapterVersion' => '0.1.1',
+            'adapterVersion' => '0.1.2',
             'database' => $databaseName,
             'configurationSHA256' => $availability['configurationSha256'],
             'secretAvailabilitySHA256' => $availability['evidenceSha256'],

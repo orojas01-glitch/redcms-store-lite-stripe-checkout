@@ -94,7 +94,7 @@ try {
     red_stripe_p3c2_assert(
         is_string($identity['status'] ?? null)
             && preg_match(
-                '/\Ap3(?:c[2-9]|d[1-9])_[a-z0-9_]+\z/D',
+                '/\Ap3(?:c[2-9]|d[1-9]|e[1-9][a-z0-9]*)_[a-z0-9_]+\z/D',
                 $identity['status']
             ) === 1,
         'identity advances only through named P3C-2 and later gates'

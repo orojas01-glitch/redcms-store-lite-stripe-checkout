@@ -137,7 +137,7 @@ try {
                 'redcms-store-lite-stripe-checkout'
             && is_string($identity['status'] ?? null)
             && preg_match(
-                '/\Ap3(?:c|d)[1-9]_[a-z0-9_]+\z/D',
+                '/\Ap3(?:c[1-9]|d[1-9]|e[1-9][a-z0-9]*)_[a-z0-9_]+\z/D',
                 $identity['status']
             )
                 === 1,

@@ -165,7 +165,7 @@ try {
     );
     red_stripe_p3c4_assert(
         ($package['id'] ?? null) === $packageId
-            && ($package['manifest']['version'] ?? null) === '0.1.1'
+            && ($package['manifest']['version'] ?? null) === '0.1.2'
             && ($package['manifest']['type'] ?? null) === 'adapter',
         'manifest identity, version, and adapter type are exact'
     );
@@ -209,9 +209,9 @@ try {
         'secret settings declare references without values or defaults'
     );
     red_stripe_p3c4_assert(
-        count($manifest['integrity']['files']) === 5
+        count($manifest['integrity']['files']) === 7
             && $manifest['integrity']['entrypoint'] === 'addon.php',
-        'integrity inventory covers every package payload file exactly once'
+        'integrity inventory covers all seven package payload files exactly once'
     );
     foreach ($manifest['integrity']['files'] as $inventoryFile) {
         $path = $fixturePackage . '/' . $inventoryFile['path'];
@@ -319,7 +319,6 @@ try {
         $packageSource .= (string) file_get_contents($entry->getPathname());
     }
     foreach ([
-        'curl_',
         'file_get_contents(',
         'PDO',
         'mysqli',
@@ -335,6 +334,25 @@ try {
             $forbiddenToken . ' is absent from the installable package payload'
         );
     }
+    foreach ([
+        'CURLOPT_HTTPGET', 'CURLAUTH_BASIC', 'CURLOPT_USERPWD',
+        'CURLOPT_SSL_VERIFYPEER', 'CURLOPT_SSL_VERIFYHOST',
+        'CURLOPT_FOLLOWLOCATION', 'CURLOPT_CONNECTTIMEOUT_MS',
+        'CURLOPT_TIMEOUT_MS', 'CURLOPT_FRESH_CONNECT',
+        'CURLOPT_FORBID_REUSE',
+    ] as $requiredTransportToken) {
+        red_stripe_p3c4_assert(
+            str_contains($packageSource, $requiredTransportToken),
+            $requiredTransportToken
+                . ' is present in the adopted read-only transport source'
+        );
+    }
+    red_stripe_p3c4_assert(
+        !str_contains($packageSource, 'CURLOPT_POST')
+            && !str_contains($packageSource, 'CURLOPT_CUSTOMREQUEST')
+            && !str_contains($packageSource, 'CURLOPT_POSTFIELDS'),
+        'adopted package contains no mutation-capable request option'
+    );
     foreach ([
         'composer.json',
         'composer.lock',
