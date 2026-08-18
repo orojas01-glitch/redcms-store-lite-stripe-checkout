@@ -72,6 +72,6 @@ Independent verification returned:
 - sleep-prevention process: `0`; and
 - configured primary: unchanged at its prior 20-table state.
 
-The restricted sandbox key remains active only so revocation can be a separate
-explicit operator action after evidence review. It must not be reused for a
-second B3C3B request.
+After evidence review, the operator explicitly expired the restricted sandbox
+key. It no longer appears in the active restricted-key list and cannot be
+reused for a second B3C3B request.

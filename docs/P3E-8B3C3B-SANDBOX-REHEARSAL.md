@@ -95,5 +95,5 @@ primary table count remained unchanged.
 
 The separately authorized provider request completed exactly once with bounded
 `404 resource_miss_observed` evidence and no retry. Merge approval alone did
-not trigger it. The remaining explicit operator action is restricted-key
-revocation after evidence review.
+not trigger it. After evidence review, the operator explicitly expired the
+restricted key; it no longer appears in the active restricted-key list.
