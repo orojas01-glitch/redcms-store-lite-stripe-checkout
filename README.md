@@ -118,6 +118,17 @@ GET with bounded `404 resource_miss_observed` evidence, no retry, clean private
 archive checksums, an empty clipboard, and complete disposable cleanup. See
 [`docs/P3E-8B3C3B-EXECUTION-CLOSEOUT.md`](docs/P3E-8B3C3B-EXECUTION-CLOSEOUT.md).
 
+P3E-9A now adds the next pure non-executing Checkout-creation contract outside
+the installable package. It reuses the P3E-1 planner, P3E-3 canonical form
+codec, and P3E-1 response gate; fixes a 30-minute through 24-hour expiry; and
+requires a new mutation-aware restricted-write profile that cannot reuse the
+completed read-only evidence. The synthetic result discards the Checkout URL
+and keeps authorization, network, provider contact/mutation, Checkout
+creation, payment, webhook, browser, order mutation, retry, demo/client state,
+and deployment false. Adapter `0.1.4` and every file under `package/` remain
+unchanged. See
+[`docs/P3E-9A-CHECKOUT-CREATION-CONTRACT.md`](docs/P3E-9A-CHECKOUT-CREATION-CONTRACT.md).
+
 ## Current contracts
 
 - `RED_CMS_Store_Lite_Stripe_Checkout_Response_Normalizer` validates a closed,
@@ -170,6 +181,10 @@ archive checksums, an empty clipboard, and complete disposable cleanup. See
   has no credential resolver and is not called by B3C1 acceptance.
 - `RED_CMS_Store_Lite_Stripe_Sandbox_Read_Only_Probe_Outcome_Gate` purely
   projects exact synthetic transport evidence to a closed status-only outcome.
+- `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Creation_Contract` prepares one
+  non-executable mutation-aware request contract and validates only a bounded
+  synthetic open/unpaid Session projection with exact expiry and no retained
+  Checkout URL.
 
 The pure normalization and record-planning contracts read no request global,
 secret, database, RED-CMS core, Store Lite runtime code, or network. The typed
@@ -242,4 +257,6 @@ and
 [`docs/P3E-8B3B-SYNTHETIC-OPERATION.md`](docs/P3E-8B3B-SYNTHETIC-OPERATION.md)
 and
 [`docs/P3E-8B3C1-PROVIDER-OPERATION.md`](docs/P3E-8B3C1-PROVIDER-OPERATION.md)
+and
+[`docs/P3E-9A-CHECKOUT-CREATION-CONTRACT.md`](docs/P3E-9A-CHECKOUT-CREATION-CONTRACT.md)
 for the complete boundaries and later-gate exclusions.
