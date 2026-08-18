@@ -28,7 +28,8 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Contact_Readiness_Planner
             'packageVersion' => $packageEvidence['packageVersion'],
             'packageArtifactSha256' =>
                 $packageEvidence['packageArtifactSha256'],
-            'runtimeProviderTransport' => 'synthetic_only',
+            'runtimeProviderTransport' =>
+                $packageEvidence['runtimeProviderTransport'],
             'method' => 'GET',
             'url' => 'https://api.stripe.com/v1/checkout/sessions/'
                 . 'cs_test_redcms_readiness_probe',
@@ -77,6 +78,12 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Contact_Readiness_Planner
 
     private static function packageEvidence(array $evidence): bool
     {
+        $profileValid = (($evidence['packageVersion'] ?? null) === '0.1.3'
+                && ($evidence['runtimeProviderTransport'] ?? null)
+                    === 'synthetic_only')
+            || (($evidence['packageVersion'] ?? null) === '0.1.4'
+                && ($evidence['runtimeProviderTransport'] ?? null)
+                    === 'provider_read_only');
         return self::exactKeys($evidence, [
             'packageId',
             'packageVersion',
@@ -85,10 +92,8 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Contact_Readiness_Planner
         ])
             && ($evidence['packageId'] ?? null)
                 === 'redcms.store-lite-stripe-checkout'
-            && ($evidence['packageVersion'] ?? null) === '0.1.3'
-            && self::sha256($evidence['packageArtifactSha256'] ?? null)
-            && ($evidence['runtimeProviderTransport'] ?? null)
-                === 'synthetic_only';
+            && $profileValid
+            && self::sha256($evidence['packageArtifactSha256'] ?? null);
     }
 
     private static function credentialEvidence(array $evidence): bool

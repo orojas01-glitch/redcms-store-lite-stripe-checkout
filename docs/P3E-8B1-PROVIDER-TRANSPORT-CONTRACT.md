@@ -76,6 +76,10 @@ into installable adapter `0.1.2` while keeping its typed handler refusal-only.
 That later inventory change does not alter the P3E-8B1 proof or authorize
 provider contact.
 
+P3E-8B3C1 later rebinds the transport's accepted plan to exact adapter
+`0.1.4/provider_read_only` and adds a separately named typed handler branch.
+That gate inspects but never invokes the branch or transport.
+
 ## Verification
 
 ```sh

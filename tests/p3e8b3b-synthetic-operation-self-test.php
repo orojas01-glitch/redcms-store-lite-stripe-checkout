@@ -88,6 +88,25 @@ try {
     $handlerSource = (string) file_get_contents(
         $projectDirectory . '/package/StripeTypedOfflineCheckoutAdapter.php'
     );
+    $syntheticStart = strpos(
+        $handlerSource,
+        'private static function syntheticProbe'
+    );
+    $syntheticEnd = strpos(
+        $handlerSource,
+        'private static function syntheticInput'
+    );
+    if (!is_int($syntheticStart)
+        || !is_int($syntheticEnd)
+        || $syntheticEnd <= $syntheticStart
+    ) {
+        throw new RuntimeException('Synthetic handler source unavailable.');
+    }
+    $syntheticHandlerSource = substr(
+        $handlerSource,
+        $syntheticStart,
+        $syntheticEnd - $syntheticStart
+    );
     foreach ([
         'curl_', 'fsockopen(', 'stream_socket_client(', 'socket_',
         'getenv(', 'putenv(', '$_ENV', '$_SERVER', '$_POST', '$_GET',
@@ -95,7 +114,10 @@ try {
         'sleep(', 'usleep(', 'error_log(', 'print_r(', 'var_dump(',
     ] as $forbiddenToken) {
         red_stripe_p3e8b3b_assert(
-            !str_contains($executorSource . $handlerSource, $forbiddenToken),
+            !str_contains(
+                $executorSource . $syntheticHandlerSource,
+                $forbiddenToken
+            ),
             $forbiddenToken . ' is absent from synthetic operation source'
         );
     }
@@ -103,13 +125,16 @@ try {
         'sk_test_', 'sk_live_', 'rk_test_', 'rk_live_', 'whsec_',
     ] as $credentialLiteral) {
         red_stripe_p3e8b3b_assert(
-            !str_contains($executorSource . $handlerSource, $credentialLiteral),
+            !str_contains(
+                $executorSource . $syntheticHandlerSource,
+                $credentialLiteral
+            ),
             $credentialLiteral . ' literal is absent'
         );
     }
     red_stripe_p3e8b3b_assert(
         !str_contains(
-            $handlerSource,
+            $syntheticHandlerSource,
             'new RED_CMS_Store_Lite_Stripe_Sandbox_Read_Only_Probe_Transport'
         ) && !str_contains($executorSource, 'Read_Only_Probe_Transport'),
         'synthetic path cannot construct or reference provider transport'

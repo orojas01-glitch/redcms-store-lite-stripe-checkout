@@ -87,6 +87,11 @@ accepts only the historical `0.1.1` / `disabled` plan and is not called by the
 new handler. A matching core gate must still repeat Owner, claim, durable-start,
 scoped-secret, outcome, and no-retry enforcement.
 
+P3E-8B3C1 later adds a second exact planner profile for adapter `0.1.4` with
+`runtimeProviderTransport=provider_read_only`. Mismatched version/mode pairs
+remain refused. Planning stays value-free and non-executing; current core does
+not yet accept or execute the provider-read-only profile.
+
 ## Explicit stop
 
 P3E-6 adds no cURL, stream, socket, DNS, TLS handshake, HTTP client, credential

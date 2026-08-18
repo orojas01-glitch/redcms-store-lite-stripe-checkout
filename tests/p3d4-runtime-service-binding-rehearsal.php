@@ -187,7 +187,7 @@ try {
             && ($storeReport['status'] ?? '') === 'enabled_current'
             && ($adapterReport['status'] ?? '') === 'enabled_current'
             && ($storePackage['manifest']['version'] ?? '') === '0.1.35'
-            && ($adapterPackage['manifest']['version'] ?? '') === '0.1.3',
+            && ($adapterPackage['manifest']['version'] ?? '') === '0.1.4',
         'both exact package identities are enabled and registry-current'
     );
 
@@ -359,7 +359,7 @@ try {
     echo json_encode(
         [
             'ok' => true,
-            'adapterVersion' => '0.1.3',
+            'adapterVersion' => '0.1.4',
             'storeLiteVersion' => '0.1.35',
             'database' => $databaseName,
             'runtimeSnapshotSHA256' => $snapshotSha256,

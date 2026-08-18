@@ -178,8 +178,8 @@ try {
                 $adapterPackage
             )['status'] ?? '') === 'enabled_current'
             && ($storePackage['manifest']['version'] ?? '') === '0.1.35'
-            && ($adapterPackage['manifest']['version'] ?? '') === '0.1.3',
-        'Store Lite and adapter 0.1.3 are enabled and registry-current'
+            && ($adapterPackage['manifest']['version'] ?? '') === '0.1.4',
+        'Store Lite and adapter 0.1.4 are enabled and registry-current'
     );
     red_stripe_p3d7_assert(
         getenv('RED_ADDON_SECRET_REFERENCES') === false
@@ -361,7 +361,7 @@ try {
     echo json_encode(
         [
             'ok' => true,
-            'adapterVersion' => '0.1.3',
+            'adapterVersion' => '0.1.4',
             'storeLiteVersion' => '0.1.35',
             'database' => $databaseName,
             'databaseSHA256' => $before,

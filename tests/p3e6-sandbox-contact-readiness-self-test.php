@@ -28,9 +28,9 @@ function red_stripe_p3e6_package(): array
 {
     return [
         'packageId' => 'redcms.store-lite-stripe-checkout',
-        'packageVersion' => '0.1.3',
+        'packageVersion' => '0.1.4',
         'packageArtifactSha256' => str_repeat('a', 64),
-        'runtimeProviderTransport' => 'synthetic_only',
+        'runtimeProviderTransport' => 'provider_read_only',
     ];
 }
 
@@ -173,10 +173,10 @@ try {
     );
     red_stripe_p3e6_assert(
         $plan['packageId'] === 'redcms.store-lite-stripe-checkout'
-            && $plan['packageVersion'] === '0.1.3'
+            && $plan['packageVersion'] === '0.1.4'
             && $plan['packageArtifactSha256'] === str_repeat('a', 64)
-            && $plan['runtimeProviderTransport'] === 'synthetic_only',
-        'plan binds exact package identity to synthetic-only runtime'
+            && $plan['runtimeProviderTransport'] === 'provider_read_only',
+        'plan binds exact package identity to read-only provider runtime'
     );
     red_stripe_p3e6_assert(
         $plan['credentialSettingKey'] === 'stripe.secret-key'
@@ -233,12 +233,30 @@ try {
             && serialize([$package, $credential, $network]) === $inputsBefore,
         'readiness planning is deterministic and does not mutate inputs'
     );
+    $syntheticPackage = $package;
+    $syntheticPackage['packageVersion'] = '0.1.3';
+    $syntheticPackage['runtimeProviderTransport'] = 'synthetic_only';
+    $syntheticReadiness =
+        RED_CMS_Store_Lite_Stripe_Sandbox_Contact_Readiness_Planner::plan(
+            $syntheticPackage,
+            $credential,
+            $network
+        );
+    red_stripe_p3e6_assert(
+        ($syntheticReadiness['ready'] ?? false) === true
+            && ($syntheticReadiness['contactPlan']['packageVersion'] ?? null)
+                === '0.1.3'
+            && ($syntheticReadiness['contactPlan']['runtimeProviderTransport']
+                ?? null) === 'synthetic_only'
+            && ($syntheticReadiness['executionPerformed'] ?? null) === false,
+        'planner retains the exact non-network 0.1.3 synthetic profile'
+    );
 
     $packageCases = [
         ['packageId', 'wrong.package'],
-        ['packageVersion', '0.1.2'],
+        ['packageVersion', '0.1.3'],
         ['packageArtifactSha256', 'invalid'],
-        ['runtimeProviderTransport', 'enabled'],
+        ['runtimeProviderTransport', 'synthetic_only'],
     ];
     foreach ($packageCases as [$key, $value]) {
         $casePackage = $package;

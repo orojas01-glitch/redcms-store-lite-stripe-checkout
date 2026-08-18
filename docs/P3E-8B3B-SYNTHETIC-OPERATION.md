@@ -96,3 +96,7 @@ Core P3E-8B3B may rebind its exact authorization/claim evidence to adapter
 `0.1.3`, invoke this operation only after the durable execution-start commit,
 and persist the bounded synthetic outcome. The real provider transport and any
 Stripe request remain a separately approved P3E-8B3C gate.
+
+P3E-8B3C1 later adds the separately named provider-capable operation in
+adapter `0.1.4`, but does not invoke it. The `0.1.3` synthetic operation and
+its no-network acceptance remain unchanged.

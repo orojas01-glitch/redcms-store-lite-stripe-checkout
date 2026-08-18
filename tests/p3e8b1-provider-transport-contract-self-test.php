@@ -31,9 +31,9 @@ function red_stripe_p3e8b1_readiness(): array
     $plan = [
         'operation' => 'stripe.sandbox.read-only-resource-miss-probe',
         'packageId' => 'redcms.store-lite-stripe-checkout',
-        'packageVersion' => '0.1.1',
+        'packageVersion' => '0.1.4',
         'packageArtifactSha256' => str_repeat('a', 64),
-        'runtimeProviderTransport' => 'disabled',
+        'runtimeProviderTransport' => 'provider_read_only',
         'method' => 'GET',
         'url' => 'https://api.stripe.com/v1/checkout/sessions/'
             . 'cs_test_redcms_readiness_probe',
@@ -141,7 +141,7 @@ try {
                 $projectDirectory
                     . '/package/StripeSandboxReadOnlyProbeOutcomeGate.php'
             ) === hash_file('sha256', $outcomePath),
-        '0.1.3 adopts byte-identical reviewed transport and outcome source'
+        '0.1.4 retains byte-identical reviewed transport and outcome source'
     );
     foreach ([
         'getenv(', 'putenv(', '$_ENV', '$_SERVER', '$_POST', '$_GET',
@@ -201,8 +201,8 @@ try {
     foreach ([
         ['method', 'POST'],
         ['url', 'https://example.com/'],
-        ['packageVersion', '0.1.2'],
-        ['runtimeProviderTransport', 'enabled'],
+        ['packageVersion', '0.1.3'],
+        ['runtimeProviderTransport', 'synthetic_only'],
         ['maximumAttempts', 2],
         ['retryAuthorized', true],
         ['mutationAuthorized', true],
@@ -345,19 +345,19 @@ try {
 
     $packageHashes = [
         'StripeTypedOfflineCheckoutAdapter.php' =>
-            '14d1103aea6726b8b016295d388f83a4da7eeaf2859c525089b2acae601aadd9',
+            '2e6b53ef82aa8d43243fe09ff36992c8af7b361ad4af4b4cefcba743df7527fe',
         'StripeSandboxReadOnlyProbeTransport.php' =>
-            '1496d748c9ca2c714fd8000a96e8feb3f39235f0242a93903d59f90678d72ccb',
+            '95b5eb0ac0cf2cc956e882c3e6d0c81524f707f851364af99da91594ffb35c4a',
         'StripeSandboxReadOnlyProbeOutcomeGate.php' =>
             'be9183b47ee2a1c6f90289279f6dcf902786c640609fd8553e830f1d8adac58e',
         'StripeSandboxReadOnlyProbeSyntheticExecutor.php' =>
             '26dc900c6bf3dcc1630e8e6e0ff9ea63610c31f85a2bebe11c4cbb9322f62741',
         'addon.json' =>
-            '6cb472ae73f3a1ab181d5499aee747067d92862e13003113effd11dcc5fb52f9',
+            '4647c9fc8b0a247090c5df1fa37d6fc3edf14860db8b317afe3856a11b8dfc9b',
         'addon.php' =>
-            'b445fffcaa930e5e6ae535135bc5e968653f82cc64026cb4ee05ce3e5d7f35c4',
+            '915864332e6292ccbdfe0599a5a267c17028fdd20e6c19d9e6566b9899859371',
         'identity.json' =>
-            '4e8bf7f1d06eef88e3be9211a152e9f052d1893369455d14ea564514488c8ef2',
+            '78e84e3858e3cbfc16b61816b50a2fb508a056b5c2036307e37ca1a86f251ea1',
         'migrations/2026-08-16-create-checkout-attempts.sql' =>
             'f58ae3b56d5b96d80f2757162e41e0fa4540f5e652934b9708e3884be633c2fa',
         'migrations/2026-08-16-create-event-receipts.sql' =>
@@ -369,7 +369,7 @@ try {
                 'sha256',
                 $projectDirectory . '/package/' . $relativePath
             ) === $expectedSha256,
-            'installable 0.1.3 package file matches reviewed SHA-256: '
+            'installable 0.1.4 package file matches reviewed SHA-256: '
                 . $relativePath
         );
     }
