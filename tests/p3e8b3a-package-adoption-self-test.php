@@ -32,9 +32,9 @@ function red_stripe_p3e8b3a_readiness(): array
     return RED_CMS_Store_Lite_Stripe_Sandbox_Contact_Readiness_Planner::plan(
         [
             'packageId' => 'redcms.store-lite-stripe-checkout',
-            'packageVersion' => '0.1.1',
+            'packageVersion' => '0.1.3',
             'packageArtifactSha256' => str_repeat('a', 64),
-            'runtimeProviderTransport' => 'disabled',
+            'runtimeProviderTransport' => 'synthetic_only',
         ],
         [
             'settingKey' => 'stripe.secret-key',
@@ -88,12 +88,12 @@ try {
     red_stripe_p3e8b3a_assert(
         ($manifest['id'] ?? null)
                 === 'redcms.store-lite-stripe-checkout'
-            && ($manifest['version'] ?? null) === '0.1.2'
+            && ($manifest['version'] ?? null) === '0.1.3'
             && ($manifest['type'] ?? null) === 'adapter'
             && ($identity['status'] ?? null)
-                === 'p3e8b3a_provider_transport_adopted_nonexecuting'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.2',
-        'manifest and identity advance exactly to non-executing 0.1.2'
+                === 'p3e8b3b_synthetic_provider_operation'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.3',
+        'later identity preserves B3A transport adoption in 0.1.3'
     );
     red_stripe_p3e8b3a_assert(
         ($manifest['outboundHosts'] ?? null) === ['api.stripe.com']
@@ -108,22 +108,23 @@ try {
                 === 'f58ae3b56d5b96d80f2757162e41e0fa4540f5e652934b9708e3884be633c2fa'
             && ($manifest['migrations'][1]['sha256'] ?? '')
                 === '20b516693d15bf2fb3829de6d9c9fe44202af03b846a05262d0c79f2b0cd2b8d',
-        '0.1.2 preserves both append-only migration checksums'
+        'later 0.1.3 preserves both append-only migration checksums'
     );
 
     $inventory = $manifest['integrity']['files'] ?? [];
     red_stripe_p3e8b3a_assert(
-        count($inventory) === 7
+        count($inventory) === 8
             && array_column($inventory, 'path') === [
                 'addon.php',
                 'StripeTypedOfflineCheckoutAdapter.php',
                 'StripeSandboxReadOnlyProbeTransport.php',
                 'StripeSandboxReadOnlyProbeOutcomeGate.php',
+                'StripeSandboxReadOnlyProbeSyntheticExecutor.php',
                 'identity.json',
                 'migrations/2026-08-16-create-checkout-attempts.sql',
                 'migrations/2026-08-16-create-event-receipts.sql',
             ],
-        'integrity inventory lists the exact seven payload files'
+        'integrity inventory lists the exact eight payload files'
     );
     foreach ($inventory as $file) {
         $path = $packageDirectory . '/' . ($file['path'] ?? '');
@@ -167,8 +168,12 @@ try {
                 $handler,
                 'provider-contact.read-only-probe-sandbox'
             )
+            && str_contains(
+                $handler,
+                'provider-contact.read-only-probe-synthetic'
+            )
             && str_contains($handler, 'provider_transport_disabled'),
-        'entrypoint inventories the classes while handler remains refusal-only'
+        'later handler adds only synthetic operation, not provider transport'
     );
     foreach ([
         'getenv(', 'putenv(', '$_ENV', '$_SERVER', '$_POST', '$_GET',
@@ -189,9 +194,9 @@ try {
         );
     }
     red_stripe_p3e8b3a_assert(
-        substr_count($handler, "'stripe.secret-key'") === 1
-            && substr_count($handler, "'stripe.webhook-secret'") === 1,
-        'legacy contract probe remains the only package secret consumer'
+        substr_count($handler, "'stripe.secret-key'") === 2
+            && substr_count($handler, "'stripe.webhook-secret'") === 2,
+        'legacy and synthetic operations use only declared secret keys'
     );
 
     $readiness = red_stripe_p3e8b3a_readiness();
@@ -199,18 +204,18 @@ try {
         ($readiness['ready'] ?? false) === true
             && ($readiness['executionPerformed'] ?? null) === false
             && ($readiness['contactPlan']['packageVersion'] ?? null)
-                === '0.1.1'
+                === '0.1.3'
             && ($readiness['contactPlan']['runtimeProviderTransport'] ?? null)
-                === 'disabled',
-        'historical readiness remains non-executing and cannot adopt 0.1.2'
+                === 'synthetic_only',
+        'later readiness is synthetic-only and remains non-contact'
     );
     $contactPlanMethod = new ReflectionMethod(
         RED_CMS_Store_Lite_Stripe_Sandbox_Read_Only_Probe_Transport::class,
         'contactPlan'
     );
     red_stripe_p3e8b3a_assert(
-        $contactPlanMethod->invoke(null, $readiness['contactPlan']) === true,
-        'adopted transport accepts only the new exact readiness plan'
+        $contactPlanMethod->invoke(null, $readiness['contactPlan']) === false,
+        'adopted provider transport refuses the synthetic-only plan'
     );
     $transport =
         new RED_CMS_Store_Lite_Stripe_Sandbox_Read_Only_Probe_Transport(

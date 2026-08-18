@@ -28,9 +28,9 @@ function red_stripe_p3e6_package(): array
 {
     return [
         'packageId' => 'redcms.store-lite-stripe-checkout',
-        'packageVersion' => '0.1.1',
+        'packageVersion' => '0.1.3',
         'packageArtifactSha256' => str_repeat('a', 64),
-        'runtimeProviderTransport' => 'disabled',
+        'runtimeProviderTransport' => 'synthetic_only',
     ];
 }
 
@@ -173,10 +173,10 @@ try {
     );
     red_stripe_p3e6_assert(
         $plan['packageId'] === 'redcms.store-lite-stripe-checkout'
-            && $plan['packageVersion'] === '0.1.1'
+            && $plan['packageVersion'] === '0.1.3'
             && $plan['packageArtifactSha256'] === str_repeat('a', 64)
-            && $plan['runtimeProviderTransport'] === 'disabled',
-        'plan binds exact package identity while runtime stays disabled'
+            && $plan['runtimeProviderTransport'] === 'synthetic_only',
+        'plan binds exact package identity to synthetic-only runtime'
     );
     red_stripe_p3e6_assert(
         $plan['credentialSettingKey'] === 'stripe.secret-key'

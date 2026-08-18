@@ -77,6 +77,16 @@ revalidate the unchanged plan and package, atomically consume the nonce, and
 write an audit fact before contact could be authorized. P3E-6 cannot do any of
 those things.
 
+## P3E-8B3B synthetic rebind
+
+P3E-8B3B later rebinds the current planner to package `0.1.3` and
+`runtimeProviderTransport=synthetic_only`. The complete plan remains
+value-free and keeps `executionPerformed=false`; it can describe only the
+sealed in-memory package proof. The actual provider-capable transport still
+accepts only the historical `0.1.1` / `disabled` plan and is not called by the
+new handler. A matching core gate must still repeat Owner, claim, durable-start,
+scoped-secret, outcome, and no-retry enforcement.
+
 ## Explicit stop
 
 P3E-6 adds no cURL, stream, socket, DNS, TLS handshake, HTTP client, credential

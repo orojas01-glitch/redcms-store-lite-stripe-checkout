@@ -27,10 +27,10 @@ It cannot address Stripe or any non-loopback host. P3E-6 adds a
 contains no transport and never marks contact authorized. P3E-8B1 now adds a
 **provider-capable but unconnected read-only transport source** plus a pure
 bounded-outcome gate. P3E-8B3A now advances the installable adapter to `0.1.2`
-and inventories byte-identical copies of both reviewed classes. The typed
-handler remains refusal-only and cannot construct either class, so discovery,
-installation, enablement, registration, and `contract.probe` remain
-non-contact operations.
+and inventories byte-identical copies of both reviewed classes. P3E-8B3B now
+advances the package to `0.1.3` and adds one synthetic-only typed operation.
+It validates the scoped restricted-test key and complete plan, then projects
+fixed in-memory evidence. The actual provider transport remains disconnected.
 
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
@@ -90,9 +90,11 @@ Basic handling, verified HTTPS with TLS 1.2 minimum, no proxy or redirects,
 one use, and hard time/header/body bounds. It discards response headers and
 body and returns only bounded status/enforcement evidence. The pure outcome
 gate classifies synthetic evidence without contacting Stripe. P3E-8B3A copies
-both classes into the `0.1.2` package integrity inventory but does not connect
-them to the typed handler. The historical P3E-6 plan remains bound to `0.1.1`
-with transport disabled, and current core refuses `0.1.2` for contact.
+both classes into the `0.1.2` package integrity inventory without connecting
+provider transport. P3E-8B3B version `0.1.3` adds a separate final synthetic
+executor and typed operation. Its readiness plan fixes
+`runtimeProviderTransport=synthetic_only`; output keeps network and provider
+contact false, and the actual cURL class is still unreachable.
 
 ## Current contracts
 
@@ -109,9 +111,13 @@ with transport disabled, and current core refuses `0.1.2` for contact.
 - `RED_CMS_Store_Lite_Stripe_Event_Receipt_Record_Planner` revalidates an
   already-verified event projection and returns only the bounded immutable
   P3C-3 receipt. Raw bodies and signatures are never accepted or returned.
-- `RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter` accepts only a
-  core-owned typed request for `contract.probe` with empty input. It privately
-  checks both declared settings and always keeps provider transport disabled.
+- `RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter` preserves the
+  offline `contract.probe` and adds one exact core-oriented synthetic probe.
+  The latter succeeds only when runtime secret access exposes the secret key
+  but withholds the webhook secret.
+- `RED_CMS_Store_Lite_Stripe_Sandbox_Read_Only_Probe_Synthetic_Executor`
+  validates the complete `0.1.3` synthetic-only plan and restricted-test key
+  shape, then projects fixed in-memory evidence exactly once.
 - `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Transport_Planner` produces only
   a deterministic non-executable sandbox request plan from exact order facts.
 - `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Transport_Response_Gate` accepts
@@ -209,4 +215,6 @@ and
 [`docs/P3E-8B1-PROVIDER-TRANSPORT-CONTRACT.md`](docs/P3E-8B1-PROVIDER-TRANSPORT-CONTRACT.md)
 and
 [`docs/P3E-8B3A-PACKAGE-ADOPTION.md`](docs/P3E-8B3A-PACKAGE-ADOPTION.md)
+and
+[`docs/P3E-8B3B-SYNTHETIC-OPERATION.md`](docs/P3E-8B3B-SYNTHETIC-OPERATION.md)
 for the complete boundaries and later-gate exclusions.
