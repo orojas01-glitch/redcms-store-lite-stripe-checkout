@@ -177,7 +177,7 @@ try {
                 $adapterPackage
             )['status'] ?? '') === 'enabled_current'
             && ($storePackage['manifest']['version'] ?? '') === '0.1.35'
-            && ($adapterPackage['manifest']['version'] ?? '') === '0.1.2',
+            && ($adapterPackage['manifest']['version'] ?? '') === '0.1.3',
         'both exact package identities are enabled and registry-current'
     );
     red_stripe_p3d5_assert(
@@ -386,7 +386,7 @@ try {
     echo json_encode(
         [
             'ok' => true,
-            'adapterVersion' => '0.1.2',
+            'adapterVersion' => '0.1.3',
             'storeLiteVersion' => '0.1.35',
             'database' => $databaseName,
             'databaseSHA256' => $before,

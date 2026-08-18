@@ -78,3 +78,7 @@ matching core runner. It must require the still-active immutable authorization
 and claim, commit the durable start before secret or handler access, preserve
 the one-attempt/no-retry rule, and pass synthetic transport evidence before
 any real provider request is approved. P3E-8B3A itself authorizes no contact.
+
+P3E-8B3B later completed that synthetic-only package operation in version
+`0.1.3`. It still leaves the actual provider transport disconnected and makes
+no network request.

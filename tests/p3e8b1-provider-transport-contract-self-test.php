@@ -28,47 +28,53 @@ function red_stripe_p3e8b1_assert(bool $condition, string $message): void
 
 function red_stripe_p3e8b1_readiness(): array
 {
-    return RED_CMS_Store_Lite_Stripe_Sandbox_Contact_Readiness_Planner::plan(
-        [
-            'packageId' => 'redcms.store-lite-stripe-checkout',
-            'packageVersion' => '0.1.1',
-            'packageArtifactSha256' => str_repeat('a', 64),
-            'runtimeProviderTransport' => 'disabled',
-        ],
-        [
-            'settingKey' => 'stripe.secret-key',
-            'keyMode' => 'restricted_test',
-            'source' => 'process_environment',
-            'available' => true,
-            'valueIncluded' => false,
-            'valueSha256Included' => false,
-            'repositoryScan' => 'clean',
-            'configurationScan' => 'clean',
-            'logScan' => 'clean',
-            'leastPrivilegeReview' => 'checkout_sessions_read_only',
-            'rotationRunbook' => 'ready',
-            'revocationRunbook' => 'ready',
-            'evidenceSha256' => str_repeat('b', 64),
-        ],
-        [
-            'providerHost' => 'api.stripe.com',
-            'providerPort' => 443,
-            'method' => 'GET',
-            'path' =>
-                '/v1/checkout/sessions/cs_test_redcms_readiness_probe',
-            'dnsRequired' => true,
-            'httpsOnly' => true,
-            'minimumTlsVersion' => '1.2',
-            'verifyPeer' => true,
-            'verifyHost' => true,
-            'proxyMode' => 'disabled',
-            'followRedirects' => false,
-            'maximumRedirects' => 0,
-            'connectTimeoutMilliseconds' => 5000,
-            'totalTimeoutMilliseconds' => 15000,
-            'maximumResponseBytes' => 65536,
-        ]
-    );
+    $plan = [
+        'operation' => 'stripe.sandbox.read-only-resource-miss-probe',
+        'packageId' => 'redcms.store-lite-stripe-checkout',
+        'packageVersion' => '0.1.1',
+        'packageArtifactSha256' => str_repeat('a', 64),
+        'runtimeProviderTransport' => 'disabled',
+        'method' => 'GET',
+        'url' => 'https://api.stripe.com/v1/checkout/sessions/'
+            . 'cs_test_redcms_readiness_probe',
+        'expectedEffect' => 'read-only-resource-miss',
+        'responseBodyProjection' => 'none',
+        'credentialSettingKey' => 'stripe.secret-key',
+        'credentialMode' => 'restricted_test',
+        'credentialSource' => 'process_environment',
+        'credentialValueIncluded' => false,
+        'credentialValueSha256Included' => false,
+        'credentialEvidenceSha256' => str_repeat('b', 64),
+        'minimumTlsVersion' => '1.2',
+        'verifyPeer' => true,
+        'verifyHost' => true,
+        'proxyMode' => 'disabled',
+        'followRedirects' => false,
+        'maximumRedirects' => 0,
+        'connectTimeoutMilliseconds' => 5000,
+        'totalTimeoutMilliseconds' => 15000,
+        'maximumResponseBytes' => 65536,
+        'maximumAttempts' => 1,
+        'oneTimeAuthorizationRequired' => true,
+        'retryAuthorized' => false,
+        'mutationAuthorized' => false,
+        'checkoutCreationAuthorized' => false,
+        'paymentAuthorized' => false,
+        'webhookAuthorized' => false,
+        'liveModeAuthorized' => false,
+        'clientDeploymentAuthorized' => false,
+        'executionPerformed' => false,
+    ];
+    return [
+        'ready' => true,
+        'contactPlan' => $plan,
+        'planSha256' => hash('sha256', json_encode(
+            $plan,
+            JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+        )),
+        'executionPerformed' => false,
+        'errors' => [],
+    ];
 }
 
 function red_stripe_p3e8b1_evidence(int $statusCode = 404): array
@@ -135,7 +141,7 @@ try {
                 $projectDirectory
                     . '/package/StripeSandboxReadOnlyProbeOutcomeGate.php'
             ) === hash_file('sha256', $outcomePath),
-        '0.1.2 adopts byte-identical reviewed transport and outcome source'
+        '0.1.3 adopts byte-identical reviewed transport and outcome source'
     );
     foreach ([
         'getenv(', 'putenv(', '$_ENV', '$_SERVER', '$_POST', '$_GET',
@@ -339,17 +345,19 @@ try {
 
     $packageHashes = [
         'StripeTypedOfflineCheckoutAdapter.php' =>
-            '8418682d9fcad1a7e1a1624234d76fe948a1fbbd866c228954250306b694042b',
+            '14d1103aea6726b8b016295d388f83a4da7eeaf2859c525089b2acae601aadd9',
         'StripeSandboxReadOnlyProbeTransport.php' =>
             '1496d748c9ca2c714fd8000a96e8feb3f39235f0242a93903d59f90678d72ccb',
         'StripeSandboxReadOnlyProbeOutcomeGate.php' =>
             'be9183b47ee2a1c6f90289279f6dcf902786c640609fd8553e830f1d8adac58e',
+        'StripeSandboxReadOnlyProbeSyntheticExecutor.php' =>
+            '26dc900c6bf3dcc1630e8e6e0ff9ea63610c31f85a2bebe11c4cbb9322f62741',
         'addon.json' =>
-            'e2f08e72317508d1dc89e1b640aa50326a37b1755d9f8ee65c8bffd576ead64a',
+            '6cb472ae73f3a1ab181d5499aee747067d92862e13003113effd11dcc5fb52f9',
         'addon.php' =>
-            'b472d435761958c0669422d100d2c13da2a47d94d74ea6c77cf430cba7016ced',
+            'b445fffcaa930e5e6ae535135bc5e968653f82cc64026cb4ee05ce3e5d7f35c4',
         'identity.json' =>
-            'fde1431d23459a3bba5b864bcc626d8d92aebe4b336e76b78dbaa569ffdbb78e',
+            '4e8bf7f1d06eef88e3be9211a152e9f052d1893369455d14ea564514488c8ef2',
         'migrations/2026-08-16-create-checkout-attempts.sql' =>
             'f58ae3b56d5b96d80f2757162e41e0fa4540f5e652934b9708e3884be633c2fa',
         'migrations/2026-08-16-create-event-receipts.sql' =>
@@ -361,7 +369,7 @@ try {
                 'sha256',
                 $projectDirectory . '/package/' . $relativePath
             ) === $expectedSha256,
-            'installable 0.1.2 package file matches reviewed SHA-256: '
+            'installable 0.1.3 package file matches reviewed SHA-256: '
                 . $relativePath
         );
     }

@@ -205,7 +205,7 @@ try {
             && $storeSnapshot['version'] === '0.1.35'
             && count($storeSnapshot['migrations']) === 11
             && is_array($adapterSnapshot)
-            && $adapterSnapshot['version'] === '0.1.2'
+            && $adapterSnapshot['version'] === '0.1.3'
             && count($adapterSnapshot['migrations']) === 2,
         'exact Store Lite and adapter versions and migrations are trusted'
     );
@@ -345,7 +345,7 @@ try {
     );
     red_stripe_p3d1_assert(
         $adapterInstalled['status'] === 'installed_disabled'
-            && $adapterInstalled['version'] === '0.1.2'
+            && $adapterInstalled['version'] === '0.1.3'
             && $adapterInstalled['appliedMigrations'] === [
                 '2026-08-16-checkout-attempts',
                 '2026-08-16-event-receipts',
@@ -360,7 +360,7 @@ try {
                 LifecycleState)
              FROM RED_Addon_Installations
              WHERE PackageID='$adapterPackageId'"
-        ) === '0.1.2:adapter:installed_disabled',
+        ) === '0.1.3:adapter:installed_disabled',
         'adapter registry stores the exact disabled identity'
     );
     red_stripe_p3d1_assert(

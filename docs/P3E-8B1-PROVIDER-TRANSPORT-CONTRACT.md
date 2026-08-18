@@ -87,7 +87,7 @@ credential-shape refusal, required cURL safety options, closed outcome
 classification, evidence bounds, and deterministic hashes. At the original
 P3E-8B1 gate it also proved package absence; after P3E-8B3A it instead proves
 the two package copies are byte-identical to the reviewed source and the
-remaining `0.1.2` payload matches its reviewed hashes.
+remaining current package payload matches its reviewed hashes.
 
 ## Official references reviewed
 
