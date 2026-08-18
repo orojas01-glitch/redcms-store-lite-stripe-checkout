@@ -113,6 +113,10 @@ See [`docs/P3E-8B3C3B-SANDBOX-REHEARSAL.md`](docs/P3E-8B3C3B-SANDBOX-REHEARSAL.m
 The disposable no-key preflight has passed through 46 migrations, exact
 package activation, fresh authorization/claim, verified backup, operator dry
 run, and complete cleanup without resolving a credential or contacting Stripe.
+The separately authorized B3C3B execution then completed one exact read-only
+GET with bounded `404 resource_miss_observed` evidence, no retry, clean private
+archive checksums, an empty clipboard, and complete disposable cleanup. See
+[`docs/P3E-8B3C3B-EXECUTION-CLOSEOUT.md`](docs/P3E-8B3C3B-EXECUTION-CLOSEOUT.md).
 
 ## Current contracts
 

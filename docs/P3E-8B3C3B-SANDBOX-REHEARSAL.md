@@ -1,8 +1,8 @@
 # P3E-8B3C3B Restricted-Key Sandbox Rehearsal
 
-Status: the adapter repository contains isolated orchestration for the first
-single real read-only Stripe Sandbox GET. The no-key non-contact preflight has
-passed end to end. No provider request is part of this commit.
+Status: the isolated no-key preflight and one explicit restricted-key GET have
+passed. The execution evidence and cleanup are recorded in
+[`P3E-8B3C3B-EXECUTION-CLOSEOUT.md`](P3E-8B3C3B-EXECUTION-CLOSEOUT.md).
 
 ## Exact staged boundary
 
@@ -93,5 +93,7 @@ The no-key disposable preflight passed with adapter `0.1.4`, Store Lite
 post-run verification also returned `database:0 grant:0` while the retained
 primary table count remained unchanged.
 
-A real provider request still requires a later explicit operator action; it is
-not implied by test, pull-request, or merge approval.
+The separately authorized provider request completed exactly once with bounded
+`404 resource_miss_observed` evidence and no retry. Merge approval alone did
+not trigger it. The remaining explicit operator action is restricted-key
+revocation after evidence review.
