@@ -29,8 +29,9 @@ contains no transport and never marks contact authorized. P3E-8B1 now adds a
 bounded-outcome gate. P3E-8B3A now advances the installable adapter to `0.1.2`
 and inventories byte-identical copies of both reviewed classes. P3E-8B3B now
 advances the package to `0.1.3` and adds one synthetic-only typed operation.
-It validates the scoped restricted-test key and complete plan, then projects
-fixed in-memory evidence. The actual provider transport remains disconnected.
+P3E-8B3C1 now advances the package to `0.1.4` and adds the exact latent
+read-only sandbox operation. Its source is integrity-checked but remains
+uninvoked, and current core rejects the new provider-read-only profile.
 
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
@@ -96,6 +97,11 @@ executor and typed operation. Its readiness plan fixes
 `runtimeProviderTransport=synthetic_only`; output keeps network and provider
 contact false, and the actual cURL class is still unreachable.
 
+P3E-8B3C1 connects a separate typed handler branch to the already-reviewed
+one-use cURL transport for `0.1.4/provider_read_only`. The package itself adds
+no caller. Tests inspect the complete provider path and construct an unused
+transport object only; they never invoke the handler or `exchange()`.
+
 ## Current contracts
 
 - `RED_CMS_Store_Lite_Stripe_Checkout_Response_Normalizer` validates a closed,
@@ -112,9 +118,10 @@ contact false, and the actual cURL class is still unreachable.
   already-verified event projection and returns only the bounded immutable
   P3C-3 receipt. Raw bodies and signatures are never accepted or returned.
 - `RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter` preserves the
-  offline `contract.probe` and adds one exact core-oriented synthetic probe.
-  The latter succeeds only when runtime secret access exposes the secret key
-  but withholds the webhook secret.
+  offline `contract.probe`, the exact core-oriented synthetic probe, and one
+  separately named read-only sandbox probe. Both probe branches require
+  runtime access scoped to the secret key with the webhook secret withheld;
+  B3C1 never invokes the sandbox branch.
 - `RED_CMS_Store_Lite_Stripe_Sandbox_Read_Only_Probe_Synthetic_Executor`
   validates the complete `0.1.3` synthetic-only plan and restricted-test key
   shape, then projects fixed in-memory evidence exactly once.
@@ -143,8 +150,8 @@ contact false, and the actual cURL class is still unreachable.
   hash-bound 15-minute envelope but cannot authenticate an owner, consume a
   nonce, authorize contact, or execute it.
 - `RED_CMS_Store_Lite_Stripe_Sandbox_Read_Only_Probe_Transport` is an
-  unconnected one-use primitive for only the exact P3E-6 read-only target. It
-  has no credential resolver and is never called in P3E-8B1.
+  one-use primitive for only the exact `0.1.4/provider_read_only` target. It
+  has no credential resolver and is not called by B3C1 acceptance.
 - `RED_CMS_Store_Lite_Stripe_Sandbox_Read_Only_Probe_Outcome_Gate` purely
   projects exact synthetic transport evidence to a closed status-only outcome.
 
@@ -217,4 +224,6 @@ and
 [`docs/P3E-8B3A-PACKAGE-ADOPTION.md`](docs/P3E-8B3A-PACKAGE-ADOPTION.md)
 and
 [`docs/P3E-8B3B-SYNTHETIC-OPERATION.md`](docs/P3E-8B3B-SYNTHETIC-OPERATION.md)
+and
+[`docs/P3E-8B3C1-PROVIDER-OPERATION.md`](docs/P3E-8B3C1-PROVIDER-OPERATION.md)
 for the complete boundaries and later-gate exclusions.

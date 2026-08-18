@@ -208,9 +208,10 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Read_Only_Probe_Transport
                 === 'stripe.sandbox.read-only-resource-miss-probe'
             && ($plan['packageId'] ?? null)
                 === 'redcms.store-lite-stripe-checkout'
-            && ($plan['packageVersion'] ?? null) === '0.1.1'
+            && ($plan['packageVersion'] ?? null) === '0.1.4'
             && self::sha256($plan['packageArtifactSha256'] ?? null)
-            && ($plan['runtimeProviderTransport'] ?? null) === 'disabled'
+            && ($plan['runtimeProviderTransport'] ?? null)
+                === 'provider_read_only'
             && ($plan['method'] ?? null) === 'GET'
             && ($plan['url'] ?? null) === self::TARGET_URL
             && ($plan['expectedEffect'] ?? null)

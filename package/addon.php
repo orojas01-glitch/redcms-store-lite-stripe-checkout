@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * P3E-8B3B typed synthetic-operation package entrypoint.
+ * P3E-8B3C1 typed read-only provider-operation package entrypoint.
  *
  * RED-CMS may integrity-check and execute this registrar only to validate the
  * exact declared registration shape. Loading and registering the package
