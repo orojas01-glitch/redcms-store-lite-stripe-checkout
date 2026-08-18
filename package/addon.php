@@ -13,6 +13,12 @@ declare(strict_types=1);
 require_once __DIR__ . '/StripeSandboxReadOnlyProbeTransport.php';
 require_once __DIR__ . '/StripeSandboxReadOnlyProbeOutcomeGate.php';
 require_once __DIR__ . '/StripeSandboxReadOnlyProbeSyntheticExecutor.php';
+require_once __DIR__ . '/StripeCheckoutResponseNormalizer.php';
+require_once __DIR__ . '/StripeSandboxCheckoutTransportPlanner.php';
+require_once __DIR__ . '/StripeSandboxCheckoutTransportResponseGate.php';
+require_once __DIR__ . '/StripeSandboxCheckoutWireCodec.php';
+require_once __DIR__ . '/StripeSandboxCheckoutCreationContract.php';
+require_once __DIR__ . '/StripeSandboxCheckoutCreationSyntheticExecutor.php';
 require_once __DIR__ . '/StripeTypedOfflineCheckoutAdapter.php';
 
 return static function ($registry): void {

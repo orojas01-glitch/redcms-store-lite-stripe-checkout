@@ -1,13 +1,13 @@
 {
   "contractVersion": 1,
-  "status": "p3e8b3c1_provider_operation_available_uninvoked",
+  "status": "p3e9b1_synthetic_checkout_operation_available",
   "id": "redcms.store-lite-stripe-checkout",
   "name": "RED-CMS Store Lite Stripe Checkout",
   "repository": "redcms-store-lite-stripe-checkout",
   "futureManifest": {
     "schemaVersion": 1,
     "type": "adapter",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "cmsCompatibility": ">=5.1 <6.0",
     "phpCompatibility": ">=8.2 <9.0",
     "requiredDependency": {

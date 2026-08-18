@@ -95,11 +95,11 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e8b3c1_assert(
-        ($manifest['version'] ?? null) === '0.1.4'
+        ($manifest['version'] ?? null) === '0.1.5'
             && ($identity['status'] ?? null)
-                === 'p3e8b3c1_provider_operation_available_uninvoked'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.4',
-        'package identity advances exactly to uninvoked provider operation'
+                === 'p3e9b1_synthetic_checkout_operation_available'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.5',
+        'later package preserves the exact read-only provider operation'
     );
     red_stripe_p3e8b3c1_assert(
         ($manifest['outboundHosts'] ?? null) === ['api.stripe.com']
@@ -128,8 +128,8 @@ try {
         );
     }
     red_stripe_p3e8b3c1_assert(
-        count($manifest['integrity']['files'] ?? []) === 8,
-        'provider activation adds no package payload file'
+        count($manifest['integrity']['files'] ?? []) === 14,
+        'later synthetic Checkout adoption has exact current package inventory'
     );
     red_stripe_p3e8b3c1_assert(
         hash_file(

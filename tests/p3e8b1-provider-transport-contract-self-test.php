@@ -344,20 +344,12 @@ try {
     }
 
     $packageHashes = [
-        'StripeTypedOfflineCheckoutAdapter.php' =>
-            '2e6b53ef82aa8d43243fe09ff36992c8af7b361ad4af4b4cefcba743df7527fe',
         'StripeSandboxReadOnlyProbeTransport.php' =>
             '95b5eb0ac0cf2cc956e882c3e6d0c81524f707f851364af99da91594ffb35c4a',
         'StripeSandboxReadOnlyProbeOutcomeGate.php' =>
             'be9183b47ee2a1c6f90289279f6dcf902786c640609fd8553e830f1d8adac58e',
         'StripeSandboxReadOnlyProbeSyntheticExecutor.php' =>
             '26dc900c6bf3dcc1630e8e6e0ff9ea63610c31f85a2bebe11c4cbb9322f62741',
-        'addon.json' =>
-            '4647c9fc8b0a247090c5df1fa37d6fc3edf14860db8b317afe3856a11b8dfc9b',
-        'addon.php' =>
-            '915864332e6292ccbdfe0599a5a267c17028fdd20e6c19d9e6566b9899859371',
-        'identity.json' =>
-            '78e84e3858e3cbfc16b61816b50a2fb508a056b5c2036307e37ca1a86f251ea1',
         'migrations/2026-08-16-create-checkout-attempts.sql' =>
             'f58ae3b56d5b96d80f2757162e41e0fa4540f5e652934b9708e3884be633c2fa',
         'migrations/2026-08-16-create-event-receipts.sql' =>
@@ -369,7 +361,7 @@ try {
                 'sha256',
                 $projectDirectory . '/package/' . $relativePath
             ) === $expectedSha256,
-            'installable 0.1.4 package file matches reviewed SHA-256: '
+            'later package retains reviewed B1 file SHA-256: '
                 . $relativePath
         );
     }
