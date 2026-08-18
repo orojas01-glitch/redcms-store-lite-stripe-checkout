@@ -102,6 +102,18 @@ one-use cURL transport for `0.1.4/provider_read_only`. The package itself adds
 no caller. Tests inspect the complete provider path and construct an unused
 transport object only; they never invoke the handler or `exchange()`.
 
+P3E-8B3C3B adds separate disposable rehearsal orchestration for the merged
+core B3C3A operator command. It defaults to a no-key dry run, stages exact
+Store Lite `0.1.35` and adapter `0.1.4` copies, creates fresh ten-minute
+authorization/claim evidence, verifies a pre-contact backup, and owns exact
+database/grant/project cleanup. A real GET remains locked behind one external
+execution token, exactly one `rk_test_` value, and a new private evidence
+directory. No provider request occurs in ordinary tests or merge validation.
+See [`docs/P3E-8B3C3B-SANDBOX-REHEARSAL.md`](docs/P3E-8B3C3B-SANDBOX-REHEARSAL.md).
+The disposable no-key preflight has passed through 46 migrations, exact
+package activation, fresh authorization/claim, verified backup, operator dry
+run, and complete cleanup without resolving a credential or contacting Stripe.
+
 ## Current contracts
 
 - `RED_CMS_Store_Lite_Stripe_Checkout_Response_Normalizer` validates a closed,
