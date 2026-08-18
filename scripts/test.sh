@@ -57,6 +57,8 @@ fi
 "$PHP_CLI" -l "$PROJECT_DIR/tests/p3e8b3a-package-adoption-self-test.php"
 "$PHP_CLI" -l "$PROJECT_DIR/tests/p3e8b3b-synthetic-operation-self-test.php"
 "$PHP_CLI" -l "$PROJECT_DIR/tests/p3e8b3c1-provider-operation-self-test.php"
+"$PHP_CLI" -l "$PROJECT_DIR/tests/p3e8b3c3b-sandbox-rehearsal-setup.php"
+"$PHP_CLI" -l "$PROJECT_DIR/tests/p3e8b3c3b-sandbox-rehearsal-self-test.php"
 "$PHP_CLI" "$PROJECT_DIR/tests/p3c1-foundation-self-test.php"
 "$PHP_CLI" "$PROJECT_DIR/tests/p3c2-checkout-attempt-storage-self-test.php"
 "$PHP_CLI" "$PROJECT_DIR/tests/p3c3-event-replay-storage-self-test.php"
@@ -71,3 +73,4 @@ fi
 "$PHP_CLI" "$PROJECT_DIR/tests/p3e8b3a-package-adoption-self-test.php"
 "$PHP_CLI" "$PROJECT_DIR/tests/p3e8b3b-synthetic-operation-self-test.php"
 "$PHP_CLI" "$PROJECT_DIR/tests/p3e8b3c1-provider-operation-self-test.php"
+"$PHP_CLI" "$PROJECT_DIR/tests/p3e8b3c3b-sandbox-rehearsal-self-test.php"
