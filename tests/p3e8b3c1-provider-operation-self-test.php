@@ -95,10 +95,10 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e8b3c1_assert(
-        ($manifest['version'] ?? null) === '0.1.5'
+        ($manifest['version'] ?? null) === '0.1.6'
             && ($identity['status'] ?? null)
-                === 'p3e9b1_synthetic_checkout_operation_available'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.5',
+                === 'p3e9d1_real_post_preflight_operation_available'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.6',
         'later package preserves the exact read-only provider operation'
     );
     red_stripe_p3e8b3c1_assert(
@@ -128,7 +128,7 @@ try {
         );
     }
     red_stripe_p3e8b3c1_assert(
-        count($manifest['integrity']['files'] ?? []) === 14,
+        count($manifest['integrity']['files'] ?? []) === 15,
         'later synthetic Checkout adoption has exact current package inventory'
     );
     red_stripe_p3e8b3c1_assert(

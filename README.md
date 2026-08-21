@@ -33,9 +33,10 @@ P3E-8B3C1 now advances the package to `0.1.4` and adds the exact latent
 read-only sandbox operation. Its source is integrity-checked but remains
 uninvoked at that adapter gate. Core later adopted the profile and completed
 one separately authorized read-only Sandbox request. P3E-9A then added the
-source-only Checkout-creation contract, and P3E-9B1 now advances the package to
-`0.1.5` with one synthetic-only Checkout operation. Core does not yet invoke
-that new operation.
+source-only Checkout-creation contract, and P3E-9B1 advanced the package to
+`0.1.5` with one synthetic-only Checkout operation. P3E-9D1 now advances the
+package to `0.1.6` with one pure real-POST preflight operation that revalidates
+core P3E-9D0 request evidence. It resolves no secret and performs no transport.
 
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
@@ -143,6 +144,19 @@ payment, webhook, browser, order mutation, retry, and client deployment false.
 The real Checkout operation remains unsupported. See
 [`docs/P3E-9B1-SYNTHETIC-CHECKOUT-PACKAGE.md`](docs/P3E-9B1-SYNTHETIC-CHECKOUT-PACKAGE.md).
 
+P3E-9D1 now advances the installable adapter to `0.1.6`. The package adopts a
+byte-identical pure source and adds only
+`checkout.create-sandbox-real-post-preflight`. That operation recomputes the
+P3E-9A contract and complete D0 request—including endpoint, form fields,
+expiry, idempotency, input hash, and request hash—before returning the same
+non-secret request facts under a distinct preflight identity. It does not call
+the package secret boundary. `executionReady`, network, provider contact and
+mutation, Checkout creation, payment, webhook, browser navigation, Store Lite
+mutation, retry, live mode, client deployment, and execution all remain false.
+The actual `checkout.create-sandbox-real-post` operation remains unsupported.
+See
+[`docs/P3E-9D1-REAL-POST-PREFLIGHT-OPERATION.md`](docs/P3E-9D1-REAL-POST-PREFLIGHT-OPERATION.md).
+
 ## Current contracts
 
 - `RED_CMS_Store_Lite_Stripe_Checkout_Response_Normalizer` validates a closed,
@@ -202,6 +216,9 @@ The real Checkout operation remains unsupported. See
 - `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Creation_Synthetic_Executor`
   repeats the exact adopted contract once and validates fixed in-memory
   Session facts without transport, provider state, or business mutation.
+- `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Preflight` revalidates
+  and normalizes the exact core D0 request without resolving a credential,
+  constructing an authorization header, or performing provider transport.
 
 The pure normalization and record-planning contracts read no request global,
 secret, database, RED-CMS core, Store Lite runtime code, or network. The typed
@@ -278,4 +295,6 @@ and
 [`docs/P3E-9A-CHECKOUT-CREATION-CONTRACT.md`](docs/P3E-9A-CHECKOUT-CREATION-CONTRACT.md)
 and
 [`docs/P3E-9B1-SYNTHETIC-CHECKOUT-PACKAGE.md`](docs/P3E-9B1-SYNTHETIC-CHECKOUT-PACKAGE.md)
+and
+[`docs/P3E-9D1-REAL-POST-PREFLIGHT-OPERATION.md`](docs/P3E-9D1-REAL-POST-PREFLIGHT-OPERATION.md)
 for the complete boundaries and later-gate exclusions.
