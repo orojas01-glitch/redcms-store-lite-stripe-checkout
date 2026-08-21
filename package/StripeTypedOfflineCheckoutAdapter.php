@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Typed offline, synthetic, and exact read-only sandbox probe operations.
+ * Typed offline, synthetic, read-only, and real-POST preflight operations.
  *
  * The synthetic operation validates the core-supplied plan and scoped
  * restricted-test key, but it cannot construct or call provider transport.
@@ -39,6 +39,11 @@ final class RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter
             === 'checkout.create-sandbox-synthetic'
         ) {
             return self::syntheticCheckout($request);
+        }
+        if ($request->operation()
+            === 'checkout.create-sandbox-real-post-preflight'
+        ) {
+            return self::realPostPreflight($request);
         }
         return RED_Addon_Adapter_Result::failure('unsupported_operation');
     }
@@ -311,6 +316,54 @@ final class RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter
                 $input['contractSha256'],
                 (string) ($prepared['contractSha256'] ?? '')
             );
+    }
+
+    private static function realPostPreflight(
+        RED_Addon_Adapter_Request $request
+    ): RED_Addon_Adapter_Result {
+        $input = $request->input();
+        if (!self::realPostPreflightInput($input)) {
+            return RED_Addon_Adapter_Result::failure(
+                'real_post_preflight_input_refused'
+            );
+        }
+
+        $adopted =
+            RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Preflight::adopt(
+                $input['checkout'],
+                $input['policy'],
+                $input['profile'],
+                $input['contractSha256'],
+                $input['realPostPreflight']
+            );
+        if (($adopted['valid'] ?? null) !== true
+            || ($adopted['adopted'] ?? null) !== true
+            || ($adopted['errors'] ?? null) !== []
+        ) {
+            return RED_Addon_Adapter_Result::failure(
+                'real_post_preflight_refused'
+            );
+        }
+        return RED_Addon_Adapter_Result::success($adopted);
+    }
+
+    private static function realPostPreflightInput(array $input): bool
+    {
+        $keys = array_keys($input);
+        $expected = [
+            'checkout', 'contactTarget', 'contractSha256', 'policy',
+            'profile', 'realPostPreflight',
+        ];
+        sort($keys, SORT_STRING);
+        sort($expected, SORT_STRING);
+        return $keys === $expected
+            && ($input['contactTarget'] ?? null)
+                === 'stripe-sandbox-real-post-preflight'
+            && is_array($input['checkout'] ?? null)
+            && is_array($input['policy'] ?? null)
+            && is_array($input['profile'] ?? null)
+            && is_array($input['realPostPreflight'] ?? null)
+            && self::sha256($input['contractSha256'] ?? null);
     }
 
     private static function providerInput(array $input): bool

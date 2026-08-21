@@ -4,7 +4,7 @@
   "id": "redcms.store-lite-stripe-checkout",
   "name": "RED-CMS Store Lite Stripe Checkout",
   "description": "Separately distributed Stripe Checkout adapter for RED-CMS Store Lite.",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "type": "adapter",
   "compatibility": {
     "cms": ">=5.1 <6.0",
@@ -87,11 +87,11 @@
     "files": [
       {
         "path": "addon.php",
-        "sha256": "1d885d0e6c2d71e169c48fe54bbc93c077e5ee4d6f00273ac71f1a0be9a679a7"
+        "sha256": "0e7e37232fe99d8e5f9a9a0ae62b2a59ea0c8b4e4c52a1b66cc1224c858f938d"
       },
       {
         "path": "StripeTypedOfflineCheckoutAdapter.php",
-        "sha256": "39dec142cc19a4f4992728bb8e431fa03479055eb6c1443d4821a374ba2d1722"
+        "sha256": "1927903f0fa5c78c6ba048a5773964ff000ddfd2a77d652a5afd422052fe2d51"
       },
       {
         "path": "StripeSandboxReadOnlyProbeTransport.php",
@@ -130,8 +130,12 @@
         "sha256": "3534fc3ef4824b4fdc19ecad0fb98cf3d60641cc6d2c13c75f2fb2dba47bcb19"
       },
       {
+        "path": "StripeSandboxCheckoutRealPostPreflight.php",
+        "sha256": "e7db2a8a11758d173e188999ce0478b8a34c4f736f335b636d6d77ab80e2bc5a"
+      },
+      {
         "path": "identity.json",
-        "sha256": "954c4ca78cd16334c91fd912a34adbc0cda640dc4a78e1603a6070ada4f764ee"
+        "sha256": "478ef040b02a398b5d147afa888198018fd821fcb74401d31459dc558fdd84fa"
       },
       {
         "path": "migrations/2026-08-16-create-checkout-attempts.sql",
