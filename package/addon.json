@@ -4,7 +4,7 @@
   "id": "redcms.store-lite-stripe-checkout",
   "name": "RED-CMS Store Lite Stripe Checkout",
   "description": "Separately distributed Stripe Checkout adapter for RED-CMS Store Lite.",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "type": "adapter",
   "compatibility": {
     "cms": ">=5.1 <6.0",
@@ -131,11 +131,11 @@
       },
       {
         "path": "StripeSandboxCheckoutRealPostPreflight.php",
-        "sha256": "e7db2a8a11758d173e188999ce0478b8a34c4f736f335b636d6d77ab80e2bc5a"
+        "sha256": "be1fbc98086bf732ec7064a68e0efb68fcc9c7407a5f4a0f86d4c9c3f3f78da7"
       },
       {
         "path": "identity.json",
-        "sha256": "478ef040b02a398b5d147afa888198018fd821fcb74401d31459dc558fdd84fa"
+        "sha256": "a564843fa49cb9048b8eeee6fdd19e96a1421ef22c850de6e42e855e688c5962"
       },
       {
         "path": "migrations/2026-08-16-create-checkout-attempts.sql",

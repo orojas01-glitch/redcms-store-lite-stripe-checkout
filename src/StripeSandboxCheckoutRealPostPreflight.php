@@ -12,7 +12,7 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Preflight
 {
     private const PACKAGE_ID = 'redcms.store-lite-stripe-checkout';
     private const SOURCE_PACKAGE_VERSION = '0.1.5';
-    private const PACKAGE_VERSION = '0.1.6';
+    private const PACKAGE_VERSION = '0.1.7';
     private const INPUT_TARGET = 'synthetic-checkout-package';
     private const OPERATION = 'checkout.create-sandbox-real-post-preflight';
     private const PROVIDER_OPERATION = 'checkout.create-sandbox-real-post';
@@ -53,7 +53,7 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Preflight
             'profile' => $profile,
             'contractSha256' => $expectedContractSha256,
         ];
-        $inputSha256 = self::hash($input);
+        $inputSha256 = self::inputHash($input);
         $formFields = self::formFields($checkout, $policy, $inputSha256);
         if ($inputSha256 === null || $formFields === null) {
             return self::invalid('real_post_request_refused');
@@ -241,6 +241,30 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Preflight
             return null;
         }
         return hash('sha256', $encoded);
+    }
+
+    private static function inputHash(array $value): ?string
+    {
+        return self::hash(self::canonical($value));
+    }
+
+    private static function canonical(array $value): array
+    {
+        if (array_is_list($value)) {
+            return array_map(
+                static fn (mixed $item): mixed => is_array($item)
+                    ? self::canonical($item)
+                    : $item,
+                $value
+            );
+        }
+        ksort($value, SORT_STRING);
+        foreach ($value as $key => $item) {
+            if (is_array($item)) {
+                $value[$key] = self::canonical($item);
+            }
+        }
+        return $value;
     }
 
     private static function invalid(string $error): array
