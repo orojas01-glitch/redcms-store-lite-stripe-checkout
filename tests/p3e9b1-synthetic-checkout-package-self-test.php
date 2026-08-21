@@ -182,11 +182,11 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e9b1_assert(
-        ($manifest['version'] ?? null) === '0.1.6'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.6'
+        ($manifest['version'] ?? null) === '0.1.7'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.7'
             && ($identity['status'] ?? null)
-                === 'p3e9d1_real_post_preflight_operation_available',
-        'later package 0.1.6 preserves the synthetic Checkout operation'
+                === 'p3e9d1_canonical_core_hash_compatible',
+        'later package 0.1.7 preserves the synthetic Checkout operation'
     );
     red_stripe_p3e9b1_assert(
         count($manifest['integrity']['files'] ?? []) === 15,

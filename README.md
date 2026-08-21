@@ -34,9 +34,10 @@ read-only sandbox operation. Its source is integrity-checked but remains
 uninvoked at that adapter gate. Core later adopted the profile and completed
 one separately authorized read-only Sandbox request. P3E-9A then added the
 source-only Checkout-creation contract, and P3E-9B1 advanced the package to
-`0.1.5` with one synthetic-only Checkout operation. P3E-9D1 now advances the
-package to `0.1.6` with one pure real-POST preflight operation that revalidates
-core P3E-9D0 request evidence. It resolves no secret and performs no transport.
+`0.1.5` with one synthetic-only Checkout operation. P3E-9D1 introduced one
+pure real-POST preflight operation in `0.1.6`; compatibility repair `0.1.7`
+now hashes the source input with the same recursive canonical ordering as core
+P3E-9D0. It resolves no secret and performs no transport.
 
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
@@ -144,7 +145,9 @@ payment, webhook, browser, order mutation, retry, and client deployment false.
 The real Checkout operation remains unsupported. See
 [`docs/P3E-9B1-SYNTHETIC-CHECKOUT-PACKAGE.md`](docs/P3E-9B1-SYNTHETIC-CHECKOUT-PACKAGE.md).
 
-P3E-9D1 now advances the installable adapter to `0.1.6`. The package adopts a
+P3E-9D1 introduced the installable preflight adapter in `0.1.6`, and `0.1.7`
+corrects its source-input SHA-256 to match core canonical ordering. The package
+adopts a
 byte-identical pure source and adds only
 `checkout.create-sandbox-real-post-preflight`. That operation recomputes the
 P3E-9A contract and complete D0 request—including endpoint, form fields,

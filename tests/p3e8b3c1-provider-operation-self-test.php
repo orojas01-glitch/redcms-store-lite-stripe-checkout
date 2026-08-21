@@ -95,10 +95,10 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e8b3c1_assert(
-        ($manifest['version'] ?? null) === '0.1.6'
+        ($manifest['version'] ?? null) === '0.1.7'
             && ($identity['status'] ?? null)
-                === 'p3e9d1_real_post_preflight_operation_available'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.6',
+                === 'p3e9d1_canonical_core_hash_compatible'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.7',
         'later package preserves the exact read-only provider operation'
     );
     red_stripe_p3e8b3c1_assert(

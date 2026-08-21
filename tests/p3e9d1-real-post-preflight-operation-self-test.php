@@ -16,6 +16,10 @@ if (!is_file($coreDirectory . '/includes/addon_adapter_helpers.php')) {
     throw new RuntimeException('RED-CMS core not found; set RED_CMS_CORE.');
 }
 require_once $coreDirectory . '/includes/addon_adapter_helpers.php';
+require_once $coreDirectory
+    . '/includes/addon_sandbox_checkout_synthetic_execution_helpers.php';
+require_once $coreDirectory
+    . '/includes/addon_sandbox_checkout_real_post_preflight_helpers.php';
 require_once $projectDirectory . '/package/StripeCheckoutResponseNormalizer.php';
 require_once $projectDirectory
     . '/package/StripeSandboxCheckoutTransportPlanner.php';
@@ -128,53 +132,23 @@ function red_stripe_p3e9d1_preflight(
         'profile' => $profile,
         'contractSha256' => $contractSha256,
     ];
-    $inputSha256 = red_stripe_p3e9d1_hash($input);
-    $fields = [
-        'mode' => 'payment',
-        'success_url' => $policy['successUrl'],
-        'cancel_url' => $policy['cancelUrl'],
-        'expires_at' => $policy['expiresAtEpoch'],
-        'client_reference_id' => $checkout['orderId'],
-        'metadata[order_snapshot_sha256]' =>
-            $checkout['orderSnapshotSha256'],
-        'metadata[input_sha256]' => $inputSha256,
-    ];
-    foreach ($checkout['lineItems'] as $index => $line) {
-        $prefix = 'line_items[' . $index . ']';
-        $fields[$prefix . '[price_data][currency]'] = 'usd';
-        $fields[$prefix . '[price_data][product_data][name]'] = $line['name'];
-        $fields[$prefix . '[price_data][unit_amount]'] =
-            $line['unitAmountMinor'];
-        $fields[$prefix . '[quantity]'] = $line['quantity'];
-    }
-    $request = [
-        'method' => 'POST',
-        'host' => 'api.stripe.com',
-        'path' => '/v1/checkout/sessions',
-        'apiVersion' => $policy['apiVersion'],
-        'contentType' => 'application/x-www-form-urlencoded',
-        'idempotencyKey' =>
-            'redcms-checkout-' . $checkout['idempotencySha256'],
-        'formFields' => $fields,
-    ];
-    return [
+    $inputSha256 = red_addon_checkout_synthetic_hash($input);
+    $syntheticPlan = [
         'valid' => true,
         'ready' => true,
         'status' => 'ready',
         'packageId' => 'redcms.store-lite-stripe-checkout',
         'packageVersion' => '0.1.5',
-        'operation' => 'checkout.create-sandbox-real-post',
-        'method' => $request['method'],
-        'host' => $request['host'],
-        'path' => $request['path'],
-        'apiVersion' => $request['apiVersion'],
-        'contentType' => $request['contentType'],
-        'idempotencyKey' => $request['idempotencyKey'],
+        'adapterId' => 'redcms.store-lite-stripe-checkout/checkout',
+        'operation' => 'checkout.create-sandbox-synthetic',
+        'manifestSha256' => str_repeat('d', 64),
+        'inventorySha256' => str_repeat('e', 64),
         'inputSha256' => $inputSha256,
-        'syntheticPlanSha256' => str_repeat('f', 64),
-        'requestSha256' => red_stripe_p3e9d1_hash($request),
-        'restrictedTestWriteKeyRequired' => true,
-        'credentialValueIncluded' => false,
+        'planSha256' => str_repeat('f', 64),
+        'adapterInvoked' => false,
+        'boundedOutcome' => null,
+        'outcomeSha256' => '',
+        'executionPerformed' => false,
         'networkAccess' => false,
         'providerContact' => false,
         'providerMutation' => false,
@@ -182,13 +156,17 @@ function red_stripe_p3e9d1_preflight(
         'payment' => false,
         'webhook' => false,
         'browserNavigation' => false,
-        'storeLiteMutation' => false,
+        'orderMutation' => false,
         'retryAuthorized' => false,
-        'liveMode' => false,
         'clientDeployment' => false,
-        'executionPerformed' => false,
         'errors' => [],
     ];
+    $preflight = red_addon_checkout_real_post_preflight(
+        $syntheticPlan,
+        $input
+    );
+    unset($preflight['formFields']);
+    return $preflight;
 }
 
 try {
@@ -249,11 +227,11 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e9d1_assert(
-        ($manifest['version'] ?? null) === '0.1.6'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.6'
+        ($manifest['version'] ?? null) === '0.1.7'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.7'
             && ($identity['status'] ?? null)
-                === 'p3e9d1_real_post_preflight_operation_available',
-        'manifest and identity advance exactly to preflight package 0.1.6'
+                === 'p3e9d1_canonical_core_hash_compatible',
+        'manifest and identity advance to canonical-hash package 0.1.7'
     );
     red_stripe_p3e9d1_assert(
         count($manifest['integrity']['files'] ?? []) === 15,
@@ -323,6 +301,26 @@ try {
         $profile,
         $prepared['contractSha256']
     );
+    $coreInput = [
+        'contactTarget' => 'synthetic-checkout-package',
+        'checkout' => $checkout,
+        'policy' => $policy,
+        'profile' => $profile,
+        'contractSha256' => $prepared['contractSha256'],
+    ];
+    $reorderedInput = array_reverse($coreInput, true);
+    red_stripe_p3e9d1_assert(
+        $preflight['inputSha256']
+                === red_addon_checkout_synthetic_hash($coreInput)
+            && $preflight['inputSha256']
+                === red_addon_checkout_synthetic_hash($reorderedInput),
+        'D0 input SHA-256 is canonical across associative insertion order'
+    );
+    red_stripe_p3e9d1_assert(
+        $preflight['inputSha256']
+            !== red_stripe_p3e9d1_hash($coreInput),
+        'regression fixture distinguishes canonical input from raw JSON order'
+    );
     $adopted =
         RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Preflight::adopt(
             $checkout,
@@ -335,9 +333,9 @@ try {
         ($adopted['valid'] ?? null) === true
             && ($adopted['adopted'] ?? null) === true
             && ($adopted['status'] ?? null) === 'request_contract_adopted'
-            && ($adopted['packageVersion'] ?? null) === '0.1.6'
+            && ($adopted['packageVersion'] ?? null) === '0.1.7'
             && ($adopted['sourcePackageVersion'] ?? null) === '0.1.5',
-        'exact core D0 request is adopted into package 0.1.6'
+        'exact canonical core D0 request is adopted into package 0.1.7'
     );
     red_stripe_p3e9d1_assert(
         ($adopted['operation'] ?? null)
@@ -379,7 +377,7 @@ try {
 
     foreach ([
         ['requestSha256', str_repeat('0', 64)],
-        ['packageVersion', '0.1.6'],
+        ['packageVersion', '0.1.7'],
         ['networkAccess', true],
         ['operation', 'checkout.create-sandbox'],
     ] as [$field, $value]) {
