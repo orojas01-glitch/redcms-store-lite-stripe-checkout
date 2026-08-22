@@ -181,7 +181,7 @@ try {
         $handler,
         'private static function realPostPreflight'
     );
-    $handlerEnd = strpos($handler, 'private static function providerInput');
+    $handlerEnd = strpos($handler, 'private static function realPost(');
     if (!is_int($handlerStart)
         || !is_int($handlerEnd)
         || $handlerEnd <= $handlerStart
@@ -227,15 +227,15 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e9d1_assert(
-        ($manifest['version'] ?? null) === '0.1.7'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.7'
+        ($manifest['version'] ?? null) === '0.1.8'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.8'
             && ($identity['status'] ?? null)
-                === 'p3e9d1_canonical_core_hash_compatible',
-        'manifest and identity advance to canonical-hash package 0.1.7'
+                === 'p3e9d4a_provider_write_operation_uninvoked',
+        'later D4A package preserves canonical preflight adoption in 0.1.8'
     );
     red_stripe_p3e9d1_assert(
-        count($manifest['integrity']['files'] ?? []) === 15,
-        'integrity inventory covers exactly fifteen payload files'
+        count($manifest['integrity']['files'] ?? []) === 19,
+        'integrity inventory covers exactly nineteen payload files'
     );
     $inventoryPaths = [];
     foreach ($manifest['integrity']['files'] as $inventoryFile) {
@@ -333,9 +333,9 @@ try {
         ($adopted['valid'] ?? null) === true
             && ($adopted['adopted'] ?? null) === true
             && ($adopted['status'] ?? null) === 'request_contract_adopted'
-            && ($adopted['packageVersion'] ?? null) === '0.1.7'
+            && ($adopted['packageVersion'] ?? null) === '0.1.8'
             && ($adopted['sourcePackageVersion'] ?? null) === '0.1.5',
-        'exact canonical core D0 request is adopted into package 0.1.7'
+        'exact canonical core D0 request is adopted into package 0.1.8'
     );
     red_stripe_p3e9d1_assert(
         ($adopted['operation'] ?? null)
@@ -503,8 +503,8 @@ try {
         );
     red_stripe_p3e9d1_assert(
         !$realOperation->successState()
-            && $realOperation->error() === 'unsupported_operation',
-        'actual real POST operation remains unavailable'
+            && $realOperation->error() === 'real_post_input_refused',
+        'D1 preflight evidence cannot invoke the later D4A operation'
     );
 
     echo 'P3E-9D1 real POST preflight operation self-test passed: '

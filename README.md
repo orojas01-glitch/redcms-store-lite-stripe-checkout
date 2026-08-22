@@ -37,7 +37,10 @@ source-only Checkout-creation contract, and P3E-9B1 advanced the package to
 `0.1.5` with one synthetic-only Checkout operation. P3E-9D1 introduced one
 pure real-POST preflight operation in `0.1.6`; compatibility repair `0.1.7`
 now hashes the source input with the same recursive canonical ordering as core
-P3E-9D0. It resolves no secret and performs no transport.
+P3E-9D0. D4A now advances the separately distributed package to `0.1.8` with
+one exact latent provider-write operation and one-use production transport.
+Core has no D4B caller, and D4A acceptance invokes only an in-memory exchange
+double plus the existing local TLS loopback proof. No Stripe contact occurs.
 
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
@@ -147,8 +150,7 @@ The real Checkout operation remains unsupported. See
 
 P3E-9D1 introduced the installable preflight adapter in `0.1.6`, and `0.1.7`
 corrects its source-input SHA-256 to match core canonical ordering. The package
-adopts a
-byte-identical pure source and adds only
+adopts a byte-identical pure source and adds
 `checkout.create-sandbox-real-post-preflight`. That operation recomputes the
 P3E-9A contract and complete D0 request—including endpoint, form fields,
 expiry, idempotency, input hash, and request hash—before returning the same
@@ -156,9 +158,16 @@ non-secret request facts under a distinct preflight identity. It does not call
 the package secret boundary. `executionReady`, network, provider contact and
 mutation, Checkout creation, payment, webhook, browser navigation, Store Lite
 mutation, retry, live mode, client deployment, and execution all remain false.
-The actual `checkout.create-sandbox-real-post` operation remains unsupported.
+Version `0.1.8` now adds the separately named
+`checkout.create-sandbox-real-post` operation, but current core rejects that
+package version and has no provider-write runner or command. The new production
+transport remains uninvoked; focused acceptance uses only a sealed in-memory
+exchange double, and the existing TLS rehearsal remains loopback-only.
 See
-[`docs/P3E-9D1-REAL-POST-PREFLIGHT-OPERATION.md`](docs/P3E-9D1-REAL-POST-PREFLIGHT-OPERATION.md).
+[`docs/P3E-9D1-REAL-POST-PREFLIGHT-OPERATION.md`](docs/P3E-9D1-REAL-POST-PREFLIGHT-OPERATION.md),
+[`docs/P3E-9D4A-PROVIDER-WRITE-OPERATION.md`](docs/P3E-9D4A-PROVIDER-WRITE-OPERATION.md),
+and
+[`docs/P3E-9D4A-ACCEPTANCE.md`](docs/P3E-9D4A-ACCEPTANCE.md).
 
 ## Current contracts
 
@@ -222,6 +231,14 @@ See
 - `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Preflight` revalidates
   and normalizes the exact core D0 request without resolving a credential,
   constructing an authorization header, or performing provider transport.
+- `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Transport` is the
+  uninvoked one-use D4A production transport fixed to the exact Stripe Sandbox
+  Checkout Sessions POST with hard TLS, proxy, redirect, timeout, and size
+  controls.
+- `RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Operation` requires the
+  exact D1 preflight plus future D4 plan/claim/start hashes, uses only a supplied
+  exchange, discards URL/body/header/key material, and makes every post-boundary
+  ambiguity permanently no-retry.
 
 The pure normalization and record-planning contracts read no request global,
 secret, database, RED-CMS core, Store Lite runtime code, or network. The typed

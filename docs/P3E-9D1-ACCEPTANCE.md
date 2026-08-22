@@ -2,7 +2,7 @@
 
 P3E-9D1 is complete only when the focused and aggregate adapter suites prove:
 
-- exact adapter `0.1.7` identity and fifteen-file integrity inventory;
+- retention in later adapter `0.1.8` with nineteen-file integrity inventory;
 - byte-identical source/package preflight adoption;
 - unchanged migration checksums and manifest capability surface;
 - exact D0 endpoint, form, expiry, line-item, idempotency, and hash
@@ -12,11 +12,11 @@ P3E-9D1 is complete only when the focused and aggregate adapter suites prove:
 - failure-closed handling of altered, extra, malformed, read-only, or
   effect-bearing evidence;
 - typed preflight invocation without package secret access;
-- continued unsupported status for `checkout.create-sandbox-real-post`; and
+- refusal of D1 preflight input at the separately named D4A provider operation;
 - zero credential, database, DNS, TLS, HTTP, Stripe, Checkout Session,
   payment, Store Lite, demo, client, or deployment effects.
 
-Current evidence: 64 focused P3E-9D1 assertions and 1,063 aggregate adapter
+Current evidence: 68 focused P3E-9D1 assertions and 1,172 aggregate adapter
 assertions pass.
 
 Run:

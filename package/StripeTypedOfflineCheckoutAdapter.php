@@ -45,6 +45,11 @@ final class RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter
         ) {
             return self::realPostPreflight($request);
         }
+        if ($request->operation()
+            === 'checkout.create-sandbox-real-post'
+        ) {
+            return self::realPost($request);
+        }
         return RED_Addon_Adapter_Result::failure('unsupported_operation');
     }
 
@@ -364,6 +369,121 @@ final class RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter
             && is_array($input['profile'] ?? null)
             && is_array($input['realPostPreflight'] ?? null)
             && self::sha256($input['contractSha256'] ?? null);
+    }
+
+    private static function realPost(
+        RED_Addon_Adapter_Request $request
+    ): RED_Addon_Adapter_Result {
+        $input = $request->input();
+        if (!self::realPostInput($input)) {
+            return RED_Addon_Adapter_Result::failure(
+                'real_post_input_refused'
+            );
+        }
+
+        $adopted =
+            RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Preflight::adopt(
+                $input['checkout'],
+                $input['policy'],
+                $input['profile'],
+                $input['contractSha256'],
+                $input['realPostPreflight']
+            );
+        if (($adopted['valid'] ?? null) !== true
+            || ($adopted['adopted'] ?? null) !== true
+            || ($adopted['packageVersion'] ?? null) !== '0.1.8'
+            || ($adopted['providerOperation'] ?? null)
+                !== 'checkout.create-sandbox-real-post'
+            || ($adopted['errors'] ?? null) !== []
+        ) {
+            return RED_Addon_Adapter_Result::failure(
+                'real_post_preflight_refused'
+            );
+        }
+        unset($adopted);
+
+        $apiValue = null;
+        $apiResolution = $request->secret('stripe.secret-key', $apiValue);
+        $webhookValue = null;
+        $webhookResolution = $request->secret(
+            'stripe.webhook-secret',
+            $webhookValue
+        );
+        if (($apiResolution['resolved'] ?? false) !== true
+            || !is_string($apiValue)
+            || $apiValue === ''
+            || ($webhookResolution['resolved'] ?? false) !== false
+            || $webhookValue !== null
+        ) {
+            $apiValue = null;
+            return RED_Addon_Adapter_Result::failure(
+                'real_post_secret_refused'
+            );
+        }
+
+        try {
+            $transport =
+                new RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Transport(
+                    $apiValue
+                );
+            $apiValue = null;
+            $outcome =
+                RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Operation::execute(
+                    $input['checkout'],
+                    $input['policy'],
+                    $input['profile'],
+                    $input['contractSha256'],
+                    $input['realPostPreflight'],
+                    $input['execution'],
+                    $transport
+                );
+        } catch (Throwable $throwable) {
+            $apiValue = null;
+            return RED_Addon_Adapter_Result::failure(
+                'real_post_failed'
+            );
+        }
+        $apiValue = null;
+        if (($outcome['valid'] ?? null) !== true) {
+            return RED_Addon_Adapter_Result::failure(
+                'real_post_failed'
+            );
+        }
+        return RED_Addon_Adapter_Result::success($outcome);
+    }
+
+    private static function realPostInput(array $input): bool
+    {
+        $keys = array_keys($input);
+        $expected = [
+            'checkout', 'contactTarget', 'contractSha256', 'execution',
+            'policy', 'profile', 'realPostPreflight',
+        ];
+        sort($keys, SORT_STRING);
+        sort($expected, SORT_STRING);
+        $execution = $input['execution'] ?? null;
+        $executionKeys = is_array($execution) ? array_keys($execution) : [];
+        $expectedExecutionKeys = [
+            'planSha256', 'claimStateSha256',
+            'executionStartStateSha256',
+        ];
+        sort($executionKeys, SORT_STRING);
+        sort($expectedExecutionKeys, SORT_STRING);
+        return $keys === $expected
+            && ($input['contactTarget'] ?? null)
+                === 'stripe-sandbox-real-post'
+            && is_array($input['checkout'] ?? null)
+            && is_array($input['policy'] ?? null)
+            && is_array($input['profile'] ?? null)
+            && is_array($input['realPostPreflight'] ?? null)
+            && self::sha256($input['contractSha256'] ?? null)
+            && is_array($execution)
+            && $executionKeys === $expectedExecutionKeys
+            && self::sha256($execution['planSha256'] ?? null)
+            && self::sha256($execution['claimStateSha256'] ?? null)
+            && self::sha256(
+                $execution['executionStartStateSha256'] ?? null
+            );
     }
 
     private static function providerInput(array $input): bool
