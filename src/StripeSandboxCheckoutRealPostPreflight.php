@@ -12,7 +12,7 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Preflight
 {
     private const PACKAGE_ID = 'redcms.store-lite-stripe-checkout';
     private const SOURCE_PACKAGE_VERSION = '0.1.5';
-    private const PACKAGE_VERSION = '0.1.7';
+    private const PACKAGE_VERSION = '0.1.8';
     private const INPUT_TARGET = 'synthetic-checkout-package';
     private const OPERATION = 'checkout.create-sandbox-real-post-preflight';
     private const PROVIDER_OPERATION = 'checkout.create-sandbox-real-post';

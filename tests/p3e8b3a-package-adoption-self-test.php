@@ -88,12 +88,12 @@ try {
     red_stripe_p3e8b3a_assert(
         ($manifest['id'] ?? null)
                 === 'redcms.store-lite-stripe-checkout'
-            && ($manifest['version'] ?? null) === '0.1.7'
+            && ($manifest['version'] ?? null) === '0.1.8'
             && ($manifest['type'] ?? null) === 'adapter'
             && ($identity['status'] ?? null)
-                === 'p3e9d1_canonical_core_hash_compatible'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.7',
-        'later identity preserves B3A transport adoption in 0.1.7'
+                === 'p3e9d4a_provider_write_operation_uninvoked'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.8',
+        'later identity preserves B3A transport adoption in 0.1.8'
     );
     red_stripe_p3e8b3a_assert(
         ($manifest['outboundHosts'] ?? null) === ['api.stripe.com']
@@ -108,12 +108,12 @@ try {
                 === 'f58ae3b56d5b96d80f2757162e41e0fa4540f5e652934b9708e3884be633c2fa'
             && ($manifest['migrations'][1]['sha256'] ?? '')
                 === '20b516693d15bf2fb3829de6d9c9fe44202af03b846a05262d0c79f2b0cd2b8d',
-        'later 0.1.7 preserves both append-only migration checksums'
+        'later 0.1.8 preserves both append-only migration checksums'
     );
 
     $inventory = $manifest['integrity']['files'] ?? [];
     red_stripe_p3e8b3a_assert(
-        count($inventory) === 15
+        count($inventory) === 19
             && array_column($inventory, 'path') === [
                 'addon.php',
                 'StripeTypedOfflineCheckoutAdapter.php',
@@ -121,17 +121,21 @@ try {
                 'StripeSandboxReadOnlyProbeOutcomeGate.php',
                 'StripeSandboxReadOnlyProbeSyntheticExecutor.php',
                 'StripeCheckoutResponseNormalizer.php',
+                'StripeBoundedJsonDecoder.php',
                 'StripeSandboxCheckoutTransportPlanner.php',
                 'StripeSandboxCheckoutTransportResponseGate.php',
                 'StripeSandboxCheckoutWireCodec.php',
                 'StripeSandboxCheckoutCreationContract.php',
                 'StripeSandboxCheckoutCreationSyntheticExecutor.php',
                 'StripeSandboxCheckoutRealPostPreflight.php',
+                'StripeSandboxCheckoutRealPostExchange.php',
+                'StripeSandboxCheckoutRealPostTransport.php',
+                'StripeSandboxCheckoutRealPostOperation.php',
                 'identity.json',
                 'migrations/2026-08-16-create-checkout-attempts.sql',
                 'migrations/2026-08-16-create-event-receipts.sql',
             ],
-        'integrity inventory lists the exact fifteen payload files'
+        'integrity inventory lists the exact nineteen payload files'
     );
     foreach ($inventory as $file) {
         $path = $packageDirectory . '/' . ($file['path'] ?? '');
@@ -201,9 +205,9 @@ try {
         );
     }
     red_stripe_p3e8b3a_assert(
-        substr_count($handler, "'stripe.secret-key'") === 4
-            && substr_count($handler, "'stripe.webhook-secret'") === 4,
-        'all four operations use only declared secret keys'
+        substr_count($handler, "'stripe.secret-key'") === 5
+            && substr_count($handler, "'stripe.webhook-secret'") === 5,
+        'all five secret-aware operations use only declared keys'
     );
 
     $readiness = red_stripe_p3e8b3a_readiness();

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Typed provider-operation and P3E-9D1 real-POST preflight entrypoint.
+ * Typed provider operations through the uninvoked D4A real-POST boundary.
  *
  * RED-CMS may integrity-check and execute this registrar only to validate the
  * exact declared registration shape. Loading and registering the package
@@ -16,10 +16,14 @@ require_once __DIR__ . '/StripeSandboxReadOnlyProbeSyntheticExecutor.php';
 require_once __DIR__ . '/StripeCheckoutResponseNormalizer.php';
 require_once __DIR__ . '/StripeSandboxCheckoutTransportPlanner.php';
 require_once __DIR__ . '/StripeSandboxCheckoutTransportResponseGate.php';
+require_once __DIR__ . '/StripeBoundedJsonDecoder.php';
 require_once __DIR__ . '/StripeSandboxCheckoutWireCodec.php';
 require_once __DIR__ . '/StripeSandboxCheckoutCreationContract.php';
 require_once __DIR__ . '/StripeSandboxCheckoutCreationSyntheticExecutor.php';
 require_once __DIR__ . '/StripeSandboxCheckoutRealPostPreflight.php';
+require_once __DIR__ . '/StripeSandboxCheckoutRealPostExchange.php';
+require_once __DIR__ . '/StripeSandboxCheckoutRealPostTransport.php';
+require_once __DIR__ . '/StripeSandboxCheckoutRealPostOperation.php';
 require_once __DIR__ . '/StripeTypedOfflineCheckoutAdapter.php';
 
 return static function ($registry): void {
