@@ -139,7 +139,7 @@
       },
       {
         "path": "StripeSandboxCheckoutRealPostExchange.php",
-        "sha256": "b2e863f139ee69cef623c21f7ee699908ae3394eef2c6eea27613c02c8261a2d"
+        "sha256": "40a7d3834dfa5f6cc1cf4ac4b8800933fa40a3c19dcfaeec21db14e453eb596e"
       },
       {
         "path": "StripeSandboxCheckoutRealPostTransport.php",
