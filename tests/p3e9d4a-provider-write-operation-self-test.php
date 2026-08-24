@@ -386,6 +386,7 @@ try {
             && ($created['sourcePackageVersion'] ?? null) === '0.1.7'
             && ($created['operation'] ?? null)
                 === 'checkout.create-sandbox-real-post'
+            && ($created['failureStage'] ?? null) === 'none'
             && ($created['execution'] ?? null) === $execution,
         'one sealed synthetic exchange yields the exact D4A operation result: '
             . json_encode($created, JSON_UNESCAPED_SLASHES)
@@ -456,6 +457,7 @@ try {
     red_stripe_p3e9d4a_assert(
         $refusalDouble->calls() === 0
             && ($refused['status'] ?? null) === 'refused'
+            && ($refused['failureStage'] ?? null) === 'preflight_refused'
             && empty($refused['executionPerformed'])
             && empty($refused['providerContact'])
             && empty($refused['checkoutCreation']),
@@ -481,6 +483,8 @@ try {
             && ($indeterminate['providerMutation'] ?? null) === true
             && ($indeterminate['checkoutCreation'] ?? null) === true
             && ($indeterminate['checkout'] ?? null) === null
+            && ($indeterminate['failureStage'] ?? null)
+                === 'transport_exchange_failed'
             && ($indeterminate['retryAuthorized'] ?? null) === false,
         'every post-boundary failure is conservatively indeterminate and permanently no-retry'
     );
@@ -500,6 +504,8 @@ try {
         $liveDouble->calls() === 1
             && ($liveRefused['status'] ?? null) === 'indeterminate'
             && ($liveRefused['checkout'] ?? null) === null
+            && ($liveRefused['failureStage'] ?? null)
+                === 'response_acceptance_failed'
             && ($liveRefused['liveMode'] ?? null) === false
             && ($liveRefused['retryAuthorized'] ?? null) === false,
         'live-mode provider output yields no accepted Session and no retry'

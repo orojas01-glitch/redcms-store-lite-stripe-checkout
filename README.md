@@ -159,14 +159,16 @@ the package secret boundary. `executionReady`, network, provider contact and
 mutation, Checkout creation, payment, webhook, browser navigation, Store Lite
 mutation, retry, live mode, client deployment, and execution all remain false.
 Version `0.1.8` now adds the separately named
-`checkout.create-sandbox-real-post` operation, but current core rejects that
-package version and has no provider-write runner or command. The new production
-transport remains uninvoked; focused acceptance uses only a sealed in-memory
-exchange double, and the existing TLS rehearsal remains loopback-only.
+`checkout.create-sandbox-real-post` operation. Core D4B/D4C now provides the
+fresh authority, durable one-attempt runner, and dry-run-first CLI boundary;
+there is still no automatic caller. The first D4D operational attempt reached
+no Stripe request, and its unused restricted key was expired. The bounded
+diagnostic recovery contract must pass before a separately authorized new
+provider attempt.
 See
 [`docs/P3E-9D1-REAL-POST-PREFLIGHT-OPERATION.md`](docs/P3E-9D1-REAL-POST-PREFLIGHT-OPERATION.md),
 [`docs/P3E-9D4A-PROVIDER-WRITE-OPERATION.md`](docs/P3E-9D4A-PROVIDER-WRITE-OPERATION.md),
-and
+[`docs/P3E-9D4D-DIAGNOSTIC-RECOVERY.md`](docs/P3E-9D4D-DIAGNOSTIC-RECOVERY.md), and
 [`docs/P3E-9D4A-ACCEPTANCE.md`](docs/P3E-9D4A-ACCEPTANCE.md).
 
 ## Current contracts

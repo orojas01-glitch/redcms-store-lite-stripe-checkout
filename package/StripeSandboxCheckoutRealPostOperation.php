@@ -20,7 +20,10 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Operation
         RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Exchange $exchange
     ): array {
         if (!self::dependencies() || !self::execution($execution)) {
-            return self::outcome('refused', $execution, false, null);
+            return self::outcome(
+                'refused', $execution, false, null, null,
+                'preflight_refused'
+            );
         }
         $adopted =
             RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Preflight::adopt(
@@ -50,7 +53,10 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Operation
                 (string) ($prepared['contractSha256'] ?? '')
             )
         ) {
-            return self::outcome('refused', $execution, false, null);
+            return self::outcome(
+                'refused', $execution, false, null, null,
+                'preflight_refused'
+            );
         }
 
         $attempted = false;
@@ -60,6 +66,7 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Operation
         $rawValue = null;
         $projection = null;
         $accepted = null;
+        $failureStage = 'transport_exchange_failed';
         try {
             $attempted = true;
             $wireResponse = $exchange->exchange(
@@ -71,9 +78,11 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Operation
                     $execution,
                     true,
                     null,
-                    $adopted
+                    $adopted,
+                    'exchange_invariant_failed'
                 );
             }
+            $failureStage = 'response_decode_failed';
             $decoded =
                 RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Wire_Codec::decode(
                     $wireResponse
@@ -91,7 +100,8 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Operation
                     $execution,
                     true,
                     null,
-                    $adopted
+                    $adopted,
+                    'response_decode_failed'
                 );
             }
             $rawDecoded =
@@ -110,13 +120,15 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Operation
                     $execution,
                     true,
                     null,
-                    $adopted
+                    $adopted,
+                    'response_decode_failed'
                 );
             }
             $projection = $transcript['projection'];
             $projection['expires_at'] = $rawValue['expires_at'];
             $projection['after_expiration'] =
                 $rawValue['after_expiration'];
+            $failureStage = 'response_acceptance_failed';
             $accepted =
                 RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Creation_Contract::accept(
                     $checkout,
@@ -134,7 +146,8 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Operation
                     $execution,
                     true,
                     null,
-                    $adopted
+                    $adopted,
+                    'response_acceptance_failed'
                 );
             }
             return self::outcome(
@@ -142,7 +155,8 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Operation
                 $execution,
                 true,
                 $accepted,
-                $adopted
+                $adopted,
+                'none'
             );
         } catch (Throwable $throwable) {
             return self::outcome(
@@ -150,7 +164,8 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Operation
                 $execution,
                 $attempted,
                 null,
-                $adopted
+                $adopted,
+                $attempted ? $failureStage : 'preflight_refused'
             );
         } finally {
             $wireResponse = null;
@@ -197,9 +212,21 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Operation
         array $execution,
         bool $attempted,
         ?array $accepted,
-        ?array $adopted = null
+        ?array $adopted = null,
+        string $failureStage = 'none'
     ): array {
         $created = $status === 'checkout_session_created';
+        $allowedFailureStages = [
+            'none', 'preflight_refused', 'transport_exchange_failed',
+            'exchange_invariant_failed', 'response_decode_failed',
+            'response_acceptance_failed',
+        ];
+        if (!in_array($failureStage, $allowedFailureStages, true)) {
+            $failureStage = 'transport_exchange_failed';
+        }
+        if ($created) {
+            $failureStage = 'none';
+        }
         $acceptedResult = $created ? ($accepted['result'] ?? null) : null;
         $bounded = is_array($acceptedResult) ? [
             'checkoutSessionRef' =>
@@ -264,6 +291,7 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Operation
             'liveMode' => false,
             'clientDeployment' => false,
             'executionPerformed' => $attempted,
+            'failureStage' => $failureStage,
             'errors' => $status === 'indeterminate'
                 ? ['provider_execution_indeterminate']
                 : ($status === 'refused' ? ['operation_refused'] : []),
