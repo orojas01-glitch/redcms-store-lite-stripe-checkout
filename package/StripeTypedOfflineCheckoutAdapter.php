@@ -60,7 +60,119 @@ final class RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter
         ) {
             return self::subscriptionAccept($request);
         }
+        if ($request->operation()
+            === 'subscription.checkout.create-sandbox-real-post'
+        ) {
+            return self::subscriptionRealPost($request);
+        }
         return RED_Addon_Adapter_Result::failure('unsupported_operation');
+    }
+
+    private static function subscriptionRealPost(
+        RED_Addon_Adapter_Request $request
+    ): RED_Addon_Adapter_Result {
+        $input = $request->input();
+        if (!self::subscriptionRealPostInput($input)) {
+            return RED_Addon_Adapter_Result::failure(
+                'subscription_real_post_input_refused'
+            );
+        }
+        $prepared =
+            RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Contract::
+                prepare($input['intent'], $input['offer'], $input['policy']);
+        if (($prepared['valid'] ?? null) !== true
+            || ($prepared['errors'] ?? null) !== []
+        ) {
+            return RED_Addon_Adapter_Result::failure(
+                'subscription_real_post_preflight_refused'
+            );
+        }
+
+        $apiValue = null;
+        $apiResolution = $request->secret('stripe.secret-key', $apiValue);
+        $webhookValue = null;
+        $webhookResolution = $request->secret(
+            'stripe.webhook-secret',
+            $webhookValue
+        );
+        if (($apiResolution['resolved'] ?? false) !== true
+            || !is_string($apiValue)
+            || $apiValue === ''
+            || ($webhookResolution['resolved'] ?? false) !== false
+            || $webhookValue !== null
+        ) {
+            $apiValue = null;
+            return RED_Addon_Adapter_Result::failure(
+                'subscription_real_post_secret_refused'
+            );
+        }
+
+        try {
+            $transport =
+                new RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Transport(
+                    $apiValue
+                );
+            $apiValue = null;
+            $outcome =
+                RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Real_Post_Operation::
+                    execute(
+                        $input['intent'],
+                        $input['offer'],
+                        $input['policy'],
+                        $input['execution'],
+                        $transport
+                    );
+        } catch (Throwable $throwable) {
+            $apiValue = null;
+            return RED_Addon_Adapter_Result::failure(
+                'subscription_real_post_failed'
+            );
+        }
+        $apiValue = null;
+        if (($outcome['valid'] ?? null) !== true) {
+            return RED_Addon_Adapter_Result::failure(
+                'subscription_real_post_failed'
+            );
+        }
+        $execution = $outcome['execution'] ?? [];
+        unset($outcome['execution']);
+        $outcome['planSha256'] = $execution['planSha256'] ?? '';
+        $outcome['claimStateSha256'] =
+            $execution['claimStateSha256'] ?? '';
+        $outcome['executionStartStateSha256'] =
+            $execution['executionStartStateSha256'] ?? '';
+        return RED_Addon_Adapter_Result::success($outcome);
+    }
+
+    private static function subscriptionRealPostInput(array $input): bool
+    {
+        $keys = array_keys($input);
+        $expected = [
+            'contactTarget', 'execution', 'intent', 'offer', 'policy',
+        ];
+        sort($keys, SORT_STRING);
+        sort($expected, SORT_STRING);
+        $execution = $input['execution'] ?? null;
+        $executionKeys = is_array($execution) ? array_keys($execution) : [];
+        $expectedExecution = [
+            'planSha256', 'claimStateSha256',
+            'executionStartStateSha256',
+        ];
+        sort($executionKeys, SORT_STRING);
+        sort($expectedExecution, SORT_STRING);
+        return $keys === $expected
+            && ($input['contactTarget'] ?? null)
+                === 'stripe-subscription-sandbox-real-post'
+            && is_array($input['intent'] ?? null)
+            && is_array($input['offer'] ?? null)
+            && is_array($input['policy'] ?? null)
+            && is_array($execution)
+            && $executionKeys === $expectedExecution
+            && self::sha256($execution['planSha256'] ?? null)
+            && self::sha256($execution['claimStateSha256'] ?? null)
+            && self::sha256(
+                $execution['executionStartStateSha256'] ?? null
+            );
     }
 
     private static function subscriptionPrepare(
@@ -525,7 +637,7 @@ final class RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter
             );
         if (($adopted['valid'] ?? null) !== true
             || ($adopted['adopted'] ?? null) !== true
-            || ($adopted['packageVersion'] ?? null) !== '0.1.9'
+            || ($adopted['packageVersion'] ?? null) !== '0.1.10'
             || ($adopted['providerOperation'] ?? null)
                 !== 'checkout.create-sandbox-real-post'
             || ($adopted['errors'] ?? null) !== []

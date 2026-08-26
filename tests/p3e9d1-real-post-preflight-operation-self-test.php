@@ -227,14 +227,14 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e9d1_assert(
-        ($manifest['version'] ?? null) === '0.1.9'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.9'
+        ($manifest['version'] ?? null) === '0.1.10'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.10'
             && ($identity['status'] ?? null)
-                === 'p3e10_subscription_checkout_package_adopted_offline',
-        'later D4A package preserves canonical preflight adoption in 0.1.9'
+                === 'p3e11_subscription_real_post_operation_adopted_offline',
+        'later D4A package preserves canonical preflight adoption in 0.1.10'
     );
     red_stripe_p3e9d1_assert(
-        count($manifest['integrity']['files'] ?? []) === 20,
+        count($manifest['integrity']['files'] ?? []) === 21,
         'integrity inventory covers exactly twenty payload files'
     );
     $inventoryPaths = [];
@@ -333,9 +333,9 @@ try {
         ($adopted['valid'] ?? null) === true
             && ($adopted['adopted'] ?? null) === true
             && ($adopted['status'] ?? null) === 'request_contract_adopted'
-            && ($adopted['packageVersion'] ?? null) === '0.1.9'
+            && ($adopted['packageVersion'] ?? null) === '0.1.10'
             && ($adopted['sourcePackageVersion'] ?? null) === '0.1.5',
-        'exact canonical core D0 request is adopted into package 0.1.9'
+        'exact canonical core D0 request is adopted into package 0.1.10'
     );
     red_stripe_p3e9d1_assert(
         ($adopted['operation'] ?? null)
