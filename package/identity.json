@@ -1,13 +1,13 @@
 {
   "contractVersion": 1,
-  "status": "p3e12_subscription_verified_event_contract_adopted_offline",
+  "status": "p3e13_stripe_webhook_signature_envelope_adopted_offline",
   "id": "redcms.store-lite-stripe-checkout",
   "name": "RED-CMS Store Lite Stripe Checkout",
   "repository": "redcms-store-lite-stripe-checkout",
   "futureManifest": {
     "schemaVersion": 1,
     "type": "adapter",
-    "version": "0.1.11",
+    "version": "0.1.12",
     "cmsCompatibility": ">=5.1 <6.0",
     "phpCompatibility": ">=8.2 <9.0",
     "requiredDependency": {

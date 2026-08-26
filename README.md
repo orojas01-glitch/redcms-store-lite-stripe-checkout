@@ -74,6 +74,16 @@ The route remains non-operational: no request parsing, signature verification,
 secret resolution, database write, Stripe contact, payment, or deployment is
 added.
 
+P3E-13 advances the adapter to `0.1.12` with an inert Stripe Sandbox webhook
+signature-envelope verifier. It accepts only the untouched bounded UTF-8 body,
+the `Stripe-Signature` header, a process-local `whsec_` endpoint secret, and a
+server receipt timestamp. It verifies one of at most eight `v1` HMAC-SHA256
+signatures over `timestamp.raw-body`, enforces a symmetric five-minute window,
+strictly decodes duplicate-key-free JSON, and admits only the five subscription
+event types used by P3E-12 under API version `2024-09-30.acacia`. Its result
+contains hashes and top-level event facts only. The class is inventoried but no
+runtime operation or route can invoke it.
+
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
 value-free `contract.probe` operation through the core typed boundary. The

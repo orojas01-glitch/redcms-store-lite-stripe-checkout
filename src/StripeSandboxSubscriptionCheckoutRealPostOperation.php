@@ -6,7 +6,7 @@ declare(strict_types=1);
 final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Real_Post_Operation
 {
     private const PACKAGE_ID = 'redcms.store-lite-stripe-checkout';
-    private const PACKAGE_VERSION = '0.1.11';
+    private const PACKAGE_VERSION = '0.1.12';
     private const OPERATION = 'subscription.checkout.create-sandbox-real-post';
 
     public static function execute(

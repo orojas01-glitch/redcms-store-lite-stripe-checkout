@@ -308,7 +308,7 @@ try {
         JSON_THROW_ON_ERROR
     );
     $assert(
-        ($manifest['version'] ?? null) === '0.1.11'
+        ($manifest['version'] ?? null) === '0.1.12'
             && ($manifest['dependencies']['required'][0]['version'] ?? null)
                 === '>=0.1.48 <1.0'
             && in_array(
@@ -330,7 +330,7 @@ try {
                     $root . '/package/StripeSandboxSubscriptionCheckoutContract.php'
                 )
             ),
-        'adapter 0.1.11 adopts the exact source with Store Lite 0.1.48'
+        'adapter 0.1.12 adopts the exact source with Store Lite 0.1.48'
     );
 
     require_once dirname($root) . '/redcms v5.1/includes/addon_adapter_helpers.php';

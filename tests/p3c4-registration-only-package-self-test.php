@@ -165,7 +165,7 @@ try {
     );
     red_stripe_p3c4_assert(
         ($package['id'] ?? null) === $packageId
-            && ($package['manifest']['version'] ?? null) === '0.1.11'
+            && ($package['manifest']['version'] ?? null) === '0.1.12'
             && ($package['manifest']['type'] ?? null) === 'adapter',
         'manifest identity, version, and adapter type are exact'
     );
@@ -209,9 +209,9 @@ try {
         'secret settings declare references without values or defaults'
     );
     red_stripe_p3c4_assert(
-        count($manifest['integrity']['files']) === 23
+        count($manifest['integrity']['files']) === 24
             && $manifest['integrity']['entrypoint'] === 'addon.php',
-        'integrity inventory covers all twenty-three payload files exactly once'
+        'integrity inventory covers all twenty-four payload files exactly once'
     );
     foreach ($manifest['integrity']['files'] as $inventoryFile) {
         $path = $fixturePackage . '/' . $inventoryFile['path'];
@@ -327,13 +327,23 @@ try {
         'shell_exec(',
         'sk_test_',
         'sk_live_',
-        'whsec_',
     ] as $forbiddenToken) {
         red_stripe_p3c4_assert(
             strpos($packageSource, $forbiddenToken) === false,
             $forbiddenToken . ' is absent from the installable package payload'
         );
     }
+    red_stripe_p3c4_assert(
+        substr_count($packageSource, 'whsec_') === 1
+            && str_contains(
+                (string) file_get_contents(
+                    $fixturePackage
+                        . '/StripeSandboxWebhookSignatureEnvelope.php'
+                ),
+                "str_starts_with(\$endpointSecret, 'whsec_')"
+            ),
+        'webhook prefix appears only as the inert verifier input gate'
+    );
     foreach ([
         'CURLOPT_HTTPGET', 'CURLAUTH_BASIC', 'CURLOPT_USERPWD',
         'CURLOPT_SSL_VERIFYPEER', 'CURLOPT_SSL_VERIFYHOST',
