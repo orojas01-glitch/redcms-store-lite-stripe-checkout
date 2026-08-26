@@ -165,7 +165,7 @@ try {
     );
     red_stripe_p3c4_assert(
         ($package['id'] ?? null) === $packageId
-            && ($package['manifest']['version'] ?? null) === '0.1.8'
+            && ($package['manifest']['version'] ?? null) === '0.1.9'
             && ($package['manifest']['type'] ?? null) === 'adapter',
         'manifest identity, version, and adapter type are exact'
     );
@@ -209,9 +209,9 @@ try {
         'secret settings declare references without values or defaults'
     );
     red_stripe_p3c4_assert(
-        count($manifest['integrity']['files']) === 19
+        count($manifest['integrity']['files']) === 20
             && $manifest['integrity']['entrypoint'] === 'addon.php',
-        'integrity inventory covers all nineteen payload files exactly once'
+        'integrity inventory covers all twenty payload files exactly once'
     );
     foreach ($manifest['integrity']['files'] as $inventoryFile) {
         $path = $fixturePackage . '/' . $inventoryFile['path'];

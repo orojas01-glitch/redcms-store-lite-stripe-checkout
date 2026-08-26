@@ -310,7 +310,7 @@ try {
     red_stripe_p3d1_assert(
         $adapterInstallPlan['requiredDependencies'] === [[
             'id' => $storePackageId,
-            'versionRange' => '>=0.1.35 <1.0',
+            'versionRange' => '>=0.1.48 <1.0',
             'installedVersion' => '0.1.35',
             'manifestSha256' => $storeSnapshot['manifestSha256'],
             'inventorySha256' => $storeSnapshot['inventorySha256'],

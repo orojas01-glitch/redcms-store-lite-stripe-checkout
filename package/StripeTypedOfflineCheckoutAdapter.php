@@ -50,7 +50,141 @@ final class RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter
         ) {
             return self::realPost($request);
         }
+        if ($request->operation()
+            === 'subscription.checkout.prepare-sandbox-offline'
+        ) {
+            return self::subscriptionPrepare($request);
+        }
+        if ($request->operation()
+            === 'subscription.checkout.accept-sandbox-synthetic'
+        ) {
+            return self::subscriptionAccept($request);
+        }
         return RED_Addon_Adapter_Result::failure('unsupported_operation');
+    }
+
+    private static function subscriptionPrepare(
+        RED_Addon_Adapter_Request $request
+    ): RED_Addon_Adapter_Result {
+        $input = $request->input();
+        if (!self::subscriptionInput($input, false)) {
+            return RED_Addon_Adapter_Result::failure(
+                'subscription_checkout_input_refused'
+            );
+        }
+        $prepared =
+            RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Contract::
+                prepare($input['intent'], $input['offer'], $input['policy']);
+        if (($prepared['valid'] ?? null) !== true
+            || ($prepared['errors'] ?? null) !== []
+        ) {
+            return RED_Addon_Adapter_Result::failure(
+                'subscription_checkout_refused'
+            );
+        }
+        $contract = $prepared['contract'];
+        return RED_Addon_Adapter_Result::success([
+            'valid' => true,
+            'operation' => $contract['operation'],
+            'contractSha256' => $prepared['contractSha256'],
+            'requestSha256' => $contract['request']['bodySha256'],
+            'intentReference' => $contract['intent']['intentReference'],
+            'intentStateSha256' =>
+                $contract['intent']['intentStateSha256'],
+            'offerStateSha256' =>
+                $contract['intent']['offerStateSha256'],
+            'offerId' => $contract['offer']['offerId'],
+            'amountMinor' => $contract['offer']['priceMinor'],
+            'currency' => $contract['offer']['currency'],
+            'billingPeriod' => $contract['offer']['billingPeriod'],
+            'expiresAtEpoch' => $contract['expiry']['expiresAtEpoch'],
+            'networkAccess' => false,
+            'providerContact' => false,
+            'providerMutation' => false,
+            'checkoutCreation' => false,
+            'subscriptionCreation' => false,
+            'browserNavigation' => false,
+            'errors' => [],
+        ]);
+    }
+
+    private static function subscriptionAccept(
+        RED_Addon_Adapter_Request $request
+    ): RED_Addon_Adapter_Result {
+        $input = $request->input();
+        if (!self::subscriptionInput($input, true)) {
+            return RED_Addon_Adapter_Result::failure(
+                'subscription_checkout_input_refused'
+            );
+        }
+        $accepted =
+            RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Contract::
+                accept(
+                    $input['intent'],
+                    $input['offer'],
+                    $input['policy'],
+                    $input['envelope'],
+                    $input['projection']
+                );
+        if (($accepted['valid'] ?? null) !== true
+            || ($accepted['errors'] ?? null) !== []
+        ) {
+            return RED_Addon_Adapter_Result::failure(
+                'subscription_checkout_refused'
+            );
+        }
+        $handoff = $accepted['handoff'];
+        return RED_Addon_Adapter_Result::success([
+            'valid' => true,
+            'intentReference' => $handoff['intentReference'],
+            'checkoutSessionRef' => $handoff['checkoutSessionRef'],
+            'checkoutUrl' => $handoff['checkoutUrl'],
+            'expiresAtEpoch' => $handoff['expiresAtEpoch'],
+            'navigationMode' => $handoff['navigationMode'],
+            'transientOnly' => $handoff['transientOnly'],
+            'persistCheckoutUrl' => $handoff['persistCheckoutUrl'],
+            'cacheControl' => $handoff['cacheControl'],
+            'authorizationRequired' => $handoff['authorizationRequired'],
+            'browserNavigationAuthorized' =>
+                $handoff['browserNavigationAuthorized'],
+            'contractSha256' => $accepted['contractSha256'],
+            'responseEvidenceSha256' =>
+                $accepted['responseEvidenceSha256'],
+            'resultSha256' => $accepted['resultSha256'],
+            'networkAccess' => false,
+            'providerContact' => false,
+            'providerMutation' => false,
+            'checkoutCreation' => false,
+            'subscriptionCreation' => false,
+            'browserNavigation' => false,
+            'errors' => [],
+        ]);
+    }
+
+    private static function subscriptionInput(
+        array $input,
+        bool $accept
+    ): bool {
+        $expected = $accept
+            ? [
+                'contactTarget', 'envelope', 'intent', 'offer', 'policy',
+                'projection',
+            ]
+            : ['contactTarget', 'intent', 'offer', 'policy'];
+        $keys = array_keys($input);
+        sort($keys, SORT_STRING);
+        sort($expected, SORT_STRING);
+        return $keys === $expected
+            && ($input['contactTarget'] ?? null)
+                === ($accept
+                    ? 'stripe-subscription-sandbox-synthetic-response'
+                    : 'stripe-subscription-sandbox-offline')
+            && is_array($input['intent'] ?? null)
+            && is_array($input['offer'] ?? null)
+            && is_array($input['policy'] ?? null)
+            && (!$accept
+                || (is_array($input['envelope'] ?? null)
+                    && is_array($input['projection'] ?? null)));
     }
 
     private static function contractProbe(
@@ -391,7 +525,7 @@ final class RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter
             );
         if (($adopted['valid'] ?? null) !== true
             || ($adopted['adopted'] ?? null) !== true
-            || ($adopted['packageVersion'] ?? null) !== '0.1.8'
+            || ($adopted['packageVersion'] ?? null) !== '0.1.9'
             || ($adopted['providerOperation'] ?? null)
                 !== 'checkout.create-sandbox-real-post'
             || ($adopted['errors'] ?? null) !== []

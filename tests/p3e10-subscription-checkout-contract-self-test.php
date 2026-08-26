@@ -308,17 +308,77 @@ try {
         JSON_THROW_ON_ERROR
     );
     $assert(
-        ($manifest['version'] ?? null) === '0.1.8'
-            && !in_array(
+        ($manifest['version'] ?? null) === '0.1.9'
+            && ($manifest['dependencies']['required'][0]['version'] ?? null)
+                === '>=0.1.48 <1.0'
+            && in_array(
                 'StripeSandboxSubscriptionCheckoutContract.php',
                 array_column($manifest['integrity']['files'] ?? [], 'path'),
                 true
             )
-            && !str_contains(
+            && str_contains(
                 (string) file_get_contents($root . '/package/addon.php'),
                 'StripeSandboxSubscriptionCheckoutContract'
+            )
+            && hash_equals(
+                hash_file(
+                    'sha256',
+                    $root . '/src/StripeSandboxSubscriptionCheckoutContract.php'
+                ),
+                hash_file(
+                    'sha256',
+                    $root . '/package/StripeSandboxSubscriptionCheckoutContract.php'
+                )
             ),
-        'source gate leaves installable adapter 0.1.8 and D4D evidence unchanged'
+        'adapter 0.1.9 adopts the exact source with Store Lite 0.1.48'
+    );
+
+    require_once dirname($root) . '/redcms v5.1/includes/addon_adapter_helpers.php';
+    require_once $root . '/package/StripeTypedOfflineCheckoutAdapter.php';
+    $preparedResult =
+        RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter::handle(
+            new RED_Addon_Adapter_Request(
+                'redcms.store-lite-stripe-checkout/checkout',
+                'subscription.checkout.prepare-sandbox-offline',
+                [
+                    'contactTarget' =>
+                        'stripe-subscription-sandbox-offline',
+                    'intent' => $monthlyIntent,
+                    'offer' => $monthlyOffer,
+                    'policy' => $policy(),
+                ]
+            )
+        );
+    $assert(
+        $preparedResult->successState()
+            && ($preparedResult->data()['valid'] ?? null) === true
+            && $preparedResult->error() === '',
+        'typed adapter exposes the offline subscription preparation operation'
+    );
+    $acceptedResult =
+        RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter::handle(
+            new RED_Addon_Adapter_Request(
+                'redcms.store-lite-stripe-checkout/checkout',
+                'subscription.checkout.accept-sandbox-synthetic',
+                [
+                    'contactTarget' =>
+                        'stripe-subscription-sandbox-synthetic-response',
+                    'intent' => $monthlyIntent,
+                    'offer' => $monthlyOffer,
+                    'policy' => $policy(),
+                    'envelope' => $envelope(),
+                    'projection' =>
+                        $projection($monthlyIntent, $monthlyOffer),
+                ]
+            )
+        );
+    $assert(
+        $acceptedResult->successState()
+            && ($acceptedResult->data()['valid'] ?? null) === true
+            && ($acceptedResult->data()
+                ['browserNavigationAuthorized'] ?? null) === false
+            && $acceptedResult->error() === '',
+        'typed adapter returns only the still-unauthorized transient handoff'
     );
 
     echo 'Stripe subscription Checkout source contract passed '

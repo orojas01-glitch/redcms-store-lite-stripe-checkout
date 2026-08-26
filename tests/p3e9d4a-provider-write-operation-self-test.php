@@ -363,8 +363,8 @@ try {
         );
     red_stripe_p3e9d4a_assert(
         ($adoptedPreflight['valid'] ?? null) === true
-            && ($adoptedPreflight['packageVersion'] ?? null) === '0.1.8',
-        'D4A retains exact 0.1.8 preflight adoption: '
+            && ($adoptedPreflight['packageVersion'] ?? null) === '0.1.9',
+        'D4A retains exact 0.1.9 preflight adoption: '
             . json_encode($adoptedPreflight, JSON_UNESCAPED_SLASHES)
     );
     $double = new RED_Stripe_P3E9D4A_Exchange_Double();
@@ -382,8 +382,8 @@ try {
         $double->calls() === 1
             && ($created['valid'] ?? null) === true
             && ($created['status'] ?? null) === 'checkout_session_created'
-            && ($created['packageVersion'] ?? null) === '0.1.8'
-            && ($created['sourcePackageVersion'] ?? null) === '0.1.7'
+            && ($created['packageVersion'] ?? null) === '0.1.9'
+            && ($created['sourcePackageVersion'] ?? null) === '0.1.8'
             && ($created['operation'] ?? null)
                 === 'checkout.create-sandbox-real-post'
             && ($created['failureStage'] ?? null) === 'none'
@@ -556,11 +556,11 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e9d4a_assert(
-        ($manifest['version'] ?? null) === '0.1.8'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.8'
+        ($manifest['version'] ?? null) === '0.1.9'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.9'
             && ($identity['status'] ?? null)
-                === 'p3e9d4a_provider_write_operation_uninvoked'
-            && count($manifest['integrity']['files'] ?? []) === 19,
+                === 'p3e10_subscription_checkout_package_adopted_offline'
+            && count($manifest['integrity']['files'] ?? []) === 20,
         'manifest and identity advance to the exact uninvoked D4A package'
     );
     $inventoryPaths = [];
@@ -594,8 +594,13 @@ try {
                 'StripeSandboxCheckoutRealPostOperation.php',
                 $inventoryPaths,
                 true
+            )
+            && in_array(
+                'StripeSandboxSubscriptionCheckoutContract.php',
+                $inventoryPaths,
+                true
             ),
-        'nineteen-file inventory includes each D4A payload exactly once'
+        'twenty-file inventory includes D4A and subscription payloads once'
     );
     red_stripe_p3e9d4a_assert(
         ($manifest['migrations'] ?? null) === [[
@@ -614,7 +619,7 @@ try {
     red_stripe_p3e9d4a_assert(
         ($manifest['dependencies']['required'] ?? null) === [[
             'id' => 'redcms.store-lite',
-            'version' => '>=0.1.35 <1.0',
+            'version' => '>=0.1.48 <1.0',
         ]]
             && ($manifest['permissions'] ?? null) === []
             && ($manifest['jobs'] ?? null) === []

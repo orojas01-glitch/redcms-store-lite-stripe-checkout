@@ -1,7 +1,8 @@
 # P3E-10 Subscription Checkout Source Contract
 
-Status: source-only and offline. The installable Stripe adapter remains at
-`0.1.8`, and the accepted D4D diagnostic/recovery evidence is unchanged.
+Status: adopted offline in installable Stripe adapter `0.1.9`. The prior
+`0.1.8` D4D diagnostic/recovery attempt remains expired and cannot authorize
+this new package identity.
 
 P3E-10 maps one current Store Lite `0.1.48` provider-neutral subscription
 intent plus its exact published offer state into a canonical hosted Stripe
@@ -9,6 +10,12 @@ Checkout request. It performs no package registration, secret resolution,
 database access, provider request, Checkout Session creation, customer or
 subscription creation, browser navigation, Store Lite mutation, webhook
 handling, or deployment.
+
+The package exposes two typed offline-only operations: exact contract
+preparation and synthetic response acceptance. Both return flattened bounded
+evidence compatible with the core adapter result limit. Canonical form bytes
+stay inside the adapter; only the synthetic accepted handoff may carry the
+short-lived Checkout URL.
 
 ## Input boundary
 
@@ -58,13 +65,11 @@ bounded redirect response.
 
 ## Next gates
 
-1. Adopt the byte-identical source into a new adapter package version without
-   weakening the frozen one-time D4D recovery path.
-2. Add a core coordinator that derives the intent reference from current
+1. Add a core coordinator that derives the intent reference from current
    client-local Store Lite state and performs one durable, replay-safe claim.
-3. Add a synthetic end-to-end redirect rehearsal before any provider request.
-4. Separately authorize one Stripe Sandbox subscription Checkout attempt.
-5. Require signed webhook agreement before any entitlement becomes active.
+2. Add a synthetic end-to-end redirect rehearsal before any provider request.
+3. Separately authorize one Stripe Sandbox subscription Checkout attempt.
+4. Require signed webhook agreement before any entitlement becomes active.
 
 ## Official Stripe references
 

@@ -147,7 +147,7 @@ try {
         ($identity['futureManifest']['requiredDependency']['id'] ?? null)
             === 'redcms.store-lite'
             && ($identity['futureManifest']['requiredDependency']['version']
-                ?? null) === '>=0.1.35 <1.0'
+                ?? null) === '>=0.1.48 <1.0'
             && ($identity['futureManifest']['adapterId'] ?? null)
                 === 'redcms.store-lite-stripe-checkout/checkout'
             && ($identity['futureManifest']['outboundHost'] ?? null)
