@@ -1,6 +1,6 @@
 # P3E-10 Subscription Checkout Source Contract
 
-Status: adopted offline in installable Stripe adapter `0.1.9`. The prior
+Status: retained in installable Stripe adapter `0.1.10`. The prior
 `0.1.8` D4D diagnostic/recovery attempt remains expired and cannot authorize
 this new package identity.
 
@@ -65,9 +65,9 @@ bounded redirect response.
 
 ## Next gates
 
-1. Add a core coordinator that derives the intent reference from current
-   client-local Store Lite state and performs one durable, replay-safe claim.
-2. Add a synthetic end-to-end redirect rehearsal before any provider request.
+1. Add the core durable, restartable provider-attempt coordinator for the new
+   P3E-11 real-POST operation.
+2. Add a network-disabled end-to-end provider-operation rehearsal.
 3. Separately authorize one Stripe Sandbox subscription Checkout attempt.
 4. Require signed webhook agreement before any entitlement becomes active.
 

@@ -258,7 +258,7 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Transport
                 $request['bodySha256'],
                 hash('sha256', $request['body'])
             )
-            && str_contains($request['body'], 'mode=payment')
+            && self::checkoutBody($request['body'])
             && str_contains($request['body'], 'expires_at=')
             && !str_contains($request['body'], 'after_expiration')
             && !str_contains($request['body'], '&customer=')
@@ -286,6 +286,19 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Transport
                 'totalTimeoutMilliseconds' => 15000,
                 'maximumResponseBytes' => 262144,
             ];
+    }
+
+    private static function checkoutBody(string $body): bool
+    {
+        $payment = str_contains($body, 'mode=payment')
+            && !str_contains($body, 'mode=subscription')
+            && !str_contains($body, 'recurring%5D');
+        $subscription = str_contains($body, 'mode=subscription')
+            && !str_contains($body, 'mode=payment')
+            && str_contains($body, 'submit_type=subscribe')
+            && str_contains($body, 'recurring%5D%5Binterval%5D=')
+            && str_contains($body, 'subscription_data%5Bmetadata%5D');
+        return $payment xor $subscription;
     }
 
     private static function exactKeys(array $value, array $expected): bool

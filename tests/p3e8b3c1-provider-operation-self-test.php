@@ -95,10 +95,10 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e8b3c1_assert(
-        ($manifest['version'] ?? null) === '0.1.9'
+        ($manifest['version'] ?? null) === '0.1.10'
             && ($identity['status'] ?? null)
-                === 'p3e10_subscription_checkout_package_adopted_offline'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.9',
+                === 'p3e11_subscription_real_post_operation_adopted_offline'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.10',
         'later package preserves the exact read-only provider operation'
     );
     red_stripe_p3e8b3c1_assert(
@@ -109,12 +109,14 @@ try {
         'package retains one host and no permission, mutation, or job'
     );
     red_stripe_p3e8b3c1_assert(
-        count($manifest['migrations'] ?? []) === 2
+        count($manifest['migrations'] ?? []) === 3
             && ($manifest['migrations'][0]['sha256'] ?? '')
                 === 'f58ae3b56d5b96d80f2757162e41e0fa4540f5e652934b9708e3884be633c2fa'
             && ($manifest['migrations'][1]['sha256'] ?? '')
-                === '20b516693d15bf2fb3829de6d9c9fe44202af03b846a05262d0c79f2b0cd2b8d',
-        'provider operation changes no migration path or checksum'
+                === '20b516693d15bf2fb3829de6d9c9fe44202af03b846a05262d0c79f2b0cd2b8d'
+            && ($manifest['migrations'][2]['sha256'] ?? '')
+                === '550bd34da11f47372f1922b106ea6561ab19b126a76861ca7a03fcb574d58fcd',
+        'provider operation retains all current migration checksums'
     );
     foreach ($manifest['integrity']['files'] ?? [] as $file) {
         $path = $packageDirectory . '/' . ($file['path'] ?? '');
@@ -128,7 +130,7 @@ try {
         );
     }
     red_stripe_p3e8b3c1_assert(
-        count($manifest['integrity']['files'] ?? []) === 20,
+        count($manifest['integrity']['files'] ?? []) === 22,
         'later synthetic Checkout adoption has exact current package inventory'
     );
     red_stripe_p3e8b3c1_assert(
