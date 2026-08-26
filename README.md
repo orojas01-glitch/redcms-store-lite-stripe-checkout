@@ -60,6 +60,9 @@ pre-attempt refusal, malformed/throwing indeterminate outcomes, and permanent
 no-retry behavior. The typed operation remains inert without scoped owner-entered
 secret availability. No core caller, real Stripe request, secret resolution,
 Checkout Session, browser navigation, webhook, payment, or deployment occurs.
+The same package adds one hash-only subscription-operation journal migration;
+it stores start/result/session hashes and status timestamps, never a Checkout
+URL, credential, response body/header, customer value, or payment value.
 
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact

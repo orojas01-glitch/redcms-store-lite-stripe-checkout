@@ -59,6 +59,11 @@
       "id": "2026-08-16-event-receipts",
       "path": "migrations/2026-08-16-create-event-receipts.sql",
       "sha256": "20b516693d15bf2fb3829de6d9c9fe44202af03b846a05262d0c79f2b0cd2b8d"
+    },
+    {
+      "id": "2026-08-28-subscription-checkout-operations",
+      "path": "migrations/2026-08-28-create-subscription-checkout-operations.sql",
+      "sha256": "550bd34da11f47372f1922b106ea6561ab19b126a76861ca7a03fcb574d58fcd"
     }
   ],
   "routes": [
@@ -155,7 +160,7 @@
       },
       {
         "path": "StripeSandboxSubscriptionCheckoutRealPostOperation.php",
-        "sha256": "984e8fccaf57bdb94fe55f56a37482b5a590bf5f581a25c3cf8236762bec577a"
+        "sha256": "4bbaef9dc359e5b257006e6f69f9b73d3787e7f54d5abcd14afec5935a518dbc"
       },
       {
         "path": "identity.json",
@@ -168,6 +173,10 @@
       {
         "path": "migrations/2026-08-16-create-event-receipts.sql",
         "sha256": "20b516693d15bf2fb3829de6d9c9fe44202af03b846a05262d0c79f2b0cd2b8d"
+      },
+      {
+        "path": "migrations/2026-08-28-create-subscription-checkout-operations.sql",
+        "sha256": "550bd34da11f47372f1922b106ea6561ab19b126a76861ca7a03fcb574d58fcd"
       }
     ]
   },

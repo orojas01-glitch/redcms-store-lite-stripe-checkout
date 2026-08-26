@@ -227,7 +227,7 @@ try {
     );
     red_stripe_p3e9a_assert(
         ($manifest['version'] ?? null) === '0.1.10'
-            && count($manifest['integrity']['files'] ?? []) === 21,
+            && count($manifest['integrity']['files'] ?? []) === 22,
         'later P3E-9B package adoption is exact and integrity checked'
     );
 

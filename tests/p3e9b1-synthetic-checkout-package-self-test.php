@@ -189,8 +189,8 @@ try {
         'later package 0.1.10 preserves the synthetic Checkout operation'
     );
     red_stripe_p3e9b1_assert(
-        count($manifest['integrity']['files'] ?? []) === 21,
-        'integrity inventory covers the exact twenty-one payload files'
+        count($manifest['integrity']['files'] ?? []) === 22,
+        'integrity inventory covers the exact twenty-two payload files'
     );
     $inventoryPaths = [];
     foreach ($manifest['integrity']['files'] as $inventoryFile) {

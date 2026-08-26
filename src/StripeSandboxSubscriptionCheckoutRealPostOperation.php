@@ -100,6 +100,8 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Real_Post_Op
                     'response_acceptance_failed'
                 );
             }
+            $accepted['requestSha256'] =
+                $contract['request']['bodySha256'];
             return self::outcome(
                 'subscription_checkout_session_created',
                 $execution,
@@ -251,6 +253,8 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Real_Post_Op
                 ? ($handoff['browserNavigationAuthorized'] ?? true) : false,
             'contractSha256' => $created
                 ? ($accepted['contractSha256'] ?? '') : '',
+            'requestSha256' => $created
+                ? ($accepted['requestSha256'] ?? '') : '',
             'responseEvidenceSha256' => $created
                 ? ($accepted['responseEvidenceSha256'] ?? '') : '',
             'resultSha256' => $resultSha256,

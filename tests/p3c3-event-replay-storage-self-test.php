@@ -111,8 +111,10 @@ try {
                 . '/2026-08-16-create-checkout-attempts.sql',
             $migrationDirectory
                 . '/2026-08-16-create-event-receipts.sql',
+            $migrationDirectory
+                . '/2026-08-28-create-subscription-checkout-operations.sql',
         ],
-        'P3C-3 appends exactly one migration after the attempt schema'
+        'later package retains P3C-3 plus the subscription operation journal'
     );
     $sql = (string) file_get_contents($migrations[1]);
     red_stripe_p3c3_assert(

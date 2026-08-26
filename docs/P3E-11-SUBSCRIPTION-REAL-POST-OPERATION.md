@@ -28,6 +28,13 @@ resolves only `stripe.secret-key`, requires the webhook secret to remain absent
 from that scoped operation, and cannot proceed without owner-entered secret
 availability.
 
+The package also owns
+`RED_Addon_StoreLite_Stripe_Subscription_Checkout_Operations` through an
+append-only third migration. The table contains only intent/subject/offer
+identifiers, plan/claim/start/result and Session-reference hashes, a closed
+started/completed state, and timestamps. It never stores the Checkout URL,
+credential, provider response material, customer data, or payment data.
+
 The 12-assertion fixture uses only a sealed in-memory exchange. It proves the
 exact recurring request, one call, deterministic idempotency, transient
 handoff, redacted result, pre-attempt refusal, malformed/throwing containment,

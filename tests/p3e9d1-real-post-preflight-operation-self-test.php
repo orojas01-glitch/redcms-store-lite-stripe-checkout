@@ -234,8 +234,8 @@ try {
         'later D4A package preserves canonical preflight adoption in 0.1.10'
     );
     red_stripe_p3e9d1_assert(
-        count($manifest['integrity']['files'] ?? []) === 21,
-        'integrity inventory covers exactly twenty payload files'
+        count($manifest['integrity']['files'] ?? []) === 22,
+        'integrity inventory covers exactly twenty-two payload files'
     );
     $inventoryPaths = [];
     foreach ($manifest['integrity']['files'] as $inventoryFile) {

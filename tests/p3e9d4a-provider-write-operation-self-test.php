@@ -560,7 +560,7 @@ try {
             && ($identity['futureManifest']['version'] ?? null) === '0.1.10'
             && ($identity['status'] ?? null)
                 === 'p3e11_subscription_real_post_operation_adopted_offline'
-            && count($manifest['integrity']['files'] ?? []) === 21,
+            && count($manifest['integrity']['files'] ?? []) === 22,
         'manifest and identity advance to the exact uninvoked D4A package'
     );
     $inventoryPaths = [];
@@ -600,7 +600,7 @@ try {
                 $inventoryPaths,
                 true
             ),
-        'twenty-file inventory includes D4A and subscription payloads once'
+        'twenty-two-file inventory includes provider and subscription payloads once'
     );
     red_stripe_p3e9d4a_assert(
         ($manifest['migrations'] ?? null) === [[
@@ -613,8 +613,14 @@ try {
             'path' => 'migrations/2026-08-16-create-event-receipts.sql',
             'sha256' =>
                 '20b516693d15bf2fb3829de6d9c9fe44202af03b846a05262d0c79f2b0cd2b8d',
+        ], [
+            'id' => '2026-08-28-subscription-checkout-operations',
+            'path' =>
+                'migrations/2026-08-28-create-subscription-checkout-operations.sql',
+            'sha256' =>
+                '550bd34da11f47372f1922b106ea6561ab19b126a76861ca7a03fcb574d58fcd',
         ]],
-        'D4A changes no migration path or checksum'
+        'current package preserves every migration path and checksum'
     );
     red_stripe_p3e9d4a_assert(
         ($manifest['dependencies']['required'] ?? null) === [[
