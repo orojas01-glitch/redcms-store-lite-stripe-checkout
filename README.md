@@ -50,7 +50,7 @@ unauthorized, no-store, non-persistent browser handoff through two flattened
 offline-only typed operations. No core caller, secret, network, Stripe
 Session, browser navigation, webhook, entitlement, or deployment is added.
 
-P3E-11 advances the adapter to `0.1.10` with one exact subscription
+P3E-11 advanced the adapter to `0.1.10` with one exact subscription
 `subscription.checkout.create-sandbox-real-post` operation. The operation
 reuses the bounded one-use Stripe transport, but accepts only the P3E-10
 recurring contract, derives a deterministic idempotency key, validates the raw
@@ -63,6 +63,16 @@ Checkout Session, browser navigation, webhook, payment, or deployment occurs.
 The same package adds one hash-only subscription-operation journal migration;
 it stores start/result/session hashes and status timestamps, never a Checkout
 URL, credential, response body/header, customer value, or payment value.
+
+P3E-12 advances the adapter to `0.1.11` with a pure contract for an already
+signature-verified Stripe Sandbox subscription event. It maps only
+`checkout.session.completed`, `invoice.paid`, `invoice.payment_failed`,
+`customer.subscription.deleted`, and `checkout.session.expired` into Store
+Lite's provider-neutral activation, renewal, past-due, cancellation, and
+expiry facts. Raw Checkout and Subscription references are reduced to hashes.
+The route remains non-operational: no request parsing, signature verification,
+secret resolution, database write, Stripe contact, payment, or deployment is
+added.
 
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact

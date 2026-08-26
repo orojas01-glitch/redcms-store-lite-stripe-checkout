@@ -27,6 +27,8 @@ require_once __DIR__ . '/StripeSandboxCheckoutRealPostOperation.php';
 require_once __DIR__ . '/StripeSandboxSubscriptionCheckoutContract.php';
 require_once __DIR__
     . '/StripeSandboxSubscriptionCheckoutRealPostOperation.php';
+require_once __DIR__
+    . '/StripeSandboxSubscriptionVerifiedEventContract.php';
 require_once __DIR__ . '/StripeTypedOfflineCheckoutAdapter.php';
 
 return static function ($registry): void {

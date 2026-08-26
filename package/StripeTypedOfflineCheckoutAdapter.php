@@ -65,7 +65,37 @@ final class RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter
         ) {
             return self::subscriptionRealPost($request);
         }
+        if ($request->operation()
+            === 'subscription.event.normalize-sandbox-verified'
+        ) {
+            return self::subscriptionEventNormalize($request);
+        }
         return RED_Addon_Adapter_Result::failure('unsupported_operation');
+    }
+
+    private static function subscriptionEventNormalize(
+        RED_Addon_Adapter_Request $request
+    ): RED_Addon_Adapter_Result {
+        $input = $request->input();
+        if (array_keys($input) !== ['expected', 'verifiedEvent']
+            || !is_array($input['expected'] ?? null)
+            || !is_array($input['verifiedEvent'] ?? null)
+        ) {
+            return RED_Addon_Adapter_Result::failure(
+                'subscription_verified_event_input_refused'
+            );
+        }
+        $normalized =
+            RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Verified_Event_Contract::
+                normalize($input['expected'], $input['verifiedEvent']);
+        if (($normalized['valid'] ?? null) !== true
+            || ($normalized['errors'] ?? null) !== []
+        ) {
+            return RED_Addon_Adapter_Result::failure(
+                'subscription_verified_event_refused'
+            );
+        }
+        return RED_Addon_Adapter_Result::success($normalized);
     }
 
     private static function subscriptionRealPost(
@@ -637,7 +667,7 @@ final class RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter
             );
         if (($adopted['valid'] ?? null) !== true
             || ($adopted['adopted'] ?? null) !== true
-            || ($adopted['packageVersion'] ?? null) !== '0.1.10'
+            || ($adopted['packageVersion'] ?? null) !== '0.1.11'
             || ($adopted['providerOperation'] ?? null)
                 !== 'checkout.create-sandbox-real-post'
             || ($adopted['errors'] ?? null) !== []

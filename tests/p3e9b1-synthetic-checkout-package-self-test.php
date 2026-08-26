@@ -182,15 +182,15 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e9b1_assert(
-        ($manifest['version'] ?? null) === '0.1.10'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.10'
+        ($manifest['version'] ?? null) === '0.1.11'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.11'
             && ($identity['status'] ?? null)
-                === 'p3e11_subscription_real_post_operation_adopted_offline',
-        'later package 0.1.10 preserves the synthetic Checkout operation'
+                === 'p3e12_subscription_verified_event_contract_adopted_offline',
+        'later package 0.1.11 preserves the synthetic Checkout operation'
     );
     red_stripe_p3e9b1_assert(
-        count($manifest['integrity']['files'] ?? []) === 22,
-        'integrity inventory covers the exact twenty-two payload files'
+        count($manifest['integrity']['files'] ?? []) === 23,
+        'integrity inventory covers the exact twenty-three payload files'
     );
     $inventoryPaths = [];
     foreach ($manifest['integrity']['files'] as $inventoryFile) {
