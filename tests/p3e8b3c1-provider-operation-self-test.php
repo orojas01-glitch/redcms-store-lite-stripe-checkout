@@ -95,10 +95,10 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e8b3c1_assert(
-        ($manifest['version'] ?? null) === '0.1.13'
+        ($manifest['version'] ?? null) === '0.1.14'
             && ($identity['status'] ?? null)
-                === 'p3e14_subscription_event_replay_ledger_adopted_offline'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.13',
+                === 'p3e15_subscription_raw_event_projector_adopted_offline'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.14',
         'later package preserves the exact read-only provider operation'
     );
     red_stripe_p3e8b3c1_assert(
@@ -132,7 +132,7 @@ try {
         );
     }
     red_stripe_p3e8b3c1_assert(
-        count($manifest['integrity']['files'] ?? []) === 26,
+        count($manifest['integrity']['files'] ?? []) === 27,
         'later synthetic Checkout adoption has exact current package inventory'
     );
     red_stripe_p3e8b3c1_assert(

@@ -91,6 +91,16 @@ body, signature, claim, event, and lifecycle-result hashes plus a closed
 secret, provider id, customer data, or payment data. Runtime database claims
 and the provider-event handler remain later gates.
 
+P3E-15 advances the adapter to `0.1.14` with a pure raw-event projector for
+the five signature-envelope event types. Subscription Checkout creation now
+copies the opaque Store Lite intent reference into Stripe Subscription
+metadata so later invoice and cancellation events can be correlated without
+customer data. The projector requires the exact verified-envelope hashes and
+API version, validates event-specific object state, and emits only the bounded
+P3E-12 verified-event shape. It excludes raw event, customer, address, and
+payment-method data. No request reader, route, secret resolution, database
+caller, Store Lite lifecycle mutation, Stripe contact, or deployment is added.
+
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
 value-free `contract.probe` operation through the core typed boundary. The
@@ -305,7 +315,7 @@ provider or business-data path.
 
 The installable payload under `package/` declares one adapter, one Store Lite
 dependency, one server-signature event route, two value-free secret-reference
-settings, one ordinary return-origin setting, and the two existing migrations.
+settings, one ordinary return-origin setting, and four append-only migrations.
 Current RED-CMS core validates that manifest without executing it, then may
 execute only the registrar in a discarded request-local registry after prior
 database-readiness evidence is supplied.
@@ -376,4 +386,14 @@ and
 [`docs/P3E-9D1-REAL-POST-PREFLIGHT-OPERATION.md`](docs/P3E-9D1-REAL-POST-PREFLIGHT-OPERATION.md)
 and
 [`docs/P3E-10-SUBSCRIPTION-CHECKOUT-CONTRACT.md`](docs/P3E-10-SUBSCRIPTION-CHECKOUT-CONTRACT.md)
+and
+[`docs/P3E-11-SUBSCRIPTION-REAL-POST-OPERATION.md`](docs/P3E-11-SUBSCRIPTION-REAL-POST-OPERATION.md)
+and
+[`docs/P3E-12-SUBSCRIPTION-VERIFIED-EVENT-CONTRACT.md`](docs/P3E-12-SUBSCRIPTION-VERIFIED-EVENT-CONTRACT.md)
+and
+[`docs/P3E-13-STRIPE-WEBHOOK-SIGNATURE-ENVELOPE.md`](docs/P3E-13-STRIPE-WEBHOOK-SIGNATURE-ENVELOPE.md)
+and
+[`docs/P3E-14-SUBSCRIPTION-EVENT-REPLAY-LEDGER.md`](docs/P3E-14-SUBSCRIPTION-EVENT-REPLAY-LEDGER.md)
+and
+[`docs/P3E-15-SUBSCRIPTION-RAW-EVENT-PROJECTOR.md`](docs/P3E-15-SUBSCRIPTION-RAW-EVENT-PROJECTOR.md)
 for the complete boundaries and later-gate exclusions.

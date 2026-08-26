@@ -88,12 +88,12 @@ try {
     red_stripe_p3e8b3a_assert(
         ($manifest['id'] ?? null)
                 === 'redcms.store-lite-stripe-checkout'
-            && ($manifest['version'] ?? null) === '0.1.13'
+            && ($manifest['version'] ?? null) === '0.1.14'
             && ($manifest['type'] ?? null) === 'adapter'
             && ($identity['status'] ?? null)
-                === 'p3e14_subscription_event_replay_ledger_adopted_offline'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.13',
-        'later identity preserves B3A transport adoption in 0.1.13'
+                === 'p3e15_subscription_raw_event_projector_adopted_offline'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.14',
+        'later identity preserves B3A transport adoption in 0.1.14'
     );
     red_stripe_p3e8b3a_assert(
         ($manifest['outboundHosts'] ?? null) === ['api.stripe.com']
@@ -112,12 +112,12 @@ try {
                 === '550bd34da11f47372f1922b106ea6561ab19b126a76861ca7a03fcb574d58fcd'
             && ($manifest['migrations'][3]['sha256'] ?? '')
                 === '0d8cb40b0b720d894a9da6d08ca570e19598f74ae8cb8e80232c72338762aec3',
-        'later 0.1.13 preserves all four append-only migration checksums'
+        'later 0.1.14 preserves all four append-only migration checksums'
     );
 
     $inventory = $manifest['integrity']['files'] ?? [];
     red_stripe_p3e8b3a_assert(
-        count($inventory) === 26
+        count($inventory) === 27
             && array_column($inventory, 'path') === [
                 'addon.php',
                 'StripeTypedOfflineCheckoutAdapter.php',
@@ -140,13 +140,14 @@ try {
                 'StripeSandboxSubscriptionVerifiedEventContract.php',
                 'StripeSandboxWebhookSignatureEnvelope.php',
                 'StripeSubscriptionEventReceiptPlanner.php',
+                'StripeSandboxSubscriptionRawEventProjector.php',
                 'identity.json',
                 'migrations/2026-08-16-create-checkout-attempts.sql',
                 'migrations/2026-08-16-create-event-receipts.sql',
                 'migrations/2026-08-28-create-subscription-checkout-operations.sql',
                 'migrations/2026-08-29-create-subscription-event-receipts.sql',
             ],
-        'integrity inventory lists the exact twenty-six payload files'
+        'integrity inventory lists the exact twenty-seven payload files'
     );
     foreach ($inventory as $file) {
         $path = $packageDirectory . '/' . ($file['path'] ?? '');

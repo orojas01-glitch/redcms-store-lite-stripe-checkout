@@ -226,8 +226,8 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e9a_assert(
-        ($manifest['version'] ?? null) === '0.1.13'
-            && count($manifest['integrity']['files'] ?? []) === 26,
+        ($manifest['version'] ?? null) === '0.1.14'
+            && count($manifest['integrity']['files'] ?? []) === 27,
         'later P3E-9B package adoption is exact and integrity checked'
     );
 
@@ -371,7 +371,7 @@ try {
             $profile,
             'creation_policy_invalid'
         ),
-        'expiry longer than twenty-six hours is refused before encoding'
+        'expiry longer than twenty-seven hours is refused before encoding'
     );
     $invalidPolicy = $policy;
     $invalidPolicy['recoveryEnabled'] = false;
