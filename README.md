@@ -41,12 +41,13 @@ P3E-9D0. D4A now advances the separately distributed package to `0.1.8` with
 one exact latent provider-write operation and one-use production transport.
 Core has no D4B caller, and D4A acceptance invokes only an in-memory exchange
 double plus the existing local TLS loopback proof. No Stripe contact occurs.
-P3E-10 now adds a source-only subscription Checkout and transient redirect
-contract for Store Lite `0.1.48`. It maps one current provider-neutral intent
+P3E-10 now advances the installable adapter to `0.1.9` and adopts the
+subscription Checkout and transient redirect contract for Store Lite `0.1.48`.
+It maps one current provider-neutral intent
 and published monthly/yearly offer to canonical hosted `mode=subscription`
 form bytes, then accepts only an exact synthetic non-live Session URL into an
-unauthorized, no-store, non-persistent browser handoff. The installable adapter
-remains `0.1.8`; no package adoption, core caller, secret, network, Stripe
+unauthorized, no-store, non-persistent browser handoff through two flattened
+offline-only typed operations. No core caller, secret, network, Stripe
 Session, browser navigation, webhook, entitlement, or deployment is added.
 
 P3D-7 enables the adapter only inside its disposable database, injects two
@@ -183,8 +184,8 @@ See
 - `RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Contract`
   prepares one exact Store Lite 0.1.48 subscription intent as a hosted Stripe
   recurring Checkout request and validates a synthetic Session into a
-  transient redirect handoff. It remains source-only and browser navigation is
-  still unauthorized.
+  transient redirect handoff. Adapter 0.1.9 contains the byte-identical source;
+  browser navigation is still unauthorized.
 
 - `RED_CMS_Store_Lite_Stripe_Checkout_Response_Normalizer` validates a closed,
   reviewed sandbox Checkout Session response against immutable server-derived

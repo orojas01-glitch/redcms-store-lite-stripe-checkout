@@ -278,7 +278,7 @@ try {
             && $storeManifest === $storePackage['manifest']
             && ($adapterManifest['dependencies']['required'] ?? null) === [[
                 'id' => $storePackageId,
-                'version' => '>=0.1.35 <1.0',
+                'version' => '>=0.1.48 <1.0',
             ]]
             && in_array(
                 $storeServiceId,
