@@ -4,7 +4,7 @@
   "id": "redcms.store-lite-stripe-checkout",
   "name": "RED-CMS Store Lite Stripe Checkout",
   "description": "Separately distributed Stripe Checkout adapter for RED-CMS Store Lite.",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "type": "adapter",
   "compatibility": {
     "cms": ">=5.1 <6.0",
@@ -97,11 +97,11 @@
     "files": [
       {
         "path": "addon.php",
-        "sha256": "033ffa60ed537dfca4f619cdbfb7505efe9960a97917c8ad8b4122e879a59f3e"
+        "sha256": "42e557cdf34a6d0e54a8617595d6fd4c118117d88f4148ae5f4028dbbb248607"
       },
       {
         "path": "StripeTypedOfflineCheckoutAdapter.php",
-        "sha256": "80bcdc9f7ac0129dc921d634d7f683e1a36b8a55bbeb10117cbd888cd326f93c"
+        "sha256": "48449e389263c1e8207b76c654c046aac696c28ce88bc6ee4ba0f7f576c86900"
       },
       {
         "path": "StripeSandboxReadOnlyProbeTransport.php",
@@ -145,7 +145,7 @@
       },
       {
         "path": "StripeSandboxCheckoutRealPostPreflight.php",
-        "sha256": "e0658b319fd30131371a3f44d3f37b48c1153aecff14b1f0cf1072481085d81f"
+        "sha256": "c6b5818466b0dc546b7b5addccf7598134dcd4a5f130ce1be1ecf0467dec623d"
       },
       {
         "path": "StripeSandboxCheckoutRealPostExchange.php",
@@ -157,15 +157,15 @@
       },
       {
         "path": "StripeSandboxCheckoutRealPostOperation.php",
-        "sha256": "1a101eb87132fc611d809a6eae690ca4370c2ad88587461115a35b120008028a"
+        "sha256": "009eb4dd512e905fe4a0961c7d05ff58d3436c06f280105a9608f44ab366d229"
       },
       {
         "path": "StripeSandboxSubscriptionCheckoutContract.php",
-        "sha256": "a23e874b84ba1071aef35d9c25b8332154f76259c48701f7fc40c45e243ea9e8"
+        "sha256": "ad2eb4bd804c2a6cf35af2c8a9afd20e93f99276abbd4a2624f0e60966c2088d"
       },
       {
         "path": "StripeSandboxSubscriptionCheckoutRealPostOperation.php",
-        "sha256": "955f11ad885243a4d1e47d207b20bffb64b94366479c73ad48b0c099a5c74fc2"
+        "sha256": "b0f97a53c57dae559120da1f4d513c55b337ed24f5c56f5f98cb2c05d53fea28"
       },
       {
         "path": "StripeSandboxSubscriptionVerifiedEventContract.php",
@@ -180,8 +180,12 @@
         "sha256": "3c61801c4c7151ed34627beb71c22188c2256f7417d1a694dfaab72280ff892c"
       },
       {
+        "path": "StripeSandboxSubscriptionRawEventProjector.php",
+        "sha256": "db5144193bcd4b8fe4cb71cdaa500d93d51cddedc59502a7ce86489ea75f90f8"
+      },
+      {
         "path": "identity.json",
-        "sha256": "82841a8c624282e989fc31b08b7f95af616deb9cdc6f76c6d87298b29566bfb3"
+        "sha256": "c1496513a87c16d0d5a91463e761b2bb294a1c4d9642c59626a011c720c5f6d8"
       },
       {
         "path": "migrations/2026-08-16-create-checkout-attempts.sql",

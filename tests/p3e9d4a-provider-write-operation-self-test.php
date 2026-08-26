@@ -363,8 +363,8 @@ try {
         );
     red_stripe_p3e9d4a_assert(
         ($adoptedPreflight['valid'] ?? null) === true
-            && ($adoptedPreflight['packageVersion'] ?? null) === '0.1.13',
-        'D4A retains exact 0.1.13 preflight adoption: '
+            && ($adoptedPreflight['packageVersion'] ?? null) === '0.1.14',
+        'D4A retains exact 0.1.14 preflight adoption: '
             . json_encode($adoptedPreflight, JSON_UNESCAPED_SLASHES)
     );
     $double = new RED_Stripe_P3E9D4A_Exchange_Double();
@@ -382,7 +382,7 @@ try {
         $double->calls() === 1
             && ($created['valid'] ?? null) === true
             && ($created['status'] ?? null) === 'checkout_session_created'
-            && ($created['packageVersion'] ?? null) === '0.1.13'
+            && ($created['packageVersion'] ?? null) === '0.1.14'
             && ($created['sourcePackageVersion'] ?? null) === '0.1.8'
             && ($created['operation'] ?? null)
                 === 'checkout.create-sandbox-real-post'
@@ -556,11 +556,11 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e9d4a_assert(
-        ($manifest['version'] ?? null) === '0.1.13'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.13'
+        ($manifest['version'] ?? null) === '0.1.14'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.14'
             && ($identity['status'] ?? null)
-                === 'p3e14_subscription_event_replay_ledger_adopted_offline'
-            && count($manifest['integrity']['files'] ?? []) === 26,
+                === 'p3e15_subscription_raw_event_projector_adopted_offline'
+            && count($manifest['integrity']['files'] ?? []) === 27,
         'manifest and identity advance to the exact uninvoked D4A package'
     );
     $inventoryPaths = [];
@@ -610,7 +610,7 @@ try {
                 $inventoryPaths,
                 true
             ),
-        'twenty-six-file inventory includes provider and subscription payloads once'
+        'twenty-seven-file inventory includes provider and subscription payloads once'
     );
     red_stripe_p3e9d4a_assert(
         ($manifest['migrations'] ?? null) === [[

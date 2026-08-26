@@ -1,0 +1,60 @@
+<?php
+declare(strict_types=1);
+$root = dirname(__DIR__);
+require_once $root . '/package/StripeSandboxSubscriptionRawEventProjector.php';
+$assertions = 0;
+$assert = static function(bool $ok,string $m)use(&$assertions){$assertions++;if(!$ok)throw new RuntimeException($m);};
+$intent='sint_'.str_repeat('1',32);$offer=str_repeat('2',64);
+$make = static function(string $type,array $object) use($intent,$offer): array {
+    $event=['id'=>'evt_ProjectorEvent123456','object'=>'event','api_version'=>'2024-09-30.acacia',
+        'created'=>1787630500,'data'=>['object'=>$object],'livemode'=>false,'type'=>$type];
+    $envelope=['valid'=>true,'verification'=>'verified','providerEnvironment'=>'sandbox',
+        'apiVersion'=>'2024-09-30.acacia','eventType'=>$type,
+        'eventRefSha256'=>hash('sha256',$event['id']),'eventCreatedAt'=>$event['created'],
+        'objectType'=>$object['object'],'objectProjectionSha256'=>hash('sha256',json_encode($object,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR)),
+        'receivedAt'=>1787630600,'rawBodySha256'=>str_repeat('3',64),
+        'signatureEvidenceSha256'=>str_repeat('4',64)];
+    return [$envelope,$event];
+};
+try {
+    $metadata=['redcms_intent_reference'=>$intent,'redcms_offer_state_sha256'=>$offer];
+    $cases=[
+        ['checkout.session.completed',['id'=>'cs_test_ProjectorCompleted123456','object'=>'checkout.session',
+            'client_reference_id'=>$intent,'metadata'=>['redcms_offer_state_sha256'=>$offer],
+            'status'=>'complete','payment_status'=>'paid','subscription'=>['id'=>'sub_Projector123456','current_period_end'=>1790308800],
+            'customer_details'=>['email'=>'private@example.test']],'complete_paid'],
+        ['checkout.session.expired',['id'=>'cs_test_ProjectorExpired123456','object'=>'checkout.session',
+            'client_reference_id'=>$intent,'metadata'=>['redcms_offer_state_sha256'=>$offer],
+            'status'=>'expired','payment_status'=>'unpaid','subscription'=>null],'expired'],
+        ['invoice.paid',['id'=>'in_ProjectorPaid123456','object'=>'invoice','subscription'=>'sub_Projector123456',
+            'subscription_details'=>['metadata'=>$metadata],'period_end'=>1790308800,'status'=>'paid','paid'=>true,
+            'customer_email'=>'private@example.test','payment_settings'=>['x'=>'secret']],'paid_active'],
+        ['invoice.payment_failed',['id'=>'in_ProjectorFailed123456','object'=>'invoice','subscription'=>'sub_Projector123456',
+            'subscription_details'=>['metadata'=>$metadata],'period_end'=>1790308800,'status'=>'open','paid'=>false],'payment_failed'],
+        ['customer.subscription.deleted',['id'=>'sub_Projector123456','object'=>'subscription','metadata'=>$metadata,
+            'current_period_end'=>1790308800,'status'=>'canceled','customer'=>'cus_Private123456'],'canceled'],
+    ];
+    foreach($cases as [$type,$object,$status]){
+        [$envelope,$event]=$make($type,$object);
+        $result=RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Raw_Event_Projector::project($envelope,$event);
+        $assert($result['valid']&&$result['verifiedEvent']['providerStatus']===$status,
+            'supported event projects');
+        $encoded=json_encode($result,JSON_UNESCAPED_SLASHES|JSON_THROW_ON_ERROR);
+        $assert(!str_contains($encoded,'private@example.test')&&!str_contains($encoded,'cus_Private')
+            && !$result['customerDataIncluded']&&!$result['paymentMethodDataIncluded']
+            && !$result['addressDataIncluded']&&!$result['rawEventIncluded'],'private fields excluded');
+    }
+    [$envelope,$event]=$make($cases[2][0],$cases[2][1]);
+    $event['data']['object']['subscription_details']['metadata']['redcms_intent_reference']='bad';
+    $assert(!RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Raw_Event_Projector::project($envelope,$event)['valid'],
+        'object drift from signature envelope refused');
+    [$envelope,$event]=$make($cases[2][0],array_replace_recursive($cases[2][1],[
+        'subscription_details'=>['metadata'=>['redcms_intent_reference'=>'bad']],
+    ]));
+    $assert(!RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Raw_Event_Projector::project($envelope,$event)['valid'],
+        'invalid correlation metadata refused after envelope binding');
+    $assert(hash_equals(hash_file('sha256',$root.'/src/StripeSandboxSubscriptionRawEventProjector.php'),
+        hash_file('sha256',$root.'/package/StripeSandboxSubscriptionRawEventProjector.php')),
+        'copies identical');
+    echo 'Stripe raw subscription-event projector passed '.$assertions." assertions.\n";
+} catch(Throwable $e){fwrite(STDERR,$e->getMessage()."\n");exit(1);}

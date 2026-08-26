@@ -53,6 +53,8 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Contract
                 $intent['offerStateSha256'],
             'subscription_data[metadata][redcms_intent_state_sha256]' =>
                 $intent['intentStateSha256'],
+            'subscription_data[metadata][redcms_intent_reference]' =>
+                $intent['intentReference'],
             'subscription_data[metadata][redcms_offer_state_sha256]' =>
                 $intent['offerStateSha256'],
             'line_items[0][price_data][currency]' =>
