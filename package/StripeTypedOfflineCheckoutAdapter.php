@@ -667,7 +667,7 @@ final class RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter
             );
         if (($adopted['valid'] ?? null) !== true
             || ($adopted['adopted'] ?? null) !== true
-            || ($adopted['packageVersion'] ?? null) !== '0.1.12'
+            || ($adopted['packageVersion'] ?? null) !== '0.1.13'
             || ($adopted['providerOperation'] ?? null)
                 !== 'checkout.create-sandbox-real-post'
             || ($adopted['errors'] ?? null) !== []

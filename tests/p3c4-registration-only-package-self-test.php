@@ -165,7 +165,7 @@ try {
     );
     red_stripe_p3c4_assert(
         ($package['id'] ?? null) === $packageId
-            && ($package['manifest']['version'] ?? null) === '0.1.12'
+            && ($package['manifest']['version'] ?? null) === '0.1.13'
             && ($package['manifest']['type'] ?? null) === 'adapter',
         'manifest identity, version, and adapter type are exact'
     );
@@ -189,10 +189,10 @@ try {
         'one adapter, Store Lite dependency, event route, and host are declared'
     );
     red_stripe_p3c4_assert(
-        $profile['migrationCount'] === 3
+        $profile['migrationCount'] === 4
             && $profile['ordinarySettingCount'] === 1
             && $profile['secretSettingCount'] === 2,
-        'profile exposes three migrations and the exact bounded settings shape'
+        'profile exposes four migrations and the exact bounded settings shape'
     );
     red_stripe_p3c4_assert(
         $manifest['permissions'] === []
@@ -209,9 +209,9 @@ try {
         'secret settings declare references without values or defaults'
     );
     red_stripe_p3c4_assert(
-        count($manifest['integrity']['files']) === 24
+        count($manifest['integrity']['files']) === 26
             && $manifest['integrity']['entrypoint'] === 'addon.php',
-        'integrity inventory covers all twenty-four payload files exactly once'
+        'integrity inventory covers all twenty-six payload files exactly once'
     );
     foreach ($manifest['integrity']['files'] as $inventoryFile) {
         $path = $fixturePackage . '/' . $inventoryFile['path'];

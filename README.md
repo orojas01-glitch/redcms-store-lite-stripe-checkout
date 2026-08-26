@@ -84,6 +84,13 @@ event types used by P3E-12 under API version `2024-09-30.acacia`. Its result
 contains hashes and top-level event facts only. The class is inventoried but no
 runtime operation or route can invoke it.
 
+P3E-14 advances the adapter to `0.1.13` with a fourth append-only migration
+and a pure subscription-event receipt planner. The ledger stores event, raw
+body, signature, claim, event, and lifecycle-result hashes plus a closed
+`verified`, `applied`, or `refused` state. It stores no raw request, signature,
+secret, provider id, customer data, or payment data. Runtime database claims
+and the provider-event handler remain later gates.
+
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
 value-free `contract.probe` operation through the core typed boundary. The

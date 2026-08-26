@@ -88,12 +88,12 @@ try {
     red_stripe_p3e8b3a_assert(
         ($manifest['id'] ?? null)
                 === 'redcms.store-lite-stripe-checkout'
-            && ($manifest['version'] ?? null) === '0.1.12'
+            && ($manifest['version'] ?? null) === '0.1.13'
             && ($manifest['type'] ?? null) === 'adapter'
             && ($identity['status'] ?? null)
-                === 'p3e13_stripe_webhook_signature_envelope_adopted_offline'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.12',
-        'later identity preserves B3A transport adoption in 0.1.12'
+                === 'p3e14_subscription_event_replay_ledger_adopted_offline'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.13',
+        'later identity preserves B3A transport adoption in 0.1.13'
     );
     red_stripe_p3e8b3a_assert(
         ($manifest['outboundHosts'] ?? null) === ['api.stripe.com']
@@ -103,19 +103,21 @@ try {
         'package declares one host but no permission, mutation, or job'
     );
     red_stripe_p3e8b3a_assert(
-        count($manifest['migrations'] ?? []) === 3
+        count($manifest['migrations'] ?? []) === 4
             && ($manifest['migrations'][0]['sha256'] ?? '')
                 === 'f58ae3b56d5b96d80f2757162e41e0fa4540f5e652934b9708e3884be633c2fa'
             && ($manifest['migrations'][1]['sha256'] ?? '')
                 === '20b516693d15bf2fb3829de6d9c9fe44202af03b846a05262d0c79f2b0cd2b8d'
             && ($manifest['migrations'][2]['sha256'] ?? '')
-                === '550bd34da11f47372f1922b106ea6561ab19b126a76861ca7a03fcb574d58fcd',
-        'later 0.1.12 preserves all three append-only migration checksums'
+                === '550bd34da11f47372f1922b106ea6561ab19b126a76861ca7a03fcb574d58fcd'
+            && ($manifest['migrations'][3]['sha256'] ?? '')
+                === '0d8cb40b0b720d894a9da6d08ca570e19598f74ae8cb8e80232c72338762aec3',
+        'later 0.1.13 preserves all four append-only migration checksums'
     );
 
     $inventory = $manifest['integrity']['files'] ?? [];
     red_stripe_p3e8b3a_assert(
-        count($inventory) === 24
+        count($inventory) === 26
             && array_column($inventory, 'path') === [
                 'addon.php',
                 'StripeTypedOfflineCheckoutAdapter.php',
@@ -137,12 +139,14 @@ try {
                 'StripeSandboxSubscriptionCheckoutRealPostOperation.php',
                 'StripeSandboxSubscriptionVerifiedEventContract.php',
                 'StripeSandboxWebhookSignatureEnvelope.php',
+                'StripeSubscriptionEventReceiptPlanner.php',
                 'identity.json',
                 'migrations/2026-08-16-create-checkout-attempts.sql',
                 'migrations/2026-08-16-create-event-receipts.sql',
                 'migrations/2026-08-28-create-subscription-checkout-operations.sql',
+                'migrations/2026-08-29-create-subscription-event-receipts.sql',
             ],
-        'integrity inventory lists the exact twenty-four payload files'
+        'integrity inventory lists the exact twenty-six payload files'
     );
     foreach ($inventory as $file) {
         $path = $packageDirectory . '/' . ($file['path'] ?? '');

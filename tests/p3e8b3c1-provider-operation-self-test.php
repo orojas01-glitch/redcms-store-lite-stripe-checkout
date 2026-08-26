@@ -95,10 +95,10 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e8b3c1_assert(
-        ($manifest['version'] ?? null) === '0.1.12'
+        ($manifest['version'] ?? null) === '0.1.13'
             && ($identity['status'] ?? null)
-                === 'p3e13_stripe_webhook_signature_envelope_adopted_offline'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.12',
+                === 'p3e14_subscription_event_replay_ledger_adopted_offline'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.13',
         'later package preserves the exact read-only provider operation'
     );
     red_stripe_p3e8b3c1_assert(
@@ -109,13 +109,15 @@ try {
         'package retains one host and no permission, mutation, or job'
     );
     red_stripe_p3e8b3c1_assert(
-        count($manifest['migrations'] ?? []) === 3
+        count($manifest['migrations'] ?? []) === 4
             && ($manifest['migrations'][0]['sha256'] ?? '')
                 === 'f58ae3b56d5b96d80f2757162e41e0fa4540f5e652934b9708e3884be633c2fa'
             && ($manifest['migrations'][1]['sha256'] ?? '')
                 === '20b516693d15bf2fb3829de6d9c9fe44202af03b846a05262d0c79f2b0cd2b8d'
             && ($manifest['migrations'][2]['sha256'] ?? '')
-                === '550bd34da11f47372f1922b106ea6561ab19b126a76861ca7a03fcb574d58fcd',
+                === '550bd34da11f47372f1922b106ea6561ab19b126a76861ca7a03fcb574d58fcd'
+            && ($manifest['migrations'][3]['sha256'] ?? '')
+                === '0d8cb40b0b720d894a9da6d08ca570e19598f74ae8cb8e80232c72338762aec3',
         'provider operation retains all current migration checksums'
     );
     foreach ($manifest['integrity']['files'] ?? [] as $file) {
@@ -130,7 +132,7 @@ try {
         );
     }
     red_stripe_p3e8b3c1_assert(
-        count($manifest['integrity']['files'] ?? []) === 24,
+        count($manifest['integrity']['files'] ?? []) === 26,
         'later synthetic Checkout adoption has exact current package inventory'
     );
     red_stripe_p3e8b3c1_assert(

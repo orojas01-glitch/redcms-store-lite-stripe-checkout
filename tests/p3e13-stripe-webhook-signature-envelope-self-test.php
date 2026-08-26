@@ -347,8 +347,8 @@ try {
     );
     $entrypoint = (string) file_get_contents($root . '/package/addon.php');
     $assert(
-        ($manifest['version'] ?? null) === '0.1.12'
-            && count($manifest['integrity']['files'] ?? []) === 24
+        ($manifest['version'] ?? null) === '0.1.13'
+            && count($manifest['integrity']['files'] ?? []) === 26
             && in_array(
                 'StripeSandboxWebhookSignatureEnvelope.php',
                 array_column(
@@ -365,7 +365,7 @@ try {
                 $entrypoint,
                 'p3c4_route_handler_not_operational'
             ),
-        'adapter 0.1.12 inventories the verifier while retaining a non-operational route'
+        'adapter 0.1.13 inventories the verifier while retaining a non-operational route'
     );
 
     echo 'Stripe Sandbox signature envelope passed '

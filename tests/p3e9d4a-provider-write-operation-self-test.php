@@ -363,8 +363,8 @@ try {
         );
     red_stripe_p3e9d4a_assert(
         ($adoptedPreflight['valid'] ?? null) === true
-            && ($adoptedPreflight['packageVersion'] ?? null) === '0.1.12',
-        'D4A retains exact 0.1.12 preflight adoption: '
+            && ($adoptedPreflight['packageVersion'] ?? null) === '0.1.13',
+        'D4A retains exact 0.1.13 preflight adoption: '
             . json_encode($adoptedPreflight, JSON_UNESCAPED_SLASHES)
     );
     $double = new RED_Stripe_P3E9D4A_Exchange_Double();
@@ -382,7 +382,7 @@ try {
         $double->calls() === 1
             && ($created['valid'] ?? null) === true
             && ($created['status'] ?? null) === 'checkout_session_created'
-            && ($created['packageVersion'] ?? null) === '0.1.12'
+            && ($created['packageVersion'] ?? null) === '0.1.13'
             && ($created['sourcePackageVersion'] ?? null) === '0.1.8'
             && ($created['operation'] ?? null)
                 === 'checkout.create-sandbox-real-post'
@@ -556,11 +556,11 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e9d4a_assert(
-        ($manifest['version'] ?? null) === '0.1.12'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.12'
+        ($manifest['version'] ?? null) === '0.1.13'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.13'
             && ($identity['status'] ?? null)
-                === 'p3e13_stripe_webhook_signature_envelope_adopted_offline'
-            && count($manifest['integrity']['files'] ?? []) === 24,
+                === 'p3e14_subscription_event_replay_ledger_adopted_offline'
+            && count($manifest['integrity']['files'] ?? []) === 26,
         'manifest and identity advance to the exact uninvoked D4A package'
     );
     $inventoryPaths = [];
@@ -610,7 +610,7 @@ try {
                 $inventoryPaths,
                 true
             ),
-        'twenty-four-file inventory includes provider and subscription payloads once'
+        'twenty-six-file inventory includes provider and subscription payloads once'
     );
     red_stripe_p3e9d4a_assert(
         ($manifest['migrations'] ?? null) === [[
@@ -629,6 +629,12 @@ try {
                 'migrations/2026-08-28-create-subscription-checkout-operations.sql',
             'sha256' =>
                 '550bd34da11f47372f1922b106ea6561ab19b126a76861ca7a03fcb574d58fcd',
+        ], [
+            'id' => '2026-08-29-subscription-event-receipts',
+            'path' =>
+                'migrations/2026-08-29-create-subscription-event-receipts.sql',
+            'sha256' =>
+                '0d8cb40b0b720d894a9da6d08ca570e19598f74ae8cb8e80232c72338762aec3',
         ]],
         'current package preserves every migration path and checksum'
     );
