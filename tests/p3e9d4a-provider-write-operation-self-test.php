@@ -363,8 +363,8 @@ try {
         );
     red_stripe_p3e9d4a_assert(
         ($adoptedPreflight['valid'] ?? null) === true
-            && ($adoptedPreflight['packageVersion'] ?? null) === '0.1.11',
-        'D4A retains exact 0.1.11 preflight adoption: '
+            && ($adoptedPreflight['packageVersion'] ?? null) === '0.1.12',
+        'D4A retains exact 0.1.12 preflight adoption: '
             . json_encode($adoptedPreflight, JSON_UNESCAPED_SLASHES)
     );
     $double = new RED_Stripe_P3E9D4A_Exchange_Double();
@@ -382,7 +382,7 @@ try {
         $double->calls() === 1
             && ($created['valid'] ?? null) === true
             && ($created['status'] ?? null) === 'checkout_session_created'
-            && ($created['packageVersion'] ?? null) === '0.1.11'
+            && ($created['packageVersion'] ?? null) === '0.1.12'
             && ($created['sourcePackageVersion'] ?? null) === '0.1.8'
             && ($created['operation'] ?? null)
                 === 'checkout.create-sandbox-real-post'
@@ -556,11 +556,11 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e9d4a_assert(
-        ($manifest['version'] ?? null) === '0.1.11'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.11'
+        ($manifest['version'] ?? null) === '0.1.12'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.12'
             && ($identity['status'] ?? null)
-                === 'p3e12_subscription_verified_event_contract_adopted_offline'
-            && count($manifest['integrity']['files'] ?? []) === 23,
+                === 'p3e13_stripe_webhook_signature_envelope_adopted_offline'
+            && count($manifest['integrity']['files'] ?? []) === 24,
         'manifest and identity advance to the exact uninvoked D4A package'
     );
     $inventoryPaths = [];
@@ -604,8 +604,13 @@ try {
                 'StripeSandboxSubscriptionVerifiedEventContract.php',
                 $inventoryPaths,
                 true
+            )
+            && in_array(
+                'StripeSandboxWebhookSignatureEnvelope.php',
+                $inventoryPaths,
+                true
             ),
-        'twenty-three-file inventory includes provider and subscription payloads once'
+        'twenty-four-file inventory includes provider and subscription payloads once'
     );
     red_stripe_p3e9d4a_assert(
         ($manifest['migrations'] ?? null) === [[
