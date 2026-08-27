@@ -104,6 +104,26 @@ try {
             && ($verified['objectType'] ?? '') === 'checkout.session',
         'valid v1 signature admits one fixed Sandbox event envelope'
     );
+
+    $currentEvent = $event;
+    $currentEvent['api_version'] = '2026-07-29.dahlia';
+    $currentBody = json_encode(
+        $currentEvent,
+        JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR
+    );
+    $currentHeader = 't=' . $signedAt . ',v1='
+        . $sign($currentBody, $secret, $signedAt);
+    $currentVerified =
+        RED_CMS_Store_Lite_Stripe_Sandbox_Webhook_Signature_Envelope::
+            verify($currentBody, $currentHeader, $secret, $receivedAt);
+    $assert(
+        ($currentVerified['valid'] ?? null) === true
+            && ($currentVerified['apiVersion'] ?? '')
+                === '2026-07-29.dahlia'
+            && ($currentVerified['eventType'] ?? '')
+                === 'checkout.session.completed',
+        'current Dashboard Sandbox API version is accepted and retained'
+    );
     $assert(
         ($verified['signedAt'] ?? 0) === $signedAt
             && ($verified['receivedAt'] ?? 0) === $receivedAt
@@ -347,7 +367,7 @@ try {
     );
     $entrypoint = (string) file_get_contents($root . '/package/addon.php');
     $assert(
-        ($manifest['version'] ?? null) === '0.1.14'
+        ($manifest['version'] ?? null) === '0.1.15'
             && count($manifest['integrity']['files'] ?? []) === 27
             && in_array(
                 'StripeSandboxWebhookSignatureEnvelope.php',
@@ -365,7 +385,7 @@ try {
                 $entrypoint,
                 'p3c4_route_handler_not_operational'
             ),
-        'adapter 0.1.14 inventories the verifier while retaining a non-operational route'
+        'adapter 0.1.15 inventories the verifier while retaining a non-operational route'
     );
 
     echo 'Stripe Sandbox signature envelope passed '

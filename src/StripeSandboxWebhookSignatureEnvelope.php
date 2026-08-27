@@ -11,7 +11,10 @@ declare(strict_types=1);
  */
 final class RED_CMS_Store_Lite_Stripe_Sandbox_Webhook_Signature_Envelope
 {
-    private const API_VERSION = '2024-09-30.acacia';
+    private const API_VERSIONS = [
+        '2024-09-30.acacia',
+        '2026-07-29.dahlia',
+    ];
     private const MAX_BODY_BYTES = 262144;
     private const MAX_HEADER_BYTES = 4096;
     private const TOLERANCE_SECONDS = 300;
@@ -92,7 +95,11 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Webhook_Signature_Envelope
             || array_is_list($object)
             || !self::eventReference($event['id'] ?? null)
             || ($event['object'] ?? null) !== 'event'
-            || ($event['api_version'] ?? null) !== self::API_VERSION
+            || !in_array(
+                $event['api_version'] ?? null,
+                self::API_VERSIONS,
+                true
+            )
             || !self::timestamp($event['created'] ?? null)
             || $event['created'] > $signedAt
             || $signedAt - $event['created'] > 2592000
@@ -122,7 +129,7 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Webhook_Signature_Envelope
             'matchedSignatureSha256' => hash('sha256', $matched),
             'eventRefSha256' => $eventRefSha256,
             'eventType' => $eventType,
-            'apiVersion' => self::API_VERSION,
+            'apiVersion' => $event['api_version'],
             'objectProjectionSha256' => $objectProjectionSha256,
         ], JSON_UNESCAPED_SLASHES
             | JSON_UNESCAPED_UNICODE
@@ -133,7 +140,7 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Webhook_Signature_Envelope
             'valid' => true,
             'verification' => 'verified',
             'providerEnvironment' => 'sandbox',
-            'apiVersion' => self::API_VERSION,
+            'apiVersion' => $event['api_version'],
             'eventType' => $eventType,
             'eventRefSha256' => $eventRefSha256,
             'eventCreatedAt' => $event['created'],

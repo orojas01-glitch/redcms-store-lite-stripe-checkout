@@ -160,7 +160,7 @@ try {
         $result['valid'] === true
             && $result['status']
                 === 'subscription_checkout_session_created'
-            && $result['packageVersion'] === '0.1.14'
+            && $result['packageVersion'] === '0.1.15'
             && $result['operation']
                 === 'subscription.checkout.create-sandbox-real-post',
         'sealed exchange produces one bounded subscription Checkout outcome'

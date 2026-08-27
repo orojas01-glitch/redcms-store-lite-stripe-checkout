@@ -16,15 +16,17 @@ The verifier:
   comparison;
 - requires the signature timestamp within five minutes of server receipt;
 - strictly decodes UTF-8 JSON with duplicate-key, depth, and value limits;
-- requires a non-live v1 Event rendered as API `2024-09-30.acacia`;
+- requires a non-live v1 Event rendered as either the historical
+  `2024-09-30.acacia` contract or the current Sandbox Dashboard
+  `2026-07-29.dahlia` contract;
 - admits only the five P3E-12 subscription event and object-type pairs; and
 - returns only hashes, timing, size, API version, event type, and object type.
 
 The result contains no raw body, signature header, endpoint secret, decoded
 event, provider id, or customer data. Invalid signatures, changed bytes,
 malformed or ambiguous headers, stale or future timestamps, duplicate JSON
-keys, live-mode events, API drift, object drift, and unsupported events fail
-closed.
+keys, live-mode events, unallowlisted API drift, object drift, and unsupported
+events fail closed.
 
 The package entrypoint loads the reviewed class only for integrity validation.
 The declared provider-event route remains the existing throwing placeholder;
