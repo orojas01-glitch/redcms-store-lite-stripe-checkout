@@ -101,6 +101,15 @@ P3E-12 verified-event shape. It excludes raw event, customer, address, and
 payment-method data. No request reader, route, secret resolution, database
 caller, Store Lite lifecycle mutation, Stripe contact, or deployment is added.
 
+P3E-16 advances the adapter to `0.1.15` after the Stripe Sandbox Dashboard
+stopped offering the projector's historical webhook API version for new event
+destinations. Signature verification and raw-event projection now accept an
+exact two-version allowlist: historical `2024-09-30.acacia` plus current
+Sandbox `2026-07-29.dahlia`. The verified envelope retains the actual accepted
+version, the projector requires that exact version on the Event, and every
+other version still fails closed. Checkout creation remains pinned to its
+separate reviewed outbound API contract.
+
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
 value-free `contract.probe` operation through the core typed boundary. The

@@ -5,11 +5,15 @@ require_once $root . '/package/StripeSandboxSubscriptionRawEventProjector.php';
 $assertions = 0;
 $assert = static function(bool $ok,string $m)use(&$assertions){$assertions++;if(!$ok)throw new RuntimeException($m);};
 $intent='sint_'.str_repeat('1',32);$offer=str_repeat('2',64);
-$make = static function(string $type,array $object) use($intent,$offer): array {
-    $event=['id'=>'evt_ProjectorEvent123456','object'=>'event','api_version'=>'2024-09-30.acacia',
+$make = static function(
+    string $type,
+    array $object,
+    string $apiVersion = '2024-09-30.acacia'
+) use($intent,$offer): array {
+    $event=['id'=>'evt_ProjectorEvent123456','object'=>'event','api_version'=>$apiVersion,
         'created'=>1787630500,'data'=>['object'=>$object],'livemode'=>false,'type'=>$type];
     $envelope=['valid'=>true,'verification'=>'verified','providerEnvironment'=>'sandbox',
-        'apiVersion'=>'2024-09-30.acacia','eventType'=>$type,
+        'apiVersion'=>$apiVersion,'eventType'=>$type,
         'eventRefSha256'=>hash('sha256',$event['id']),'eventCreatedAt'=>$event['created'],
         'objectType'=>$object['object'],'objectProjectionSha256'=>hash('sha256',json_encode($object,JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_THROW_ON_ERROR)),
         'receivedAt'=>1787630600,'rawBodySha256'=>str_repeat('3',64),
@@ -44,6 +48,29 @@ try {
             && !$result['customerDataIncluded']&&!$result['paymentMethodDataIncluded']
             && !$result['addressDataIncluded']&&!$result['rawEventIncluded'],'private fields excluded');
     }
+    [$currentEnvelope,$currentEvent]=$make(
+        $cases[1][0],
+        $cases[1][1],
+        '2026-07-29.dahlia'
+    );
+    $currentResult=RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Raw_Event_Projector::project(
+        $currentEnvelope,
+        $currentEvent
+    );
+    $assert(
+        $currentResult['valid']
+            && $currentResult['verifiedEvent']['providerStatus']==='expired',
+        'current Dashboard Sandbox API version projects the bounded event'
+    );
+    $mismatchedEnvelope=$currentEnvelope;
+    $mismatchedEnvelope['apiVersion']='2024-09-30.acacia';
+    $assert(
+        !RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Raw_Event_Projector::project(
+            $mismatchedEnvelope,
+            $currentEvent
+        )['valid'],
+        'event and verified-envelope API versions must match'
+    );
     [$envelope,$event]=$make($cases[2][0],$cases[2][1]);
     $event['data']['object']['subscription_details']['metadata']['redcms_intent_reference']='bad';
     $assert(!RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Raw_Event_Projector::project($envelope,$event)['valid'],

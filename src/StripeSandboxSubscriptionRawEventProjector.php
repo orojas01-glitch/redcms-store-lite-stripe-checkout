@@ -5,7 +5,10 @@ declare(strict_types=1);
 /** Pure projection of a signature-bound Stripe subscription Event object. */
 final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Raw_Event_Projector
 {
-    private const API_VERSION = '2024-09-30.acacia';
+    private const API_VERSIONS = [
+        '2024-09-30.acacia',
+        '2026-07-29.dahlia',
+    ];
 
     public static function project(array $envelope, array $event): array
     {
@@ -15,7 +18,13 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Raw_Event_Projector
             || !is_array($object)
             || array_is_list($object)
             || ($event['object'] ?? null) !== 'event'
-            || ($event['api_version'] ?? null) !== self::API_VERSION
+            || !in_array(
+                $event['api_version'] ?? null,
+                self::API_VERSIONS,
+                true
+            )
+            || ($event['api_version'] ?? null)
+                !== ($envelope['apiVersion'] ?? null)
             || ($event['livemode'] ?? null) !== false
             || ($event['type'] ?? null) !== $envelope['eventType']
             || ($event['created'] ?? null) !== $envelope['eventCreatedAt']
@@ -167,7 +176,11 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Raw_Event_Projector
         return ($v['valid'] ?? null) === true
             && ($v['verification'] ?? null) === 'verified'
             && ($v['providerEnvironment'] ?? null) === 'sandbox'
-            && ($v['apiVersion'] ?? null) === self::API_VERSION
+            && in_array(
+                $v['apiVersion'] ?? null,
+                self::API_VERSIONS,
+                true
+            )
             && self::sha($v['eventRefSha256'] ?? null)
             && self::sha($v['objectProjectionSha256'] ?? null)
             && self::sha($v['rawBodySha256'] ?? null)
