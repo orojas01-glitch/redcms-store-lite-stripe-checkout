@@ -372,7 +372,7 @@ try {
         JSON_THROW_ON_ERROR
     );
     $assert(
-        ($manifest['version'] ?? null) === '0.1.16'
+        ($manifest['version'] ?? null) === '0.1.17'
             && in_array(
                 'StripeSandboxSubscriptionVerifiedEventContract.php',
                 array_column($manifest['integrity']['files'] ?? [], 'path'),
@@ -382,7 +382,7 @@ try {
                 (string) file_get_contents($root . '/package/addon.php'),
                 'StripeSandboxSubscriptionVerifiedEventContract'
             ),
-        'adapter 0.1.16 preserves the pure subscription-event contract'
+        'adapter 0.1.17 preserves the pure subscription-event contract'
     );
 
     echo 'Stripe subscription verified-event contract passed '
