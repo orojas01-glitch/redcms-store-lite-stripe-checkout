@@ -110,6 +110,15 @@ version, the projector requires that exact version on the Event, and every
 other version still fails closed. Checkout creation remains pinned to its
 separate reviewed outbound API contract.
 
+P3E-17 advances the adapter to `0.1.16` for the current Dahlia subscription
+payload shape observed in Stripe Sandbox. An unexpanded completed Checkout is
+projected as a bounded deferred event so core can acknowledge it without
+granting access; activation remains tied to the paid invoice. Dahlia invoice
+correlation comes only from `parent.subscription_details`, and the current
+period end comes from matching subscription line items with one unambiguous
+period. Historical Acacia projection remains unchanged. Raw event, customer,
+address, invoice URL, payment-method, and unrelated line data remain excluded.
+
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
 value-free `contract.probe` operation through the core typed boundary. The

@@ -1,7 +1,7 @@
 # P3E-15 Subscription Raw-Event Projector
 
 Status: current Sandbox webhook API compatibility added in Stripe adapter
-`0.1.15`.
+`0.1.16`.
 
 The subscription Checkout contract now writes the opaque
 `redcms_intent_reference` and the existing offer-state hash into Subscription
@@ -31,7 +31,7 @@ The focused fixture covers all five projections, private-field exclusion,
 object drift, invalid correlation metadata, byte-identical source/package
 copies, and exact envelope/event binding under both the historical
 `2024-09-30.acacia` and current Dashboard `2026-07-29.dahlia` API versions.
-The complete adapter suite also verifies the `0.1.15` integrity inventory and
+The complete adapter suite also verifies the `0.1.16` integrity inventory and
 all earlier gates.
 
 This gate adds no request reader, operational webhook route, endpoint secret

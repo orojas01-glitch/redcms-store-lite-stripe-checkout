@@ -62,6 +62,84 @@ try {
             && $currentResult['verifiedEvent']['providerStatus']==='expired',
         'current Dashboard Sandbox API version projects the bounded event'
     );
+    [$deferredEnvelope,$deferredEvent]=$make(
+        'checkout.session.completed',
+        ['id'=>'cs_test_ProjectorDeferred123456','object'=>'checkout.session',
+            'client_reference_id'=>$intent,
+            'metadata'=>['redcms_offer_state_sha256'=>$offer],
+            'status'=>'complete','payment_status'=>'paid',
+            'subscription'=>'sub_ProjectorDeferred123456'],
+        '2026-07-29.dahlia'
+    );
+    $deferred=RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Raw_Event_Projector::project(
+        $deferredEnvelope,
+        $deferredEvent
+    );
+    $assert(
+        $deferred['valid']
+            && $deferred['verifiedEvent']['providerStatus']
+                ==='complete_paid_deferred'
+            && $deferred['verifiedEvent']['providerSubscriptionRef']
+                ==='sub_ProjectorDeferred123456'
+            && $deferred['verifiedEvent']['currentPeriodEndEpoch']===null,
+        'unexpanded completed Checkout is projected for terminal deferral'
+    );
+    $currentInvoice=[
+        'id'=>'in_ProjectorCurrentPaid123456','object'=>'invoice',
+        'parent'=>['type'=>'subscription_details','subscription_details'=>[
+            'metadata'=>$metadata,
+            'subscription'=>'sub_ProjectorCurrent123456',
+        ]],
+        'lines'=>['object'=>'list','data'=>[ [
+            'object'=>'line_item','livemode'=>false,'metadata'=>$metadata,
+            'parent'=>['type'=>'subscription_item_details',
+                'subscription_item_details'=>[
+                    'subscription'=>'sub_ProjectorCurrent123456',
+                ]],
+            'period'=>['start'=>1787630500,'end'=>1790308800],
+            'customer_email'=>'private@example.test',
+        ]]],
+        'period_end'=>1787630500,'status'=>'paid','paid'=>true,
+        'customer_email'=>'private@example.test',
+    ];
+    [$invoiceEnvelope,$invoiceEvent]=$make(
+        'invoice.paid',
+        $currentInvoice,
+        '2026-07-29.dahlia'
+    );
+    $invoiceResult=
+        RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Raw_Event_Projector::project(
+            $invoiceEnvelope,
+            $invoiceEvent
+        );
+    $assert(
+        $invoiceResult['valid']
+            && $invoiceResult['verifiedEvent']['intentReference']===$intent
+            && $invoiceResult['verifiedEvent']['providerSubscriptionRef']
+                ==='sub_ProjectorCurrent123456'
+            && $invoiceResult['verifiedEvent']['currentPeriodEndEpoch']
+                ===1790308800
+            && !str_contains(
+                json_encode($invoiceResult,JSON_THROW_ON_ERROR),
+                'private@example.test'
+            ),
+        'current invoice parent and matching line project bounded lifecycle facts'
+    );
+    $mixedInvoice=$currentInvoice;
+    $mixedInvoice['lines']['data'][0]['period']['end']=1790400000;
+    $mixedInvoice['lines']['data'][]=$currentInvoice['lines']['data'][0];
+    [$mixedEnvelope,$mixedEvent]=$make(
+        'invoice.paid',
+        $mixedInvoice,
+        '2026-07-29.dahlia'
+    );
+    $assert(
+        !RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Raw_Event_Projector::project(
+            $mixedEnvelope,
+            $mixedEvent
+        )['valid'],
+        'mixed current invoice subscription periods are refused'
+    );
     $mismatchedEnvelope=$currentEnvelope;
     $mismatchedEnvelope['apiVersion']='2024-09-30.acacia';
     $assert(
