@@ -88,12 +88,12 @@ try {
     red_stripe_p3e8b3a_assert(
         ($manifest['id'] ?? null)
                 === 'redcms.store-lite-stripe-checkout'
-            && ($manifest['version'] ?? null) === '0.1.17'
+            && ($manifest['version'] ?? null) === '0.1.18'
             && ($manifest['type'] ?? null) === 'adapter'
             && ($identity['status'] ?? null)
                 === 'p3e16_current_sandbox_webhook_api_compatibility'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.17',
-        'later identity preserves B3A transport adoption in 0.1.17'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.18',
+        'later identity preserves B3A transport adoption in 0.1.18'
     );
     red_stripe_p3e8b3a_assert(
         ($manifest['outboundHosts'] ?? null) === ['api.stripe.com']
@@ -112,7 +112,7 @@ try {
                 === '550bd34da11f47372f1922b106ea6561ab19b126a76861ca7a03fcb574d58fcd'
             && ($manifest['migrations'][3]['sha256'] ?? '')
                 === '0d8cb40b0b720d894a9da6d08ca570e19598f74ae8cb8e80232c72338762aec3',
-        'later 0.1.17 preserves all four append-only migration checksums'
+        'later 0.1.18 preserves all four append-only migration checksums'
     );
 
     $inventory = $manifest['integrity']['files'] ?? [];
