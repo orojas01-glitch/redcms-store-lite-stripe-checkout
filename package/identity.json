@@ -7,7 +7,7 @@
   "futureManifest": {
     "schemaVersion": 1,
     "type": "adapter",
-    "version": "0.1.17",
+    "version": "0.1.18",
     "cmsCompatibility": ">=5.1 <6.0",
     "phpCompatibility": ">=8.2 <9.0",
     "requiredDependency": {

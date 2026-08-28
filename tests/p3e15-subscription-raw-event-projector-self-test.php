@@ -117,7 +117,7 @@ try {
             'period'=>['start'=>1787630500,'end'=>1790308800],
             'customer_email'=>'private@example.test',
         ]]],
-        'period_end'=>1787630500,'status'=>'paid','paid'=>true,
+        'period_end'=>1787630500,'status'=>'paid',
         'customer_email'=>'private@example.test',
     ];
     [$invoiceEnvelope,$invoiceEvent]=$make(
@@ -141,7 +141,7 @@ try {
                 json_encode($invoiceResult,JSON_THROW_ON_ERROR),
                 'private@example.test'
             ),
-        'current invoice parent and matching line project bounded lifecycle facts'
+        'current invoice parent, status, and matching line project bounded lifecycle facts without the removed paid boolean'
     );
     $mixedInvoice=$currentInvoice;
     $mixedInvoice['lines']['data'][0]['period']['end']=1790400000;

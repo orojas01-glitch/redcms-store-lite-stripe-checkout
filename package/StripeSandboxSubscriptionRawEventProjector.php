@@ -113,7 +113,9 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Raw_Event_Projector
             $periodEnd = $invoice['periodEnd'];
             $providerStatus = $type === 'invoice.paid'
                 && ($object['status'] ?? null) === 'paid'
-                && ($object['paid'] ?? null) === true
+                && (($event['api_version'] ?? null)
+                        === '2026-07-29.dahlia'
+                    || ($object['paid'] ?? null) === true)
                     ? 'paid_active'
                     : ($type === 'invoice.payment_failed'
                         && ($object['paid'] ?? null) === false
