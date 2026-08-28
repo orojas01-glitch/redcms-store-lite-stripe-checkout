@@ -62,6 +62,24 @@ try {
             && $currentResult['verifiedEvent']['providerStatus']==='expired',
         'current Dashboard Sandbox API version projects the bounded event'
     );
+    $resignedEnvelope=$currentEnvelope;
+    $resignedEnvelope['receivedAt']+=120;
+    $resignedEnvelope['signatureEvidenceSha256']=str_repeat('5',64);
+    $resignedResult=
+        RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Raw_Event_Projector::project(
+            $resignedEnvelope,
+            $currentEvent
+        );
+    $assert(
+        $resignedResult['valid']
+            && $resignedResult['signatureEvidenceSha256']
+                !==$currentResult['signatureEvidenceSha256']
+            && $resignedResult['verifiedEvent']['receivedAt']
+                !==$currentResult['verifiedEvent']['receivedAt']
+            && $resignedResult['verifiedEvent']['eventEvidenceSha256']
+                ===$currentResult['verifiedEvent']['eventEvidenceSha256'],
+        'fresh delivery signatures retain immutable event evidence'
+    );
     [$deferredEnvelope,$deferredEvent]=$make(
         'checkout.session.completed',
         ['id'=>'cs_test_ProjectorDeferred123456','object'=>'checkout.session',

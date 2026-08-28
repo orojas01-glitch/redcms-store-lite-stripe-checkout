@@ -158,10 +158,12 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Raw_Event_Projector
             'providerStatus' => $providerStatus,
             'currentPeriodEndEpoch' => $periodEnd,
             'eventEvidenceSha256' => hash('sha256', json_encode([
+                'schema' => 1,
+                'purpose' =>
+                    'stripe-sandbox-subscription-event-projection',
                 'rawBodySha256' => $envelope['rawBodySha256'],
-                'signatureEvidenceSha256' =>
-                    $envelope['signatureEvidenceSha256'],
                 'eventRefSha256' => $envelope['eventRefSha256'],
+                'eventType' => $envelope['eventType'],
                 'objectProjectionSha256' =>
                     $envelope['objectProjectionSha256'],
             ], JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)),

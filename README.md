@@ -110,7 +110,7 @@ version, the projector requires that exact version on the Event, and every
 other version still fails closed. Checkout creation remains pinned to its
 separate reviewed outbound API contract.
 
-P3E-17 advances the adapter to `0.1.16` for the current Dahlia subscription
+P3E-17 advances the adapter to `0.1.17` for the current Dahlia subscription
 payload shape observed in Stripe Sandbox. An unexpanded completed Checkout is
 projected as a bounded deferred event so core can acknowledge it without
 granting access; activation remains tied to the paid invoice. Dahlia invoice
