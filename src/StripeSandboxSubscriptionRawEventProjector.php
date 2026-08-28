@@ -75,14 +75,19 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Raw_Event_Projector
             $checkoutRef = $object['id'] ?? null;
             if ($type === 'checkout.session.completed') {
                 $expanded = $object['subscription'] ?? null;
-                $subscriptionRef = is_array($expanded)
-                    ? ($expanded['id'] ?? null) : null;
-                $periodEnd = is_array($expanded)
-                    ? ($expanded['current_period_end'] ?? null) : null;
-                $providerStatus =
-                    ($object['status'] ?? null) === 'complete'
+                if (is_array($expanded)) {
+                    $subscriptionRef = $expanded['id'] ?? null;
+                    $periodEnd = $expanded['current_period_end'] ?? null;
+                } elseif (is_string($expanded)) {
+                    $subscriptionRef = $expanded;
+                }
+                if (($object['status'] ?? null) === 'complete'
                     && ($object['payment_status'] ?? null) === 'paid'
-                        ? 'complete_paid' : null;
+                ) {
+                    $providerStatus = is_int($periodEnd)
+                        ? 'complete_paid'
+                        : 'complete_paid_deferred';
+                }
             } else {
                 $providerStatus =
                     ($object['status'] ?? null) === 'expired'
@@ -95,15 +100,17 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Raw_Event_Projector
             ['invoice.paid', 'invoice.payment_failed'],
             true
         )) {
-            $details = $object['subscription_details'] ?? null;
-            $metadata = is_array($details)
-                ? ($details['metadata'] ?? null) : null;
+            $invoice = self::invoiceSubscription(
+                $object,
+                $event['api_version']
+            );
+            $metadata = $invoice['metadata'];
             $intentReference = is_array($metadata)
                 ? ($metadata['redcms_intent_reference'] ?? null) : null;
             $offerState = is_array($metadata)
                 ? ($metadata['redcms_offer_state_sha256'] ?? null) : null;
-            $subscriptionRef = $object['subscription'] ?? null;
-            $periodEnd = $object['period_end'] ?? null;
+            $subscriptionRef = $invoice['subscriptionRef'];
+            $periodEnd = $invoice['periodEnd'];
             $providerStatus = $type === 'invoice.paid'
                 && ($object['status'] ?? null) === 'paid'
                 && ($object['paid'] ?? null) === true
@@ -129,6 +136,11 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Raw_Event_Projector
             || ($subscriptionRef !== null
                 && !self::subscription($subscriptionRef))
             || !is_string($providerStatus)
+            || (in_array(
+                $type,
+                ['invoice.paid', 'invoice.payment_failed'],
+                true
+            ) && !self::time($periodEnd))
             || ($periodEnd !== null && !self::time($periodEnd))
         ) {
             return self::invalid('subscription_raw_event_projection_refused');
@@ -169,6 +181,93 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Raw_Event_Projector
             'rawEventIncluded' => false,
             'errors' => [],
         ];
+    }
+
+    private static function invoiceSubscription(
+        array $object,
+        string $apiVersion
+    ): array {
+        $metadata = null;
+        $subscriptionRef = null;
+        $periodEnd = null;
+        if ($apiVersion === '2024-09-30.acacia') {
+            $details = $object['subscription_details'] ?? null;
+            $metadata = is_array($details)
+                ? ($details['metadata'] ?? null) : null;
+            $subscriptionRef = $object['subscription'] ?? null;
+            $periodEnd = $object['period_end'] ?? null;
+        } elseif ($apiVersion === '2026-07-29.dahlia') {
+            $parent = $object['parent'] ?? null;
+            $details = is_array($parent)
+                && !array_is_list($parent)
+                && ($parent['type'] ?? null) === 'subscription_details'
+                    ? ($parent['subscription_details'] ?? null) : null;
+            $metadata = is_array($details)
+                ? ($details['metadata'] ?? null) : null;
+            $subscriptionRef = is_array($details)
+                ? ($details['subscription'] ?? null) : null;
+            $periodEnd = self::invoiceLinePeriodEnd(
+                $object,
+                $subscriptionRef,
+                $metadata
+            );
+        }
+        return [
+            'metadata' => $metadata,
+            'subscriptionRef' => $subscriptionRef,
+            'periodEnd' => $periodEnd,
+        ];
+    }
+
+    private static function invoiceLinePeriodEnd(
+        array $object,
+        mixed $subscriptionRef,
+        mixed $metadata
+    ): ?int {
+        $lines = $object['lines'] ?? null;
+        $data = is_array($lines) && !array_is_list($lines)
+            ? ($lines['data'] ?? null) : null;
+        if (!self::subscription($subscriptionRef)
+            || !is_array($metadata)
+            || !self::intent($metadata['redcms_intent_reference'] ?? null)
+            || !self::sha($metadata['redcms_offer_state_sha256'] ?? null)
+            || !is_array($data)
+            || !array_is_list($data)
+            || count($data) < 1
+            || count($data) > 100
+        ) {
+            return null;
+        }
+        $ends = [];
+        foreach ($data as $line) {
+            if (!is_array($line) || array_is_list($line)) {
+                return null;
+            }
+            $parent = $line['parent'] ?? null;
+            $details = is_array($parent)
+                && !array_is_list($parent)
+                && ($parent['type'] ?? null)
+                    === 'subscription_item_details'
+                    ? ($parent['subscription_item_details'] ?? null)
+                    : null;
+            $lineMetadata = $line['metadata'] ?? null;
+            $period = $line['period'] ?? null;
+            $end = is_array($period) && !array_is_list($period)
+                ? ($period['end'] ?? null) : null;
+            if (!is_array($details)
+                || ($details['subscription'] ?? null) !== $subscriptionRef
+                || !is_array($lineMetadata)
+                || ($lineMetadata['redcms_intent_reference'] ?? null)
+                    !== $metadata['redcms_intent_reference']
+                || ($lineMetadata['redcms_offer_state_sha256'] ?? null)
+                    !== $metadata['redcms_offer_state_sha256']
+                || !self::time($end)
+            ) {
+                continue;
+            }
+            $ends[(string) $end] = $end;
+        }
+        return count($ends) === 1 ? array_values($ends)[0] : null;
     }
 
     private static function envelope(array $v): bool

@@ -182,11 +182,11 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e9b1_assert(
-        ($manifest['version'] ?? null) === '0.1.15'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.15'
+        ($manifest['version'] ?? null) === '0.1.16'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.16'
             && ($identity['status'] ?? null)
                 === 'p3e16_current_sandbox_webhook_api_compatibility',
-        'later package 0.1.15 preserves the synthetic Checkout operation'
+        'later package 0.1.16 preserves the synthetic Checkout operation'
     );
     red_stripe_p3e9b1_assert(
         count($manifest['integrity']['files'] ?? []) === 27,
