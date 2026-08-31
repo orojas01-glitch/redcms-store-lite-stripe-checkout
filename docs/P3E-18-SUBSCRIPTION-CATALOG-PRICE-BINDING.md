@@ -1,7 +1,7 @@
 # P3E-18 Subscription Catalog Price Binding
 
-Status: catalog Price binding and bounded transport support in adapter
-`0.1.20`; deployment and provider execution remain separate activation steps.
+Status: adapter `0.1.20` catalog Price lifecycle verified in the isolated
+`demo.red-sphere.com` Stripe Sandbox; live mode remains unauthorized.
 
 ## Purpose
 
@@ -45,6 +45,10 @@ not retrieve or mutate the Stripe catalog at this gate.
   green; and
 - source and installable package copies remain byte-identical where required.
 
-Deployment, server configuration, Stripe contact, Checkout navigation, test
-payment, webhook delivery, cancellation, live mode, and customer provisioning
-remain separate activation steps.
+The demo acceptance used the configured $59/month catalog Price. Checkout
+creation returned 200, `checkout.session.completed` and `invoice.paid` were
+delivered with 200 responses, Store Lite reached `active/active`, and immediate
+Sandbox cancellation delivered `customer.subscription.deleted` with 200 and
+reached `canceled/revoked`. The public offer remains available for repeat
+Sandbox testing. Production credentials, live mode, refunds, disputes, and
+customer provisioning remain separate release gates.

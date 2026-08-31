@@ -131,7 +131,12 @@ authority. No Stripe catalog read/write, provider request, Checkout Session,
 payment or credential change occurs through source preparation alone. Version
 `0.1.20` additionally permits that exact catalog Price request through the
 bounded real-post transport while continuing to reject hybrid inline/catalog
-requests before provider contact.
+requests before provider contact. The exact `0.1.20` package subsequently
+completed a hosted $59/month catalog-Price Sandbox lifecycle on
+`demo.red-sphere.com`: Checkout creation returned 200, Stripe delivered the
+completed Checkout and paid invoice with 200 responses, Store Lite activated
+the entitlement, and an immediate Sandbox cancellation delivered 200 and
+revoked the entitlement. Live mode remains unauthorized.
 
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
