@@ -4,7 +4,7 @@
   "id": "redcms.store-lite-stripe-checkout",
   "name": "RED-CMS Store Lite Stripe Checkout",
   "description": "Separately distributed Stripe Checkout adapter for RED-CMS Store Lite.",
-  "version": "0.1.18",
+  "version": "0.1.19",
   "type": "adapter",
   "compatibility": {
     "cms": ">=5.1 <6.0",
@@ -101,7 +101,7 @@
       },
       {
         "path": "StripeTypedOfflineCheckoutAdapter.php",
-        "sha256": "d44c073c98307d498121e097c9ab44dd0d5429c55082d3d96346e97801465d06"
+        "sha256": "f845c052cf23373d7b4f9eec4472ce4bdb006c8f3194f3cc2bbda443e757b5bc"
       },
       {
         "path": "StripeSandboxReadOnlyProbeTransport.php",
@@ -145,7 +145,7 @@
       },
       {
         "path": "StripeSandboxCheckoutRealPostPreflight.php",
-        "sha256": "ee4ba887fb2410454a1d0c686b86808f2afae21aab0a02aba745e40137a23a49"
+        "sha256": "e203bdebbb56429f9615b3f5f70df8e72c4434e1cec024e168f8f7c86fa4e825"
       },
       {
         "path": "StripeSandboxCheckoutRealPostExchange.php",
@@ -157,15 +157,15 @@
       },
       {
         "path": "StripeSandboxCheckoutRealPostOperation.php",
-        "sha256": "e803e757403abaf6b43a21e98191568603710e632d929dec914a54d496c2fc00"
+        "sha256": "3672c660f18ec66f4621dbacf4e8971db6d544f434b5cf739c9f14349251ab55"
       },
       {
         "path": "StripeSandboxSubscriptionCheckoutContract.php",
-        "sha256": "ad2eb4bd804c2a6cf35af2c8a9afd20e93f99276abbd4a2624f0e60966c2088d"
+        "sha256": "32ee352f4c778e28eed25bce4a313a9bf7988403663078444275f3a40fe97331"
       },
       {
         "path": "StripeSandboxSubscriptionCheckoutRealPostOperation.php",
-        "sha256": "4c44ba94842da862af311d452436e252336325b08963ddb161caf100d4c5c216"
+        "sha256": "8e0509e00f2e5c9e878ffccc7bd0ffb42e99046594efa2f23792c391fe7a28a9"
       },
       {
         "path": "StripeSandboxSubscriptionVerifiedEventContract.php",
@@ -185,7 +185,7 @@
       },
       {
         "path": "identity.json",
-        "sha256": "fddacddaa2136637cdaeb5c9db50884911018d78b7be84b20a214f1fae020f22"
+        "sha256": "3bcbd44a09f7460d683031f449759ff1909c3b964de537211efcb1703d9d9cd1"
       },
       {
         "path": "migrations/2026-08-16-create-checkout-attempts.sql",

@@ -6,7 +6,7 @@ declare(strict_types=1);
 final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Real_Post_Operation
 {
     private const PACKAGE_ID = 'redcms.store-lite-stripe-checkout';
-    private const PACKAGE_VERSION = '0.1.18';
+    private const PACKAGE_VERSION = '0.1.19';
     private const OPERATION = 'subscription.checkout.create-sandbox-real-post';
 
     public static function execute(
@@ -22,8 +22,11 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Real_Post_Op
                 'preflight_refused'
             );
         }
-        $prepared =
-            RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Contract::
+        $catalog = $execution['providerCatalog'] ?? null;
+        $prepared = is_array($catalog)
+            ? RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Contract::
+                prepareCatalogPrice($intent, $offer, $policy, $catalog)
+            : RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Contract::
                 prepare($intent, $offer, $policy);
         $contract = $prepared['contract'] ?? null;
         $wireRequest = is_array($contract)
@@ -82,8 +85,17 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Real_Post_Op
             $projection['expires_at'] = $raw['expires_at'];
             $projection['after_expiration'] = $raw['after_expiration'];
             $failureStage = 'response_acceptance_failed';
-            $accepted =
-                RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Contract::
+            $accepted = is_array($catalog)
+                ? RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Contract::
+                    acceptCatalogPrice(
+                        $intent,
+                        $offer,
+                        $policy,
+                        $catalog,
+                        $transcript['envelope'],
+                        $projection
+                    )
+                : RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Contract::
                     accept(
                         $intent,
                         $offer,
@@ -190,10 +202,14 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Real_Post_Op
 
     private static function execution(array $execution): bool
     {
-        return self::exactKeys($execution, [
+        $baseKeys = [
             'planSha256', 'claimStateSha256',
             'executionStartStateSha256',
-        ])
+        ];
+        $catalogKeys = array_merge($baseKeys, ['providerCatalog']);
+        return (self::exactKeys($execution, $baseKeys)
+                || (self::exactKeys($execution, $catalogKeys)
+                    && is_array($execution['providerCatalog'] ?? null)))
             && self::sha256($execution['planSha256'] ?? null)
             && self::sha256($execution['claimStateSha256'] ?? null)
             && self::sha256(

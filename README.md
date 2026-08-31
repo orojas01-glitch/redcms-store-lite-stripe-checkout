@@ -119,6 +119,17 @@ period end comes from matching subscription line items with one unambiguous
 period. Historical Acacia projection remains unchanged. Raw event, customer,
 address, invoice URL, payment-method, and unrelated line data remain excluded.
 
+P3E-18 prepares adapter `0.1.19` to reuse one exact existing Stripe Sandbox
+catalog Product and recurring Price for a Store Lite subscription offer. The
+new path requires server-local agreement on offer, Product, Price, currency,
+amount, billing period, active state, and non-live mode before it replaces the
+inline recurring `price_data` form with `line_items[0][price]`. Existing inline
+subscription behavior remains available for compatibility. The catalog path
+still preserves dynamic Store Lite intent metadata, one-attempt execution,
+transient Checkout URLs, signed webhook correlation, and zero live-mode
+authority. No Stripe catalog read/write, provider request, Checkout Session,
+payment, deployment, or credential change occurs in this source preparation.
+
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
 value-free `contract.probe` operation through the core typed boundary. The

@@ -107,8 +107,16 @@ final class RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter
                 'subscription_real_post_input_refused'
             );
         }
-        $prepared =
-            RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Contract::
+        $catalog = $input['providerCatalog'] ?? null;
+        $prepared = is_array($catalog)
+            ? RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Contract::
+                prepareCatalogPrice(
+                    $input['intent'],
+                    $input['offer'],
+                    $input['policy'],
+                    $catalog
+                )
+            : RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Contract::
                 prepare($input['intent'], $input['offer'], $input['policy']);
         if (($prepared['valid'] ?? null) !== true
             || ($prepared['errors'] ?? null) !== []
@@ -143,13 +151,17 @@ final class RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter
                     $apiValue
                 );
             $apiValue = null;
+            $operationExecution = $input['execution'];
+            if (is_array($catalog)) {
+                $operationExecution['providerCatalog'] = $catalog;
+            }
             $outcome =
                 RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Real_Post_Operation::
                     execute(
                         $input['intent'],
                         $input['offer'],
                         $input['policy'],
-                        $input['execution'],
+                        $operationExecution,
                         $transport
                     );
         } catch (Throwable $throwable) {
@@ -180,8 +192,10 @@ final class RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter
         $expected = [
             'contactTarget', 'execution', 'intent', 'offer', 'policy',
         ];
+        $expectedCatalog = array_merge($expected, ['providerCatalog']);
         sort($keys, SORT_STRING);
         sort($expected, SORT_STRING);
+        sort($expectedCatalog, SORT_STRING);
         $execution = $input['execution'] ?? null;
         $executionKeys = is_array($execution) ? array_keys($execution) : [];
         $expectedExecution = [
@@ -190,7 +204,9 @@ final class RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter
         ];
         sort($executionKeys, SORT_STRING);
         sort($expectedExecution, SORT_STRING);
-        return $keys === $expected
+        return ($keys === $expected
+                || ($keys === $expectedCatalog
+                    && is_array($input['providerCatalog'] ?? null)))
             && ($input['contactTarget'] ?? null)
                 === 'stripe-subscription-sandbox-real-post'
             && is_array($input['intent'] ?? null)
@@ -667,7 +683,7 @@ final class RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter
             );
         if (($adopted['valid'] ?? null) !== true
             || ($adopted['adopted'] ?? null) !== true
-            || ($adopted['packageVersion'] ?? null) !== '0.1.18'
+            || ($adopted['packageVersion'] ?? null) !== '0.1.19'
             || ($adopted['providerOperation'] ?? null)
                 !== 'checkout.create-sandbox-real-post'
             || ($adopted['errors'] ?? null) !== []

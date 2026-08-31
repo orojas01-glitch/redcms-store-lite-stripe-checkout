@@ -171,6 +171,163 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Contract
         ];
     }
 
+    /**
+     * Prepare the same bounded Sandbox subscription using one pre-existing
+     * Stripe catalog Price instead of creating an inline recurring Price.
+     */
+    public static function prepareCatalogPrice(
+        array $intent,
+        array $offer,
+        array $policy,
+        array $catalog
+    ): array {
+        if (!self::intent($intent)
+            || !self::offer($offer)
+            || !hash_equals(
+                $intent['offerStateSha256'],
+                self::hash($offer)
+            )
+            || !self::providerCatalog($catalog, $offer)
+        ) {
+            return self::prepareInvalid('subscription_catalog_refused');
+        }
+        $normalizedPolicy = self::policy($policy);
+        if ($normalizedPolicy === null) {
+            return self::prepareInvalid('subscription_policy_refused');
+        }
+
+        $form = [
+            'mode' => 'subscription',
+            'ui_mode' => 'hosted',
+            'submit_type' => 'subscribe',
+            'success_url' => $normalizedPolicy['successUrl'],
+            'cancel_url' => $normalizedPolicy['cancelUrl'],
+            'client_reference_id' => $intent['intentReference'],
+            'metadata[redcms_intent_state_sha256]' =>
+                $intent['intentStateSha256'],
+            'metadata[redcms_offer_state_sha256]' =>
+                $intent['offerStateSha256'],
+            'subscription_data[metadata][redcms_intent_state_sha256]' =>
+                $intent['intentStateSha256'],
+            'subscription_data[metadata][redcms_intent_reference]' =>
+                $intent['intentReference'],
+            'subscription_data[metadata][redcms_offer_state_sha256]' =>
+                $intent['offerStateSha256'],
+            'line_items[0][price]' => $catalog['stripePriceId'],
+            'line_items[0][quantity]' => '1',
+            'expires_at' => (string) $normalizedPolicy['expiresAtEpoch'],
+        ];
+        $pairs = [];
+        foreach ($form as $key => $value) {
+            $pairs[] = urlencode($key) . '=' . urlencode($value);
+        }
+        $body = implode('&', $pairs);
+        $bodyBytes = strlen($body);
+        if ($bodyBytes < 1 || $bodyBytes > self::MAX_BODY_BYTES) {
+            return self::prepareInvalid('subscription_request_refused');
+        }
+
+        $contract = [
+            'schema' => 1,
+            'packageId' => self::PACKAGE_ID,
+            'contractVersion' => 'subscription-catalog-price-v1',
+            'operation' => 'subscription.checkout.prepare-sandbox-catalog-price',
+            'sourceStoreLiteVersion' => '0.1.50',
+            'contactTarget' => 'stripe-sandbox',
+            'intent' => [
+                'intentReference' => $intent['intentReference'],
+                'intentStateSha256' => $intent['intentStateSha256'],
+                'offerStateSha256' => $intent['offerStateSha256'],
+            ],
+            'offer' => [
+                'offerId' => $offer['id'],
+                'productId' => $offer['productId'],
+                'variantId' => $offer['variantId'],
+                'currency' => $offer['currency'],
+                'priceMinor' => $offer['priceMinor'],
+                'billingPeriod' => $offer['billingPeriod'],
+            ],
+            'providerCatalog' => [
+                'offerId' => $catalog['offerId'],
+                'stripeProductId' => $catalog['stripeProductId'],
+                'stripePriceId' => $catalog['stripePriceId'],
+                'currency' => $catalog['currency'],
+                'priceMinor' => $catalog['priceMinor'],
+                'billingPeriod' => $catalog['billingPeriod'],
+                'active' => true,
+                'livemode' => false,
+            ],
+            'request' => [
+                'method' => 'POST',
+                'url' => 'https://api.stripe.com/v1/checkout/sessions',
+                'headers' => [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                    'Stripe-Version' => self::API_VERSION,
+                ],
+                'authorization' => [
+                    'mode' => 'restricted_test_write',
+                    'secretSettingKey' => 'stripe.secret-key',
+                    'valueIncluded' => false,
+                ],
+                'body' => $body,
+                'bodyBytes' => $bodyBytes,
+                'bodySha256' => hash('sha256', $body),
+                'transport' => [
+                    'scheme' => 'https',
+                    'minimumTls' => 'TLSv1.2',
+                    'verifyPeer' => true,
+                    'verifyHost' => true,
+                    'followRedirects' => false,
+                    'proxyAllowed' => false,
+                    'connectTimeoutSeconds' => 5,
+                    'totalTimeoutSeconds' => 15,
+                    'maximumResponseBytes' => 262144,
+                    'automaticRetry' => false,
+                ],
+            ],
+            'expiry' => [
+                'createdAtEpoch' => $normalizedPolicy['createdAtEpoch'],
+                'expiresAtEpoch' => $normalizedPolicy['expiresAtEpoch'],
+                'durationSeconds' => 1800,
+                'recoveryEnabled' => false,
+            ],
+            'redirectPolicy' => [
+                'providerOrigin' => 'https://checkout.stripe.com',
+                'navigationMode' => 'location.assign',
+                'transientOnly' => true,
+                'persistCheckoutUrl' => false,
+                'cacheControl' => 'no-store',
+                'authorizationRequired' => true,
+                'browserNavigationAuthorized' => false,
+            ],
+            'currentExecution' => [
+                'providerCatalogRead' => false,
+                'providerCatalogMutation' => false,
+                'network' => false,
+                'providerContact' => false,
+                'providerMutation' => false,
+                'checkoutCreation' => false,
+                'customerCreation' => false,
+                'subscriptionCreation' => false,
+                'payment' => false,
+                'webhook' => false,
+                'browserNavigation' => false,
+                'storeLiteMutation' => false,
+                'clientDeployment' => false,
+            ],
+        ];
+        $contractSha256 = self::hash($contract);
+        if (!self::sha256($contractSha256)) {
+            return self::prepareInvalid('subscription_contract_encoding_failed');
+        }
+        return [
+            'valid' => true,
+            'contract' => $contract,
+            'contractSha256' => $contractSha256,
+            'errors' => [],
+        ];
+    }
+
     public static function accept(
         array $intent,
         array $offer,
@@ -179,6 +336,48 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Contract
         array $projection
     ): array {
         $prepared = self::prepare($intent, $offer, $policy);
+        return self::acceptPrepared(
+            $prepared,
+            $intent,
+            $offer,
+            $policy,
+            $envelope,
+            $projection
+        );
+    }
+
+    public static function acceptCatalogPrice(
+        array $intent,
+        array $offer,
+        array $policy,
+        array $catalog,
+        array $envelope,
+        array $projection
+    ): array {
+        $prepared = self::prepareCatalogPrice(
+            $intent,
+            $offer,
+            $policy,
+            $catalog
+        );
+        return self::acceptPrepared(
+            $prepared,
+            $intent,
+            $offer,
+            $policy,
+            $envelope,
+            $projection
+        );
+    }
+
+    private static function acceptPrepared(
+        array $prepared,
+        array $intent,
+        array $offer,
+        array $policy,
+        array $envelope,
+        array $projection
+    ): array {
         if (($prepared['valid'] ?? null) !== true
             || !self::envelope($envelope)
             || !self::projection(
@@ -272,6 +471,31 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Subscription_Checkout_Contract
             return false;
         }
         return true;
+    }
+
+    private static function providerCatalog(array $catalog, array $offer): bool
+    {
+        return self::exactKeys($catalog, [
+            'offerId', 'stripeProductId', 'stripePriceId', 'currency',
+            'priceMinor', 'billingPeriod', 'active', 'livemode',
+        ])
+            && ($catalog['offerId'] ?? null) === $offer['id']
+            && is_string($catalog['stripeProductId'] ?? null)
+            && preg_match(
+                '/\Aprod_[A-Za-z0-9]{8,128}\z/D',
+                $catalog['stripeProductId']
+            ) === 1
+            && is_string($catalog['stripePriceId'] ?? null)
+            && preg_match(
+                '/\Aprice_[A-Za-z0-9]{8,128}\z/D',
+                $catalog['stripePriceId']
+            ) === 1
+            && ($catalog['currency'] ?? null) === $offer['currency']
+            && ($catalog['priceMinor'] ?? null) === $offer['priceMinor']
+            && ($catalog['billingPeriod'] ?? null)
+                === $offer['billingPeriod']
+            && ($catalog['active'] ?? null) === true
+            && ($catalog['livemode'] ?? null) === false;
     }
 
     private static function policy(array $policy): ?array
