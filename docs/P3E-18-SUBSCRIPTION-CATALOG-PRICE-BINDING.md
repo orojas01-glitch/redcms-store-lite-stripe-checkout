@@ -1,7 +1,7 @@
 # P3E-18 Subscription Catalog Price Binding
 
-Status: offline source preparation for adapter `0.1.19`; no provider or client
-effect.
+Status: catalog Price binding and bounded transport support in adapter
+`0.1.20`; deployment and provider execution remain separate activation steps.
 
 ## Purpose
 
@@ -39,6 +39,8 @@ not retrieve or mutate the Stripe catalog at this gate.
 - catalog contract: exact existing-Price request plus mismatch refusal;
 - catalog provider operation: one sealed exchange, transient redirect, no
   inline Price, and foreign-offer refusal;
+- real-post transport acceptance for the exact catalog Price request plus
+  refusal of mixed inline/catalog Price bodies;
 - original P3E-10 inline subscription and P3E-11 real-POST contract remain
   green; and
 - source and installable package copies remain byte-identical where required.

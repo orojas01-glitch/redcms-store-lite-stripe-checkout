@@ -293,11 +293,26 @@ final class RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Transport
         $payment = str_contains($body, 'mode=payment')
             && !str_contains($body, 'mode=subscription')
             && !str_contains($body, 'recurring%5D');
-        $subscription = str_contains($body, 'mode=subscription')
+        $subscriptionCommon = str_contains($body, 'mode=subscription')
             && !str_contains($body, 'mode=payment')
             && str_contains($body, 'submit_type=subscribe')
-            && str_contains($body, 'recurring%5D%5Binterval%5D=')
             && str_contains($body, 'subscription_data%5Bmetadata%5D');
+        $inlineSubscriptionPrice = str_contains(
+            $body,
+            'line_items%5B0%5D%5Bprice_data%5D%5Brecurring%5D%5Binterval%5D='
+        ) && !str_contains($body, 'line_items%5B0%5D%5Bprice%5D=');
+        $catalogSubscriptionPrice = preg_match(
+            '/(?:\A|&)line_items%5B0%5D%5Bprice%5D='
+                . 'price_[A-Za-z0-9]{8,128}(?:&|\z)/D',
+            $body
+        ) === 1
+            && !str_contains(
+                $body,
+                'line_items%5B0%5D%5Bprice_data%5D'
+            )
+            && !str_contains($body, 'recurring%5D%5Binterval%5D=');
+        $subscription = $subscriptionCommon
+            && ($inlineSubscriptionPrice xor $catalogSubscriptionPrice);
         return $payment xor $subscription;
     }
 

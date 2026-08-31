@@ -363,8 +363,8 @@ try {
         );
     red_stripe_p3e9d4a_assert(
         ($adoptedPreflight['valid'] ?? null) === true
-            && ($adoptedPreflight['packageVersion'] ?? null) === '0.1.19',
-        'D4A retains exact 0.1.19 preflight adoption: '
+            && ($adoptedPreflight['packageVersion'] ?? null) === '0.1.20',
+        'D4A retains exact 0.1.20 preflight adoption: '
             . json_encode($adoptedPreflight, JSON_UNESCAPED_SLASHES)
     );
     $double = new RED_Stripe_P3E9D4A_Exchange_Double();
@@ -382,7 +382,7 @@ try {
         $double->calls() === 1
             && ($created['valid'] ?? null) === true
             && ($created['status'] ?? null) === 'checkout_session_created'
-            && ($created['packageVersion'] ?? null) === '0.1.19'
+            && ($created['packageVersion'] ?? null) === '0.1.20'
             && ($created['sourcePackageVersion'] ?? null) === '0.1.8'
             && ($created['operation'] ?? null)
                 === 'checkout.create-sandbox-real-post'
@@ -556,8 +556,8 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e9d4a_assert(
-        ($manifest['version'] ?? null) === '0.1.19'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.19'
+        ($manifest['version'] ?? null) === '0.1.20'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.20'
             && ($identity['status'] ?? null)
                 === 'p3e18_subscription_catalog_price_binding'
             && count($manifest['integrity']['files'] ?? []) === 27,

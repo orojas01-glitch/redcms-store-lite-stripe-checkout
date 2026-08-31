@@ -227,11 +227,11 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e9d1_assert(
-        ($manifest['version'] ?? null) === '0.1.19'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.19'
+        ($manifest['version'] ?? null) === '0.1.20'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.20'
             && ($identity['status'] ?? null)
                 === 'p3e18_subscription_catalog_price_binding',
-        'later D4A package preserves canonical preflight adoption in 0.1.19'
+        'later D4A package preserves canonical preflight adoption in 0.1.20'
     );
     red_stripe_p3e9d1_assert(
         count($manifest['integrity']['files'] ?? []) === 27,
@@ -333,9 +333,9 @@ try {
         ($adopted['valid'] ?? null) === true
             && ($adopted['adopted'] ?? null) === true
             && ($adopted['status'] ?? null) === 'request_contract_adopted'
-            && ($adopted['packageVersion'] ?? null) === '0.1.19'
+            && ($adopted['packageVersion'] ?? null) === '0.1.20'
             && ($adopted['sourcePackageVersion'] ?? null) === '0.1.5',
-        'exact canonical core D0 request is adopted into package 0.1.19'
+        'exact canonical core D0 request is adopted into package 0.1.20'
     );
     red_stripe_p3e9d1_assert(
         ($adopted['operation'] ?? null)

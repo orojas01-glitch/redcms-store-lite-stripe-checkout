@@ -14,6 +14,7 @@ foreach ([
     'StripeBoundedJsonDecoder.php',
     'StripeSandboxCheckoutWireCodec.php',
     'StripeSandboxCheckoutRealPostExchange.php',
+    'StripeSandboxCheckoutRealPostTransport.php',
     'StripeSandboxSubscriptionCheckoutContract.php',
     'StripeSandboxSubscriptionCheckoutRealPostOperation.php',
     'StripeTypedOfflineCheckoutAdapter.php',
@@ -146,6 +147,23 @@ $assert(
     'operation sends the configured catalog Price ID'
 );
 $assert(!str_contains($body, 'price_data'), 'operation sends no inline Price');
+$transportReflection = new ReflectionClass(
+    RED_CMS_Store_Lite_Stripe_Sandbox_Checkout_Real_Post_Transport::class
+);
+$wireValidator = $transportReflection->getMethod('wireRequest');
+$assert(
+    $wireValidator->invoke(null, $exchange->request) === true,
+    'real provider transport accepts the exact catalog Price request'
+);
+$hybridRequest = $exchange->request;
+$hybridRequest['body'] .=
+    '&line_items%5B0%5D%5Bprice_data%5D%5Brecurring%5D%5Binterval%5D=month';
+$hybridRequest['bodyBytes'] = strlen($hybridRequest['body']);
+$hybridRequest['bodySha256'] = hash('sha256', $hybridRequest['body']);
+$assert(
+    $wireValidator->invoke(null, $hybridRequest) === false,
+    'real provider transport refuses a mixed catalog and inline Price request'
+);
 $assert(
     ($result['checkoutUrl'] ?? '') === $projection['url']
         && ($result['persistCheckoutUrl'] ?? true) === false,
