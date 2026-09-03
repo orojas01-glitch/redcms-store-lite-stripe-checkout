@@ -312,9 +312,9 @@ try {
         JSON_THROW_ON_ERROR
     );
     $assert(
-        ($manifest['version'] ?? null) === '0.1.20'
+        ($manifest['version'] ?? null) === '0.1.21'
             && ($manifest['dependencies']['required'][0]['version'] ?? null)
-                === '>=0.1.48 <1.0'
+                === '>=0.1.51 <1.0'
             && in_array(
                 'StripeSandboxSubscriptionCheckoutContract.php',
                 array_column($manifest['integrity']['files'] ?? [], 'path'),
@@ -334,10 +334,14 @@ try {
                     $root . '/package/StripeSandboxSubscriptionCheckoutContract.php'
                 )
             ),
-        'adapter 0.1.20 preserves the exact source with Store Lite 0.1.48'
+        'adapter 0.1.21 preserves the exact source with Store Lite 0.1.51'
     );
 
-    require_once dirname($root) . '/redcms v5.1/includes/addon_adapter_helpers.php';
+    $configuredCore = getenv('RED_CMS_CORE');
+    $coreDirectory = is_string($configuredCore) && $configuredCore !== ''
+        ? $configuredCore
+        : dirname($root) . '/redcms v5.1';
+    require_once rtrim($coreDirectory, '/') . '/includes/addon_adapter_helpers.php';
     require_once $root . '/package/StripeTypedOfflineCheckoutAdapter.php';
     $preparedResult =
         RED_CMS_Store_Lite_Stripe_Typed_Offline_Checkout_Adapter::handle(

@@ -115,8 +115,10 @@ try {
                 . '/2026-08-28-create-subscription-checkout-operations.sql',
             $migrationDirectory
                 . '/2026-08-29-create-subscription-event-receipts.sql',
+            $migrationDirectory
+                . '/2026-09-02-create-commerce-checkout-receipts.sql',
         ],
-        'later package retains P3C-3 plus both subscription journals'
+        'later package retains P3C-3, subscription journals, and commerce receipts'
     );
     $sql = (string) file_get_contents($migrations[1]);
     red_stripe_p3c3_assert(

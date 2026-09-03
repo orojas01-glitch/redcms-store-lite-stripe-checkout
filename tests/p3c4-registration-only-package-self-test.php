@@ -165,7 +165,7 @@ try {
     );
     red_stripe_p3c4_assert(
         ($package['id'] ?? null) === $packageId
-            && ($package['manifest']['version'] ?? null) === '0.1.20'
+            && ($package['manifest']['version'] ?? null) === '0.1.21'
             && ($package['manifest']['type'] ?? null) === 'adapter',
         'manifest identity, version, and adapter type are exact'
     );
@@ -189,10 +189,10 @@ try {
         'one adapter, Store Lite dependency, event route, and host are declared'
     );
     red_stripe_p3c4_assert(
-        $profile['migrationCount'] === 4
+        $profile['migrationCount'] === 5
             && $profile['ordinarySettingCount'] === 1
             && $profile['secretSettingCount'] === 2,
-        'profile exposes four migrations and the exact bounded settings shape'
+        'profile exposes five migrations and the exact bounded settings shape'
     );
     red_stripe_p3c4_assert(
         $manifest['permissions'] === []
@@ -209,9 +209,9 @@ try {
         'secret settings declare references without values or defaults'
     );
     red_stripe_p3c4_assert(
-        count($manifest['integrity']['files']) === 27
+        count($manifest['integrity']['files']) === 35
             && $manifest['integrity']['entrypoint'] === 'addon.php',
-        'integrity inventory covers all twenty-seven payload files exactly once'
+        'integrity inventory covers all thirty-five payload files exactly once'
     );
     foreach ($manifest['integrity']['files'] as $inventoryFile) {
         $path = $fixturePackage . '/' . $inventoryFile['path'];
@@ -334,15 +334,21 @@ try {
         );
     }
     red_stripe_p3c4_assert(
-        substr_count($packageSource, 'whsec_') === 1
+        substr_count($packageSource, 'whsec_') === 2
             && str_contains(
                 (string) file_get_contents(
                     $fixturePackage
                         . '/StripeSandboxWebhookSignatureEnvelope.php'
                 ),
                 "str_starts_with(\$endpointSecret, 'whsec_')"
+            )
+            && str_contains(
+                (string) file_get_contents(
+                    $fixturePackage . '/StripeSdkWebhookVerifier.php'
+                ),
+                "preg_match('/\\Awhsec_"
             ),
-        'webhook prefix appears only as the inert verifier input gate'
+        'webhook prefix appears only in the two inert verifier input gates'
     );
     foreach ([
         'CURLOPT_HTTPGET', 'CURLAUTH_BASIC', 'CURLOPT_USERPWD',
@@ -369,12 +375,25 @@ try {
             && !str_contains($readOnlyTransportSource, 'CURLOPT_POSTFIELDS'),
         'historical read-only operation remains mutation-incapable'
     );
-    foreach ([
-        'composer.json',
-        'composer.lock',
-        'vendor',
-        'secrets',
-    ] as $forbiddenPath) {
+    $composerManifest = json_decode(
+        (string) file_get_contents($fixturePackage . '/composer.json'),
+        true,
+        16,
+        JSON_THROW_ON_ERROR
+    );
+    $composerLock = json_decode(
+        (string) file_get_contents($fixturePackage . '/composer.lock'),
+        true,
+        32,
+        JSON_THROW_ON_ERROR
+    );
+    red_stripe_p3c4_assert(
+        ($composerManifest['require']['stripe/stripe-php'] ?? null) === '21.3.1'
+            && ($composerLock['packages'][0]['name'] ?? null) === 'stripe/stripe-php'
+            && ($composerLock['packages'][0]['version'] ?? null) === 'v21.3.1',
+        'official Stripe PHP SDK is exactly pinned in manifest and lockfile'
+    );
+    foreach (['vendor', 'secrets'] as $forbiddenPath) {
         red_stripe_p3c4_assert(
             !file_exists($fixturePackage . '/' . $forbiddenPath),
             $forbiddenPath . ' remains absent from the package'

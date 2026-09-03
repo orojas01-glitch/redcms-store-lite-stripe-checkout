@@ -8,8 +8,11 @@ if (PHP_SAPI !== 'cli') {
 }
 
 $root = dirname(__DIR__);
-require_once dirname($root)
-    . '/redcms v5.1/includes/addon_adapter_helpers.php';
+$configuredCore = getenv('RED_CMS_CORE');
+$coreDirectory = is_string($configuredCore) && $configuredCore !== ''
+    ? $configuredCore
+    : dirname($root) . '/redcms v5.1';
+require_once rtrim($coreDirectory, '/') . '/includes/addon_adapter_helpers.php';
 foreach ([
     'StripeBoundedJsonDecoder.php',
     'StripeSandboxCheckoutWireCodec.php',
@@ -160,7 +163,7 @@ try {
         $result['valid'] === true
             && $result['status']
                 === 'subscription_checkout_session_created'
-            && $result['packageVersion'] === '0.1.20'
+            && $result['packageVersion'] === '0.1.21'
             && $result['operation']
                 === 'subscription.checkout.create-sandbox-real-post',
         'sealed exchange produces one bounded subscription Checkout outcome'

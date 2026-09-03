@@ -138,6 +138,20 @@ completed Checkout and paid invoice with 200 responses, Store Lite activated
 the entitlement, and an immediate Sandbox cancellation delivered 200 and
 revoked the entitlement. Live mode remains unauthorized.
 
+P3E-21 advances the adapter to `0.1.21` for the isolated Red Sphere commerce
+foundation. It adds a server-authoritative multi-line subscription Checkout
+contract, lookup-key catalog resolution, an official-SDK sandbox gateway,
+official-SDK webhook signature verification, a bounded event/state projection,
+and append-only checkout-attempt and event-receipt tables. One-time setup Prices
+and monthly recurring Prices can share the initial subscription Checkout; the
+derived amount due today includes both. The dependency boundary pins
+`stripe/stripe-php` `21.3.1` in `composer.json` and `composer.lock`, but does not
+install `vendor/` in this source package. Runtime service wiring and dependency
+installation belong to the isolated commerce installation. The registered
+provider-event route remains non-operational, no credential is resolved, and no
+Stripe request, Checkout Session, payment, database migration, deployment, tax
+change, or live-mode action occurs by installing or validating this source.
+
 P3D-7 enables the adapter only inside its disposable database, injects two
 random synthetic values into that PHP process, and invokes only the exact
 value-free `contract.probe` operation through the core typed boundary. The
@@ -352,10 +366,15 @@ provider or business-data path.
 
 The installable payload under `package/` declares one adapter, one Store Lite
 dependency, one server-signature event route, two value-free secret-reference
-settings, one ordinary return-origin setting, and four append-only migrations.
+settings, one ordinary return-origin setting, and five append-only migrations.
 Current RED-CMS core validates that manifest without executing it, then may
 execute only the registrar in a discarded request-local registry after prior
 database-readiness evidence is supplied.
+
+The exact SDK version and download metadata are locked in the package, while
+the `vendor/` tree remains a deployment-time artifact. See
+[`docs/COMMERCE-CHECKOUT-WEBHOOK-FOUNDATION.md`](docs/COMMERCE-CHECKOUT-WEBHOOK-FOUNDATION.md)
+for the trust boundaries and remaining site-specific wiring.
 
 ## Run the isolated proof
 

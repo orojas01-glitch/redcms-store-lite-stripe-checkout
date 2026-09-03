@@ -363,8 +363,8 @@ try {
         );
     red_stripe_p3e9d4a_assert(
         ($adoptedPreflight['valid'] ?? null) === true
-            && ($adoptedPreflight['packageVersion'] ?? null) === '0.1.20',
-        'D4A retains exact 0.1.20 preflight adoption: '
+            && ($adoptedPreflight['packageVersion'] ?? null) === '0.1.21',
+        'D4A retains exact 0.1.21 preflight adoption: '
             . json_encode($adoptedPreflight, JSON_UNESCAPED_SLASHES)
     );
     $double = new RED_Stripe_P3E9D4A_Exchange_Double();
@@ -382,7 +382,7 @@ try {
         $double->calls() === 1
             && ($created['valid'] ?? null) === true
             && ($created['status'] ?? null) === 'checkout_session_created'
-            && ($created['packageVersion'] ?? null) === '0.1.20'
+            && ($created['packageVersion'] ?? null) === '0.1.21'
             && ($created['sourcePackageVersion'] ?? null) === '0.1.8'
             && ($created['operation'] ?? null)
                 === 'checkout.create-sandbox-real-post'
@@ -556,11 +556,11 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e9d4a_assert(
-        ($manifest['version'] ?? null) === '0.1.20'
-            && ($identity['futureManifest']['version'] ?? null) === '0.1.20'
+        ($manifest['version'] ?? null) === '0.1.21'
+            && ($identity['futureManifest']['version'] ?? null) === '0.1.21'
             && ($identity['status'] ?? null)
-                === 'p3e18_subscription_catalog_price_binding'
-            && count($manifest['integrity']['files'] ?? []) === 27,
+                === 'p3e21_commerce_checkout_webhook_foundation'
+            && count($manifest['integrity']['files'] ?? []) === 35,
         'manifest and identity advance to the exact uninvoked D4A package'
     );
     $inventoryPaths = [];
@@ -610,7 +610,7 @@ try {
                 $inventoryPaths,
                 true
             ),
-        'twenty-seven-file inventory includes provider and subscription payloads once'
+        'thirty-five-file inventory includes legacy and commerce payloads once'
     );
     red_stripe_p3e9d4a_assert(
         ($manifest['migrations'] ?? null) === [[
@@ -635,13 +635,19 @@ try {
                 'migrations/2026-08-29-create-subscription-event-receipts.sql',
             'sha256' =>
                 '0d8cb40b0b720d894a9da6d08ca570e19598f74ae8cb8e80232c72338762aec3',
+        ], [
+            'id' => '2026-09-02-commerce-checkout-receipts',
+            'path' =>
+                'migrations/2026-09-02-create-commerce-checkout-receipts.sql',
+            'sha256' =>
+                '4ea0915249efa70dbda67eebb9e70848c6695d926f954479d868f149b68963b8',
         ]],
         'current package preserves every migration path and checksum'
     );
     red_stripe_p3e9d4a_assert(
         ($manifest['dependencies']['required'] ?? null) === [[
             'id' => 'redcms.store-lite',
-            'version' => '>=0.1.48 <1.0',
+            'version' => '>=0.1.51 <1.0',
         ]]
             && ($manifest['permissions'] ?? null) === []
             && ($manifest['jobs'] ?? null) === []

@@ -1,0 +1,18 @@
+{
+  "name": "redcms/store-lite-stripe-checkout-runtime",
+  "description": "Runtime dependency boundary for the RED-CMS Store Lite Stripe Checkout adapter.",
+  "license": "proprietary",
+  "type": "project",
+  "require": {
+    "php": ">=8.2 <9.0",
+    "stripe/stripe-php": "21.3.1"
+  },
+  "config": {
+    "allow-plugins": false,
+    "discard-changes": true,
+    "lock": true,
+    "optimize-autoloader": true,
+    "platform-check": true,
+    "sort-packages": true
+  }
+}

@@ -8,8 +8,11 @@ if (PHP_SAPI !== 'cli') {
 }
 
 $root = dirname(__DIR__);
-require_once dirname($root)
-    . '/redcms v5.1/includes/addon_adapter_helpers.php';
+$configuredCore = getenv('RED_CMS_CORE');
+$coreDirectory = is_string($configuredCore) && $configuredCore !== ''
+    ? $configuredCore
+    : dirname($root) . '/redcms v5.1';
+require_once rtrim($coreDirectory, '/') . '/includes/addon_adapter_helpers.php';
 require_once $root
     . '/package/StripeSandboxSubscriptionVerifiedEventContract.php';
 require_once $root . '/package/StripeTypedOfflineCheckoutAdapter.php';
@@ -372,7 +375,7 @@ try {
         JSON_THROW_ON_ERROR
     );
     $assert(
-        ($manifest['version'] ?? null) === '0.1.20'
+        ($manifest['version'] ?? null) === '0.1.21'
             && in_array(
                 'StripeSandboxSubscriptionVerifiedEventContract.php',
                 array_column($manifest['integrity']['files'] ?? [], 'path'),
@@ -382,7 +385,7 @@ try {
                 (string) file_get_contents($root . '/package/addon.php'),
                 'StripeSandboxSubscriptionVerifiedEventContract'
             ),
-        'adapter 0.1.20 preserves the pure subscription-event contract'
+        'adapter 0.1.21 preserves the pure subscription-event contract'
     );
 
     echo 'Stripe subscription verified-event contract passed '

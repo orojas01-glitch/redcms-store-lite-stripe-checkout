@@ -1,18 +1,18 @@
 {
   "contractVersion": 1,
-  "status": "p3e18_subscription_catalog_price_binding",
+  "status": "p3e21_commerce_checkout_webhook_foundation",
   "id": "redcms.store-lite-stripe-checkout",
   "name": "RED-CMS Store Lite Stripe Checkout",
   "repository": "redcms-store-lite-stripe-checkout",
   "futureManifest": {
     "schemaVersion": 1,
     "type": "adapter",
-    "version": "0.1.20",
+    "version": "0.1.21",
     "cmsCompatibility": ">=5.1 <6.0",
     "phpCompatibility": ">=8.2 <9.0",
     "requiredDependency": {
       "id": "redcms.store-lite",
-      "version": ">=0.1.48 <1.0"
+      "version": ">=0.1.51 <1.0"
     },
     "adapterId": "redcms.store-lite-stripe-checkout/checkout",
     "outboundHost": "api.stripe.com"
@@ -22,8 +22,8 @@
     "installation",
     "enablement",
     "route-exposure",
-    "webhook-verifier",
-    "provider-sdk",
+    "provider-sdk-vendor-installation",
+    "commerce-runtime-service-wiring",
     "database-connection",
     "database-writer",
     "automatic-provider-contact",

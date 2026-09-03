@@ -32,6 +32,11 @@ require_once __DIR__
 require_once __DIR__ . '/StripeSandboxWebhookSignatureEnvelope.php';
 require_once __DIR__ . '/StripeSubscriptionEventReceiptPlanner.php';
 require_once __DIR__ . '/StripeSandboxSubscriptionRawEventProjector.php';
+require_once __DIR__ . '/StripeCommerceCheckoutContract.php';
+require_once __DIR__ . '/StripeCommerceWebhookEventContract.php';
+require_once __DIR__ . '/StripeSdkCatalogResolver.php';
+require_once __DIR__ . '/StripeSdkCommerceGateway.php';
+require_once __DIR__ . '/StripeSdkWebhookVerifier.php';
 require_once __DIR__ . '/StripeTypedOfflineCheckoutAdapter.php';
 
 return static function ($registry): void {

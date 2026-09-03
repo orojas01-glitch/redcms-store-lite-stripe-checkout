@@ -226,8 +226,8 @@ try {
         JSON_THROW_ON_ERROR
     );
     red_stripe_p3e9a_assert(
-        ($manifest['version'] ?? null) === '0.1.20'
-            && count($manifest['integrity']['files'] ?? []) === 27,
+        ($manifest['version'] ?? null) === '0.1.21'
+            && count($manifest['integrity']['files'] ?? []) === 35,
         'later P3E-9B package adoption is exact and integrity checked'
     );
 
